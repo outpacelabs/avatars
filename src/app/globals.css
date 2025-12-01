@@ -1,0 +1,74 @@
+@import "tailwindcss";
+
+/* Inter Display font */
+@font-face {
+  font-family: "InterDisplay";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/InterDisplay-Bold.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "InterDisplay";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/InterDisplay-SemiBold.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "InterDisplay";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/InterDisplay-Medium.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "InterDisplay";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/InterDisplay-Regular.woff2") format("woff2");
+}
+
+:root {
+  --background: #000000;
+  --foreground: #ffffff;
+  --font-display: "InterDisplay", sans-serif;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+}
+
+body {
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.04) 100%), #000;
+  color: var(--foreground);
+  font-family: var(--font-display);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: clip;
+}
+
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}

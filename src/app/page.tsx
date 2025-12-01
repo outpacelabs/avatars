@@ -57,7 +57,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="relative flex flex-col gap-12 items-center pb-12 min-h-screen">
+    <div className="relative flex flex-col gap-12 items-center pb-10 min-h-screen">
       {/* Top gradient */}
       <div
         className={`fixed top-0 left-0 right-0 h-[80px] z-[5] pointer-events-none transition-opacity duration-300 ${

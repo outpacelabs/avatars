@@ -12,16 +12,17 @@ interface ToastData {
 function SingleToast({
   index,
   total,
-  isNew,
+  isNewest,
   onAnimationComplete
 }: {
   index: number;
   total: number;
-  isNew: boolean;
+  isNewest: boolean;
   onAnimationComplete?: () => void;
 }) {
   const toastRef = useRef<HTMLDivElement>(null);
   const checkRef = useRef<SVGPathElement>(null);
+  const hasAnimatedIn = useRef(false);
 
   const depth = total - 1 - index;
   const scale = 1 - depth * 0.05;
@@ -35,9 +36,10 @@ function SingleToast({
     const toast = toastRef.current;
     const check = checkRef.current;
 
-    if (isNew && index === total - 1) {
+    if (isNewest && !hasAnimatedIn.current) {
       // Animate in the newest toast
-      gsap.set(check, { strokeDashoffset: 24 });
+      hasAnimatedIn.current = true;
+      gsap.set(check, { strokeDashoffset: 18 });
 
       gsap.fromTo(toast,
         { opacity: 0, y: 16, scale: scale * 0.95 },
@@ -50,7 +52,7 @@ function SingleToast({
         delay: 0.1,
         ease: "power2.out",
       });
-    } else {
+    } else if (hasAnimatedIn.current) {
       // Animate existing toasts to new position
       gsap.to(toast, {
         y: yOffset,
@@ -60,7 +62,7 @@ function SingleToast({
         ease: "power2.out",
       });
     }
-  }, [index, total, isNew, scale, yOffset, opacity]);
+  }, [index, total, isNewest, scale, yOffset, opacity]);
 
   useEffect(() => {
     if (!toastRef.current || index !== 0) return;
@@ -84,28 +86,32 @@ function SingleToast({
   return (
     <div
       ref={toastRef}
-      className="absolute left-0 right-0 flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-white/[0.12] backdrop-blur-md border border-white/[0.08] shadow-lg shadow-black/20"
-      style={{ zIndex, opacity: 0 }}
+      className="absolute left-1/2 -translate-x-1/2 flex items-center gap-2 px-[14px] py-2 rounded-full bg-white/[0.12] backdrop-blur-[12px] border border-white/[0.12] whitespace-nowrap"
+      style={{
+        zIndex,
+        opacity: 0,
+        boxShadow: "0 3px 6px rgba(10, 10, 10, 0.06), 0 11px 11px rgba(10, 10, 10, 0.05), 0 25px 15px rgba(10, 10, 10, 0.03), 0 44px 18px rgba(10, 10, 10, 0.01)"
+      }}
     >
       <svg
-        width="16"
-        height="16"
-        viewBox="0 0 24 24"
+        width="14"
+        height="14"
+        viewBox="0 0 14 14"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
+        className="shrink-0"
       >
         <path
           ref={checkRef}
-          d="M5 13L9 17L19 7"
+          d="M1.60416 8.80469L5.24999 11.8125L12.3958 2.1875"
           stroke="white"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeDasharray="24"
-          strokeDashoffset="24"
+          strokeWidth="1.25"
+          strokeLinecap="square"
+          strokeDasharray="18"
+          strokeDashoffset="18"
         />
       </svg>
-      <span className="text-sm font-medium text-white/[0.88]">
+      <span className="text-sm font-medium text-white/[0.88] leading-5 tracking-[0.14px]">
         Copied to clipboard
       </span>
     </div>
@@ -114,19 +120,15 @@ function SingleToast({
 
 export function Toast() {
   const [toasts, setToasts] = useState<ToastData[]>([]);
-  const [isNew, setIsNew] = useState(false);
   const idRef = useRef(0);
 
   useEffect(() => {
     const handleShowToast = () => {
       const id = idRef.current++;
-      setIsNew(true);
       setToasts((prev) => {
         const updated = [...prev, { id }];
         return updated.slice(-MAX_TOASTS);
       });
-      // Reset isNew on next frame
-      requestAnimationFrame(() => setIsNew(false));
     };
 
     window.addEventListener("show-toast", handleShowToast);
@@ -140,14 +142,14 @@ export function Toast() {
   if (toasts.length === 0) return null;
 
   return (
-    <div className="fixed bottom-8 left-1/2 z-50" style={{ transform: "translateX(-50%)" }}>
-      <div className="relative h-10 w-[200px]">
+    <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50">
+      <div className="relative h-9">
         {toasts.map((toast, index) => (
           <SingleToast
             key={toast.id}
             index={index}
             total={toasts.length}
-            isNew={isNew}
+            isNewest={index === toasts.length - 1}
             onAnimationComplete={index === 0 ? handleRemoveOldest : undefined}
           />
         ))}

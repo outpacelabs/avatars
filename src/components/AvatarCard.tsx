@@ -51,6 +51,12 @@ export function AvatarCard({ id, index, previewSrc, fullSrc }: AvatarCardProps) 
   const circleRef = useRef<HTMLDivElement>(null);
   const buttonsRef = useRef<HTMLDivElement>(null);
 
+  // Check if device supports clipboard write for images
+  const supportsClipboard = typeof navigator !== "undefined"
+    && "clipboard" in navigator
+    && "write" in navigator.clipboard
+    && !/iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
   useEffect(() => {
     if (cardRef.current) {
       gsap.fromTo(
@@ -155,7 +161,7 @@ export function AvatarCard({ id, index, previewSrc, fullSrc }: AvatarCardProps) 
       className="relative flex aspect-square items-center justify-center rounded-[20px] bg-white/[0.04] cursor-pointer opacity-0"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      onClick={handleCopyToClipboard}
+      onClick={supportsClipboard ? handleCopyToClipboard : undefined}
     >
       <div
         ref={circleRef}
@@ -175,11 +181,13 @@ export function AvatarCard({ id, index, previewSrc, fullSrc }: AvatarCardProps) 
 
       <div
         ref={buttonsRef}
-        className="absolute bottom-2 right-2 md:bottom-4 md:right-4 flex gap-1 items-center opacity-0 translate-y-2 blur-[4px]"
+        className="absolute bottom-3 right-3 md:bottom-4 md:right-4 flex gap-1 items-center opacity-0 translate-y-2 blur-[4px]"
       >
-        <IconButton onClick={(e) => { e.stopPropagation(); handleCopyToClipboard(); }} title="Copy to clipboard">
-          <ClipboardIcon />
-        </IconButton>
+        {supportsClipboard && (
+          <IconButton onClick={(e) => { e.stopPropagation(); handleCopyToClipboard(); }} title="Copy to clipboard">
+            <ClipboardIcon />
+          </IconButton>
+        )}
         <IconButton onClick={handleDownloadClick} title="Download">
           <DownloadIcon />
         </IconButton>

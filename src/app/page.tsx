@@ -87,7 +87,7 @@ export default function Home() {
               Avatars
             </p>
             <p className="text-sm font-semibold text-white/[0.88] leading-5 tracking-[0.14px]">
-              by Outpace Studios
+              by <a href="https://outpacestudios.com" target="_blank">Outpace Studios</a>
             </p>
           </header>
 
@@ -106,7 +106,7 @@ export default function Home() {
       </div>
 
       <div className="flex flex-col gap-10 items-center text-center">
-        <div className="flex flex-col gap-2 items-center text-sm leading-5 tracking-[0.14px]">
+        <div className="flex flex-col gap-1.5 items-center text-sm leading-5 tracking-[0.14px]">
           <p className="font-medium text-white/[0.48]">Handcrafted by</p>
           <a
             href="https://outpacestudios.com"

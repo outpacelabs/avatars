@@ -1,6 +1,7 @@
 "use client";
 
 import { AvatarCard } from "@/components/AvatarCard";
+import { Toast } from "@/components/Toast";
 import { useEffect, useState } from "react";
 
 const OutpaceLogo = () => (
@@ -81,7 +82,7 @@ export default function Home() {
         <OutpaceLogo />
 
         <div className="flex flex-col gap-3 w-full px-4">
-          <header className="sticky top-4 z-10 flex items-center justify-between w-full rounded-[10px] px-4 py-3">
+          <header className="sticky top-4 z-10 flex items-center justify-between w-full rounded-[10px] px-4 md:px-5 py-3">
             <p className="text-sm font-semibold text-white/[0.88] leading-5 tracking-[0.14px]">
               Avatars
             </p>
@@ -109,15 +110,18 @@ export default function Home() {
           <p className="font-medium text-white/[0.48]">Handcrafted by</p>
           <a
             href="https://outpacestudios.com"
-            className="font-semibold text-white/[0.88] underline"
+            target="_blank"
+            className="font-semibold text-white/[0.88]"
           >
             Outpace Studios
           </a>
         </div>
         <p className="text-xs font-medium text-white/[0.48] leading-4 tracking-[0.12px]">
-          Free to use, licensed under CC BY 4.0.
+          Free to use, licensed under <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank">CC BY 4.0</a>.
         </p>
       </div>
+
+      <Toast />
     </div>
   );
 }

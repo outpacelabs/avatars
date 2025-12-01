@@ -50,7 +50,6 @@ export function AvatarCard({ id, index, previewSrc, fullSrc }: AvatarCardProps) 
   const cardRef = useRef<HTMLDivElement>(null);
   const circleRef = useRef<HTMLDivElement>(null);
   const buttonsRef = useRef<HTMLDivElement>(null);
-  const copiedRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (cardRef.current) {
@@ -99,28 +98,8 @@ export function AvatarCard({ id, index, previewSrc, fullSrc }: AvatarCardProps) 
         new ClipboardItem({ "image/png": pngBlob }),
       ]);
 
-      // Show copied animation
-      if (copiedRef.current) {
-        gsap.killTweensOf(copiedRef.current);
-        gsap.fromTo(
-          copiedRef.current,
-          { opacity: 0, scale: 0.8, y: 10 },
-          {
-            opacity: 1,
-            scale: 1,
-            y: 0,
-            duration: 0.3,
-            ease: "back.out(1.7)",
-          }
-        );
-        gsap.to(copiedRef.current, {
-          opacity: 0,
-          y: -10,
-          duration: 0.3,
-          delay: 1.2,
-          ease: "power2.in",
-        });
-      }
+      // Show toast
+      window.dispatchEvent(new CustomEvent("show-toast"));
     } catch (err) {
       console.error("Failed to copy image:", err);
     }
@@ -190,38 +169,13 @@ export function AvatarCard({ id, index, previewSrc, fullSrc }: AvatarCardProps) 
         />
       </div>
 
-      <span className="absolute top-5 left-5 text-xs font-medium text-white/[0.48] leading-4 tracking-[0.12px]">
+      <span className="absolute top-4 left-4 md:top-5 md:left-5 text-xs font-medium text-white/[0.48] leading-4 tracking-[0.12px]">
         {id.toString().padStart(3, "0")}
       </span>
 
-      {/* Copied to clipboard overlay */}
-      <div
-        ref={copiedRef}
-        className="absolute inset-0 flex items-center justify-center rounded-[20px] bg-black/60 backdrop-blur-sm opacity-0 pointer-events-none"
-      >
-        <div className="flex flex-col items-center gap-2">
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M5 13L9 17L19 7"
-              stroke="white"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-          <span className="text-xs font-medium text-white/[0.88]">Copied</span>
-        </div>
-      </div>
-
       <div
         ref={buttonsRef}
-        className="absolute bottom-4 right-4 flex gap-1 items-center opacity-0 translate-y-2 blur-[4px]"
+        className="absolute bottom-2 right-2 md:bottom-4 md:right-4 flex gap-1 items-center opacity-0 translate-y-2 blur-[4px]"
       >
         <IconButton onClick={(e) => { e.stopPropagation(); handleCopyToClipboard(); }} title="Copy to clipboard">
           <ClipboardIcon />

@@ -57,51 +57,25 @@ export default function Home() {
 
   return (
     <div className="relative flex flex-col gap-12 items-center pb-12 min-h-screen">
-      {/* Top blur gradient */}
+      {/* Top gradient */}
       <div
         className={`fixed top-0 left-0 right-0 h-[80px] z-[5] pointer-events-none transition-opacity duration-300 ${
           showTopBlur ? "opacity-100" : "opacity-0"
         }`}
-      >
-        <div
-          className="absolute inset-0"
-          style={{
-            background: "linear-gradient(to bottom, #0A0A0A 0%, transparent 100%)",
-          }}
-        />
-        <div
-          className="absolute inset-0"
-          style={{
-            backdropFilter: "blur(16px)",
-            WebkitBackdropFilter: "blur(16px)",
-            maskImage: "linear-gradient(to bottom, black 0%, transparent 100%)",
-            WebkitMaskImage: "linear-gradient(to bottom, black 0%, transparent 100%)",
-          }}
-        />
-      </div>
+        style={{
+          background: "linear-gradient(to bottom, #0A0A0A 0%, transparent 100%)",
+        }}
+      />
 
-      {/* Bottom blur gradient */}
+      {/* Bottom gradient */}
       <div
         className={`fixed bottom-0 left-0 right-0 h-[80px] z-[5] pointer-events-none transition-opacity duration-300 ${
           showBottomBlur ? "opacity-100" : "opacity-0"
         }`}
-      >
-        <div
-          className="absolute inset-0"
-          style={{
-            background: "linear-gradient(to top, #0A0A0A 0%, transparent 100%)",
-          }}
-        />
-        <div
-          className="absolute inset-0"
-          style={{
-            backdropFilter: "blur(16px)",
-            WebkitBackdropFilter: "blur(16px)",
-            maskImage: "linear-gradient(to top, black 0%, transparent 100%)",
-            WebkitMaskImage: "linear-gradient(to top, black 0%, transparent 100%)",
-          }}
-        />
-      </div>
+        style={{
+          background: "linear-gradient(to top, #0A0A0A 0%, transparent 100%)",
+        }}
+      />
 
       <div className="flex flex-col gap-6 items-center w-full pt-10">
         <OutpaceLogo />
@@ -117,10 +91,11 @@ export default function Home() {
           </header>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 w-full">
-            {avatars.map((avatar) => (
+            {avatars.map((avatar, index) => (
               <AvatarCard
                 key={avatar.id}
                 id={avatar.id}
+                index={index}
                 previewSrc={avatar.previewSrc}
                 fullSrc={avatar.fullSrc}
               />

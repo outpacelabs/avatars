@@ -1,12 +1,13 @@
 "use client";
 
 import Image from "next/image";
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import gsap from "gsap";
 import { IconButton } from "./IconButton";
 
 interface AvatarCardProps {
   id: number;
+  index: number;
   previewSrc: string;
   fullSrc: string;
 }
@@ -45,11 +46,32 @@ const DownloadIcon = () => (
   </svg>
 );
 
-export function AvatarCard({ id, previewSrc, fullSrc }: AvatarCardProps) {
+export function AvatarCard({ id, index, previewSrc, fullSrc }: AvatarCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const circleRef = useRef<HTMLDivElement>(null);
   const buttonsRef = useRef<HTMLDivElement>(null);
   const copiedRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (cardRef.current) {
+      gsap.fromTo(
+        cardRef.current,
+        {
+          opacity: 0,
+          y: 24,
+          scale: 0.95,
+        },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.5,
+          delay: index * 0.03,
+          ease: "power2.out",
+        }
+      );
+    }
+  }, [index]);
 
   const handleCopyToClipboard = async () => {
     try {
@@ -151,7 +173,7 @@ export function AvatarCard({ id, previewSrc, fullSrc }: AvatarCardProps) {
   return (
     <div
       ref={cardRef}
-      className="relative flex aspect-square items-center justify-center rounded-[20px] bg-white/[0.04] cursor-pointer"
+      className="relative flex aspect-square items-center justify-center rounded-[20px] bg-white/[0.04] cursor-pointer opacity-0"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onClick={handleCopyToClipboard}

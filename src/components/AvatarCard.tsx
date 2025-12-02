@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import gsap from "gsap";
 import { IconButton } from "./IconButton";
 
@@ -50,12 +50,15 @@ export function AvatarCard({ id, index, previewSrc, fullSrc }: AvatarCardProps) 
   const cardRef = useRef<HTMLDivElement>(null);
   const circleRef = useRef<HTMLDivElement>(null);
   const buttonsRef = useRef<HTMLDivElement>(null);
+  const [supportsClipboard, setSupportsClipboard] = useState(false);
 
-  // Check if device supports clipboard write for images
-  const supportsClipboard = typeof navigator !== "undefined"
-    && "clipboard" in navigator
-    && "write" in navigator.clipboard
-    && !/iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  // Check if device supports clipboard write for images (client-side only)
+  useEffect(() => {
+    const supported = "clipboard" in navigator
+      && "write" in navigator.clipboard
+      && !/iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    queueMicrotask(() => setSupportsClipboard(supported));
+  }, []);
 
   useEffect(() => {
     if (cardRef.current) {
@@ -165,7 +168,7 @@ export function AvatarCard({ id, index, previewSrc, fullSrc }: AvatarCardProps) 
     >
       <div
         ref={circleRef}
-        className="relative size-[96px] rounded-full overflow-hidden"
+        className="relative size-[88px] md:size-[96px] rounded-full overflow-hidden"
       >
         <Image
           src={previewSrc}

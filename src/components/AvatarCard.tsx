@@ -82,6 +82,9 @@ export function AvatarCard({ id, index, previewSrc, fullSrc }: AvatarCardProps) 
   }, [index]);
 
   const handleCopyToClipboard = async () => {
+    // Show toast immediately for instant feedback
+    window.dispatchEvent(new CustomEvent("show-toast"));
+
     try {
       const response = await fetch(fullSrc);
       const blob = await response.blob();
@@ -106,9 +109,6 @@ export function AvatarCard({ id, index, previewSrc, fullSrc }: AvatarCardProps) 
       await navigator.clipboard.write([
         new ClipboardItem({ "image/png": pngBlob }),
       ]);
-
-      // Show toast
-      window.dispatchEvent(new CustomEvent("show-toast"));
     } catch (err) {
       console.error("Failed to copy image:", err);
     }

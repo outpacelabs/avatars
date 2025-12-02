@@ -87,29 +87,32 @@ export function AvatarCard({ id, index, previewSrc, fullSrc }: AvatarCardProps) 
     window.dispatchEvent(new CustomEvent("show-toast"));
 
     try {
-      const response = await fetch(fullSrc);
-      const blob = await response.blob();
+      // Use ClipboardItem with a Promise to maintain user gesture context
+      const clipboardItem = new ClipboardItem({
+        "image/png": (async () => {
+          const response = await fetch(fullSrc);
+          const blob = await response.blob();
 
-      // Convert to PNG as clipboard only supports PNG
-      const img = document.createElement("img");
-      img.src = URL.createObjectURL(blob);
-      await new Promise((resolve) => (img.onload = resolve));
+          // Convert to PNG as clipboard only supports PNG
+          const img = document.createElement("img");
+          img.src = URL.createObjectURL(blob);
+          await new Promise((resolve) => (img.onload = resolve));
 
-      const canvas = document.createElement("canvas");
-      canvas.width = img.width;
-      canvas.height = img.height;
-      const ctx = canvas.getContext("2d");
-      ctx?.drawImage(img, 0, 0);
+          const canvas = document.createElement("canvas");
+          canvas.width = img.width;
+          canvas.height = img.height;
+          const ctx = canvas.getContext("2d");
+          ctx?.drawImage(img, 0, 0);
 
-      URL.revokeObjectURL(img.src);
+          URL.revokeObjectURL(img.src);
 
-      const pngBlob = await new Promise<Blob>((resolve) =>
-        canvas.toBlob((b) => resolve(b!), "image/png")
-      );
+          return new Promise<Blob>((resolve) =>
+            canvas.toBlob((b) => resolve(b!), "image/png")
+          );
+        })(),
+      });
 
-      await navigator.clipboard.write([
-        new ClipboardItem({ "image/png": pngBlob }),
-      ]);
+      await navigator.clipboard.write([clipboardItem]);
 
       // Track successful clipboard copy
       posthog.capture("Avatar Copied to Clipboard", {

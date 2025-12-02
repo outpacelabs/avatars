@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useRef, useEffect, useState } from "react";
 import gsap from "gsap";
+import posthog from "posthog-js";
 import { IconButton } from "./IconButton";
 
 interface AvatarCardProps {
@@ -109,8 +110,22 @@ export function AvatarCard({ id, index, previewSrc, fullSrc }: AvatarCardProps) 
       await navigator.clipboard.write([
         new ClipboardItem({ "image/png": pngBlob }),
       ]);
+
+      // Track successful clipboard copy
+      posthog.capture("Avatar Copied to Clipboard", {
+        avatar_id: id,
+        avatar_src: fullSrc,
+      });
     } catch (err) {
       console.error("Failed to copy image:", err);
+
+      // Track clipboard copy failure with error tracking
+      posthog.capture("Avatar Copy Failed", {
+        avatar_id: id,
+        avatar_src: fullSrc,
+        error_message: err instanceof Error ? err.message : String(err),
+      });
+      posthog.captureException(err);
     }
   };
 
@@ -121,6 +136,13 @@ export function AvatarCard({ id, index, previewSrc, fullSrc }: AvatarCardProps) 
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+
+    // Track avatar download
+    posthog.capture("Avatar Downloaded", {
+      avatar_id: id,
+      avatar_src: fullSrc,
+      file_name: `avatar-${id.toString().padStart(3, "0")}.jpg`,
+    });
   };
 
   const handleMouseEnter = () => {
@@ -135,6 +157,11 @@ export function AvatarCard({ id, index, previewSrc, fullSrc }: AvatarCardProps) 
       filter: "blur(0px)",
       duration: 0.4,
       ease: "power2.out",
+    });
+
+    // Track avatar hover engagement
+    posthog.capture("Avatar Hovered", {
+      avatar_id: id,
     });
   };
 

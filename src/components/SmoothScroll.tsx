@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import Lenis from "lenis";
+import posthog from "posthog-js";
 
 export function SmoothScroll({ children }: { children: React.ReactNode }) {
   useEffect(() => {
@@ -18,6 +19,13 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
     }
 
     requestAnimationFrame(raf);
+
+    // Track smooth scroll initialization
+    posthog.capture("Smooth Scroll Initialized", {
+      scroll_library: "lenis",
+      scroll_duration: 1.2,
+      scroll_orientation: "vertical",
+    });
 
     return () => {
       lenis.destroy();

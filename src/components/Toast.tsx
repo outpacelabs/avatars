@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, useCallback } from "react";
 import gsap from "gsap";
+import posthog from "posthog-js";
 
 const MAX_TOASTS = 4;
 
@@ -128,6 +129,13 @@ export function Toast() {
       setToasts((prev) => {
         const updated = [...prev, { id }];
         return updated.slice(-MAX_TOASTS);
+      });
+
+      // Track toast display
+      posthog.capture("Toast Displayed", {
+        toast_id: id,
+        toast_message: "Copied to clipboard",
+        total_toasts_active: Math.min(idRef.current, MAX_TOASTS),
       });
     };
 

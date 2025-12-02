@@ -2,7 +2,8 @@
 
 import { AvatarCard } from "@/components/AvatarCard";
 import { Toast } from "@/components/Toast";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+import posthog from "posthog-js";
 
 const OutpaceLogo = () => (
   <svg
@@ -39,6 +40,7 @@ const avatars = Array.from({ length: 50 }, (_, i) => ({
 export default function Home() {
   const [showTopBlur, setShowTopBlur] = useState(false);
   const [showBottomBlur, setShowBottomBlur] = useState(true);
+  const hasTrackedScrollToBottom = useRef(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -49,6 +51,15 @@ export default function Home() {
 
       setShowTopBlur(scrollTop > 50);
       setShowBottomBlur(scrollBottom > 50);
+
+      // Track when user scrolls to bottom (within 50px threshold)
+      if (scrollBottom <= 50 && !hasTrackedScrollToBottom.current) {
+        hasTrackedScrollToBottom.current = true;
+        posthog.capture("Page Scrolled to Bottom", {
+          scroll_depth_percentage: 100,
+          total_avatars: 50,
+        });
+      }
     };
 
     handleScroll();
@@ -87,7 +98,15 @@ export default function Home() {
               Avatars
             </p>
             <p className="text-sm font-semibold text-white/[0.88] leading-5 tracking-[0.14px]">
-              by <a href="https://outpacestudios.com" target="_blank">Outpace Studios</a>
+              by <a
+                href="https://outpacestudios.com"
+                target="_blank"
+                onClick={() => posthog.capture("External Link Clicked", {
+                  link_url: "https://outpacestudios.com",
+                  link_location: "header",
+                  link_text: "Outpace Studios",
+                })}
+              >Outpace Studios</a>
             </p>
           </header>
 
@@ -112,12 +131,24 @@ export default function Home() {
             href="https://outpacestudios.com"
             target="_blank"
             className="font-semibold text-white/[0.88]"
+            onClick={() => posthog.capture("External Link Clicked", {
+              link_url: "https://outpacestudios.com",
+              link_location: "footer",
+              link_text: "Outpace Studios",
+            })}
           >
             Outpace Studios
           </a>
         </div>
         <p className="text-xs font-medium text-white/[0.48] leading-4 tracking-[0.12px]">
-          Free to use, licensed under <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank">CC BY 4.0</a>.
+          Free to use, licensed under <a
+            href="https://creativecommons.org/licenses/by/4.0/"
+            target="_blank"
+            onClick={() => posthog.capture("License Link Clicked", {
+              link_url: "https://creativecommons.org/licenses/by/4.0/",
+              license_type: "CC BY 4.0",
+            })}
+          >CC BY 4.0</a>.
         </p>
       </div>
 

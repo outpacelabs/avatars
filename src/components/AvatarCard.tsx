@@ -174,6 +174,8 @@ export function AvatarCard({ id, index, previewSrc, fullSrc }: AvatarCardProps) 
           src={previewSrc}
           alt={`Avatar ${id.toString().padStart(3, "0")}`}
           fill
+          sizes="96px"
+          loading={index < 10 ? "eager" : "lazy"}
           className="object-cover"
         />
       </div>

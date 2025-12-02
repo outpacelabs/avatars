@@ -4,20 +4,6 @@ import { AvatarCard } from "@/components/AvatarCard";
 import { Toast } from "@/components/Toast";
 import { useEffect, useState } from "react";
 
-const jsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'WebPage',
-  name: '50 beautifully handcrafted gradients',
-  description: '50 beautifully handcrafted gradient avatars, free to use under CC BY 4.0',
-  publisher: {
-    '@type': 'Organization',
-    name: 'Outpace Studios',
-    url: 'https://outpacestudios.com'
-  },
-  license: 'https://creativecommons.org/licenses/by/4.0/',
-  isAccessibleForFree: true
-};
-
 const OutpaceLogo = () => (
   <svg
     width="33"
@@ -71,12 +57,7 @@ export default function Home() {
   }, []);
 
   return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-      <div className="relative flex flex-col gap-12 items-center pb-10 min-h-screen">
+    <div className="relative flex flex-col gap-12 items-center pb-10 min-h-screen">
       {/* Top gradient */}
       <div
         className={`fixed top-0 left-0 right-0 h-[80px] z-[5] pointer-events-none transition-opacity duration-300 ${
@@ -141,7 +122,6 @@ export default function Home() {
       </div>
 
       <Toast />
-      </div>
-    </>
+    </div>
   );
 }

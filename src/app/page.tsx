@@ -33,8 +33,8 @@ const OutpaceLogo = () => (
 
 const avatars = Array.from({ length: 50 }, (_, i) => ({
   id: i + 1,
-  previewSrc: `/avatars/previews/gradient-${i}.webp`,
-  fullSrc: `/avatars/gradient-${i}.jpg`,
+  previewSrc: `/avatars/previews/avatar-${i + 1}.webp`,
+  fullSrc: `/avatars/avatar-${i + 1}.jpg`,
 }));
 
 export default function Home() {

@@ -7,64 +7,70 @@
  * Usage: npx tsx scripts/generate-gradients.ts
  */
 
-import puppeteer from 'puppeteer';
-import path from 'path';
-import fs from 'fs';
-import { GRADIENT_PALETTES } from './gradient-palettes';
+import fs from "node:fs";
+import path from "node:path";
+import puppeteer from "puppeteer";
+import { GRADIENT_PALETTES } from "./gradient-palettes";
 
-const OUTPUT_DIR = path.join(process.cwd(), 'public', 'avatars');
+const OUTPUT_DIR = path.join(process.cwd(), "public", "avatars");
 const SIZE = 2000;
 
 async function generateGradients() {
-  console.log('Starting gradient generation...');
-  console.log(`Output directory: ${OUTPUT_DIR}`);
-  console.log(`Generating ${GRADIENT_PALETTES.length} gradients at ${SIZE}x${SIZE}px`);
+	console.log("Starting gradient generation...");
+	console.log(`Output directory: ${OUTPUT_DIR}`);
+	console.log(
+		`Generating ${GRADIENT_PALETTES.length} gradients at ${SIZE}x${SIZE}px`,
+	);
 
-  // Ensure output directory exists
-  if (!fs.existsSync(OUTPUT_DIR)) {
-    fs.mkdirSync(OUTPUT_DIR, { recursive: true });
-  }
+	// Ensure output directory exists
+	if (!fs.existsSync(OUTPUT_DIR)) {
+		fs.mkdirSync(OUTPUT_DIR, { recursive: true });
+	}
 
-  const browser = await puppeteer.launch({
-    headless: true,
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
-  });
+	const browser = await puppeteer.launch({
+		headless: true,
+		args: ["--no-sandbox", "--disable-setuid-sandbox"],
+	});
 
-  for (const palette of GRADIENT_PALETTES) {
-    const { id, colors, harmony } = palette;
-    console.log(`Generating gradient ${id + 1}/${GRADIENT_PALETTES.length} (${harmony})...`);
+	for (const palette of GRADIENT_PALETTES) {
+		const { id, colors, harmony } = palette;
+		console.log(
+			`Generating gradient ${id + 1}/${GRADIENT_PALETTES.length} (${harmony})...`,
+		);
 
-    // Create fresh page for each gradient to ensure clean slate
-    const page = await browser.newPage();
-    await page.setViewport({ width: SIZE, height: SIZE, deviceScaleFactor: 1 });
+		// Create fresh page for each gradient to ensure clean slate
+		const page = await browser.newPage();
+		await page.setViewport({ width: SIZE, height: SIZE, deviceScaleFactor: 1 });
 
-    // Create HTML with the mesh gradient
-    const html = generateHTML(colors, id);
-    await page.setContent(html, { waitUntil: 'load' });
+		// Create HTML with the mesh gradient
+		const html = generateHTML(colors, id);
+		await page.setContent(html, { waitUntil: "load" });
 
-    // Wait for canvas to render
-    await new Promise((resolve) => setTimeout(resolve, 300));
+		// Wait for canvas to render
+		await new Promise((resolve) => setTimeout(resolve, 300));
 
-    // Screenshot
-    const outputPath = path.join(OUTPUT_DIR, `gradient-${id}.jpg`);
-    await page.screenshot({
-      path: outputPath,
-      type: 'jpeg',
-      quality: 90,
-    });
+		// Screenshot
+		const outputPath = path.join(OUTPUT_DIR, `gradient-${id}.jpg`);
+		await page.screenshot({
+			path: outputPath,
+			type: "jpeg",
+			quality: 90,
+		});
 
-    await page.close();
-    console.log(`  Saved: gradient-${id}.jpg (${colors.length} colors)`);
-  }
+		await page.close();
+		console.log(`  Saved: gradient-${id}.jpg (${colors.length} colors)`);
+	}
 
-  await browser.close();
-  console.log(`\nDone! Generated ${GRADIENT_PALETTES.length} gradients in ${OUTPUT_DIR}`);
+	await browser.close();
+	console.log(
+		`\nDone! Generated ${GRADIENT_PALETTES.length} gradients in ${OUTPUT_DIR}`,
+	);
 }
 
 function generateHTML(colors: string[], seed: number): string {
-  const colorArray = JSON.stringify(colors);
+	const colorArray = JSON.stringify(colors);
 
-  return `
+	return `
 <!DOCTYPE html>
 <html>
 <head>

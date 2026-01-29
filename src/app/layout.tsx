@@ -1,20 +1,43 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { SmoothScroll } from "@/components/SmoothScroll";
 import "./globals.css";
 
 const jsonLd = {
 	"@context": "https://schema.org",
-	"@type": "WebPage",
-	name: "Beautifully handcrafted gradients",
-	description:
-		"Beautifully handcrafted gradient avatars, free to use under CC BY 4.0",
-	publisher: {
-		"@type": "Organization",
-		name: "Outpace Studios",
-		url: "https://outpacestudios.com",
-	},
-	license: "https://creativecommons.org/licenses/by/4.0/",
-	isAccessibleForFree: true,
+	"@graph": [
+		{
+			"@type": "WebPage",
+			"@id": "https://avatars.outpace.systems/#webpage",
+			name: "Beautifully handcrafted gradients",
+			description:
+				"Beautifully handcrafted gradient avatars, free to use under CC BY 4.0",
+			url: "https://avatars.outpace.systems",
+			publisher: {
+				"@id": "https://avatars.outpace.systems/#organization",
+			},
+			license: "https://creativecommons.org/licenses/by/4.0/",
+			isAccessibleForFree: true,
+		},
+		{
+			"@type": "Organization",
+			"@id": "https://avatars.outpace.systems/#organization",
+			name: "Outpace Studios",
+			url: "https://outpacestudios.com",
+			logo: {
+				"@type": "ImageObject",
+				url: "https://outpacestudios.com/favicon.svg",
+			},
+			sameAs: [
+				"https://www.linkedin.com/company/outpacestudios/",
+				"https://twitter.com/outpacestudios",
+			],
+		},
+	],
+};
+
+export const viewport: Viewport = {
+	width: "device-width",
+	initialScale: 1,
 };
 
 export const metadata: Metadata = {
@@ -59,6 +82,8 @@ export const metadata: Metadata = {
 		title: "Beautifully handcrafted gradients - by Outpace Studios",
 		description: "Beautifully handcrafted gradient avatars, free to use.",
 		images: ["/meta.jpg"],
+		site: "@outpacestudios",
+		creator: "@outpacestudios",
 	},
 	robots: {
 		index: true,
@@ -74,6 +99,7 @@ export const metadata: Metadata = {
 	alternates: {
 		canonical: "https://avatars.outpace.systems",
 	},
+	category: "Design Resources",
 };
 
 export default function RootLayout({

@@ -12,11 +12,11 @@
 	"homepage": "https://avatars.outpace.systems",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/outpacestudios/avatars.git",
+		"url": "https://github.com/outpacelabs/avatars.git",
 		"directory": "packages/avatars"
 	},
 	"bugs": {
-		"url": "https://github.com/outpacestudios/avatars/issues"
+		"url": "https://github.com/outpacelabs/avatars/issues"
 	},
 	"author": "Outpace Studios (https://outpacestudios.com)",
 	"license": "CC-BY-4.0",

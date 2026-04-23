@@ -14,12 +14,13 @@
 	"homepage": "https://avatars.outpace.systems",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/outpacestudios/avatars.git",
+		"url": "https://github.com/outpacelabs/avatars.git",
 		"directory": "packages/avatars-wc"
 	},
 	"author": "Outpace Studios (https://outpacestudios.com)",
 	"license": "CC-BY-4.0",
 	"type": "module",
+	"sideEffects": true,
 	"main": "./dist/index.cjs",
 	"module": "./dist/index.js",
 	"types": "./dist/index.d.ts",
@@ -31,7 +32,11 @@
 		},
 		"./package.json": "./package.json"
 	},
-	"files": ["dist", "README.md", "LICENSE"],
+	"files": [
+		"dist",
+		"README.md",
+		"LICENSE"
+	],
 	"scripts": {
 		"build": "tsup",
 		"dev": "tsup --watch",

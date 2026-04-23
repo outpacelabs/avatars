@@ -2,11 +2,17 @@
 	"name": "@outpacelabs/avatars-svelte",
 	"version": "0.1.0",
 	"description": "Svelte component for @outpacelabs/avatars — 50 handcrafted gradient avatars.",
-	"keywords": ["avatars", "gradient", "svelte", "sveltekit", "profile-pictures"],
+	"keywords": [
+		"avatars",
+		"gradient",
+		"svelte",
+		"sveltekit",
+		"profile-pictures"
+	],
 	"homepage": "https://avatars.outpace.systems",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/outpacestudios/avatars.git",
+		"url": "https://github.com/outpacelabs/avatars.git",
 		"directory": "packages/avatars-svelte"
 	},
 	"author": "Outpace Studios (https://outpacestudios.com)",
@@ -23,7 +29,11 @@
 		},
 		"./package.json": "./package.json"
 	},
-	"files": ["dist", "README.md", "LICENSE"],
+	"files": [
+		"dist",
+		"README.md",
+		"LICENSE"
+	],
 	"scripts": {
 		"build": "svelte-package -i src -o dist",
 		"typecheck": "svelte-check --tsconfig ./tsconfig.json",

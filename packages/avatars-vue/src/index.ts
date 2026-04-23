@@ -1,5 +1,5 @@
 import { getAvatarUrl } from "@outpacelabs/avatars";
-import { type PropType, defineComponent, h } from "vue";
+import { defineComponent, h, type PropType } from "vue";
 
 export const GradientAvatar = defineComponent({
 	name: "GradientAvatar",
@@ -35,6 +35,7 @@ export const GradientAvatar = defineComponent({
 	},
 });
 
+export type { Avatar, AvatarUrlOptions } from "@outpacelabs/avatars";
 export {
 	AVATAR_COUNT,
 	AVATARS,
@@ -42,4 +43,3 @@ export {
 	getAvatarBySeed,
 	getAvatarUrl,
 } from "@outpacelabs/avatars";
-export type { Avatar, AvatarUrlOptions } from "@outpacelabs/avatars";

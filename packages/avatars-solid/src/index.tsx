@@ -16,7 +16,10 @@ export interface GradientAvatarProps
 }
 
 export function GradientAvatar(rawProps: GradientAvatarProps) {
-	const props = mergeProps({ size: 32, preview: false, alt: "Avatar" }, rawProps);
+	const props = mergeProps(
+		{ size: 32, preview: false, alt: "Avatar" },
+		rawProps,
+	);
 	const [local, others] = splitProps(props, [
 		"id",
 		"seed",
@@ -28,7 +31,9 @@ export function GradientAvatar(rawProps: GradientAvatarProps) {
 	]);
 	const src = () => {
 		if (local.id === undefined && local.seed === undefined) {
-			throw new Error("GradientAvatar: either `id` or `seed` must be provided.");
+			throw new Error(
+				"GradientAvatar: either `id` or `seed` must be provided.",
+			);
 		}
 		return getAvatarUrl(local.id ?? (local.seed as string), {
 			basePath: local.basePath,
@@ -48,6 +53,7 @@ export function GradientAvatar(rawProps: GradientAvatarProps) {
 	);
 }
 
+export type { Avatar, AvatarUrlOptions } from "@outpacelabs/avatars";
 export {
 	AVATAR_COUNT,
 	AVATARS,
@@ -55,4 +61,3 @@ export {
 	getAvatarBySeed,
 	getAvatarUrl,
 } from "@outpacelabs/avatars";
-export type { Avatar, AvatarUrlOptions } from "@outpacelabs/avatars";

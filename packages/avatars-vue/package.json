@@ -1,0 +1,49 @@
+{
+	"name": "@outpacelabs/avatars-vue",
+	"version": "0.1.0",
+	"description": "Vue 3 component for @outpacelabs/avatars — 50 handcrafted gradient avatars.",
+	"keywords": ["avatars", "gradient", "vue", "nuxt", "profile-pictures"],
+	"homepage": "https://avatars.outpace.systems",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/outpacestudios/avatars.git",
+		"directory": "packages/avatars-vue"
+	},
+	"author": "Outpace Studios (https://outpacestudios.com)",
+	"license": "CC-BY-4.0",
+	"type": "module",
+	"sideEffects": false,
+	"main": "./dist/index.cjs",
+	"module": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js",
+			"require": "./dist/index.cjs"
+		},
+		"./package.json": "./package.json"
+	},
+	"files": ["dist", "README.md", "LICENSE"],
+	"scripts": {
+		"build": "tsup",
+		"dev": "tsup --watch",
+		"typecheck": "tsc --noEmit",
+		"prepublishOnly": "pnpm build"
+	},
+	"dependencies": {
+		"@outpacelabs/avatars": "workspace:*"
+	},
+	"peerDependencies": {
+		"vue": "^3.3.0"
+	},
+	"devDependencies": {
+		"tsup": "^8.3.5",
+		"typescript": "^5.9.3",
+		"vue": "^3.5.0"
+	},
+	"publishConfig": {
+		"access": "public",
+		"registry": "https://registry.npmjs.org/"
+	}
+}

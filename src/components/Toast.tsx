@@ -3,6 +3,7 @@
 import gsap from "gsap";
 import posthog from "posthog-js";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { usePrefersReducedMotion } from "@/lib/utils/useReducedMotion";
 
 const MAX_TOASTS = 4;
 
@@ -24,6 +25,7 @@ function SingleToast({
 	const toastRef = useRef<HTMLDivElement>(null);
 	const checkRef = useRef<SVGPathElement>(null);
 	const hasAnimatedIn = useRef(false);
+	const reducedMotion = usePrefersReducedMotion();
 
 	const depth = total - 1 - index;
 	const scale = 1 - depth * 0.05;
@@ -38,16 +40,20 @@ function SingleToast({
 		const check = checkRef.current;
 
 		if (isNewest && !hasAnimatedIn.current) {
-			// Animate in the newest toast
 			hasAnimatedIn.current = true;
-			gsap.set(check, { strokeDashoffset: 18 });
 
+			if (reducedMotion) {
+				gsap.set(toast, { opacity, y: yOffset, scale });
+				gsap.set(check, { strokeDashoffset: 0 });
+				return;
+			}
+
+			gsap.set(check, { strokeDashoffset: 18 });
 			gsap.fromTo(
 				toast,
 				{ opacity: 0, y: 16, scale: scale * 0.95 },
 				{ opacity, y: yOffset, scale, duration: 0.25, ease: "back.out(2)" },
 			);
-
 			gsap.to(check, {
 				strokeDashoffset: 0,
 				duration: 0.2,
@@ -55,7 +61,10 @@ function SingleToast({
 				ease: "power2.out",
 			});
 		} else if (hasAnimatedIn.current) {
-			// Animate existing toasts to new position
+			if (reducedMotion) {
+				gsap.set(toast, { y: yOffset, scale, opacity });
+				return;
+			}
 			gsap.to(toast, {
 				y: yOffset,
 				scale,
@@ -64,26 +73,29 @@ function SingleToast({
 				ease: "power2.out",
 			});
 		}
-	}, [isNewest, scale, yOffset, opacity]);
+	}, [isNewest, scale, yOffset, opacity, reducedMotion]);
 
 	useEffect(() => {
 		if (!toastRef.current || index !== 0) return;
 
-		// Only the oldest toast (index 0) handles exit
 		const timer = setTimeout(() => {
-			if (toastRef.current) {
-				gsap.to(toastRef.current, {
-					opacity: 0,
-					y: yOffset + 8,
-					duration: 0.2,
-					ease: "power2.in",
-					onComplete: onAnimationComplete,
-				});
+			if (!toastRef.current) return;
+			if (reducedMotion) {
+				gsap.set(toastRef.current, { opacity: 0 });
+				onAnimationComplete?.();
+				return;
 			}
+			gsap.to(toastRef.current, {
+				opacity: 0,
+				y: yOffset + 8,
+				duration: 0.2,
+				ease: "power2.in",
+				onComplete: onAnimationComplete,
+			});
 		}, 1400);
 
 		return () => clearTimeout(timer);
-	}, [index, yOffset, onAnimationComplete]);
+	}, [index, yOffset, onAnimationComplete, reducedMotion]);
 
 	return (
 		<div

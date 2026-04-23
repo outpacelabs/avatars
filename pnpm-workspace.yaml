@@ -1,1 +1,8 @@
-onlyBuiltDependencies: puppeteer,sharp,esbuild
+packages:
+  - packages/*
+
+onlyBuiltDependencies:
+  - puppeteer
+  - sharp
+  - esbuild
+

@@ -1,0 +1,57 @@
+{
+	"name": "@outpacelabs/avatars",
+	"version": "0.1.0",
+	"description": "50 handcrafted gradient avatars by Outpace Studios. Framework-agnostic core with assets and URL helpers.",
+	"keywords": [
+		"avatars",
+		"gradient",
+		"profile-pictures",
+		"design-resources",
+		"free"
+	],
+	"homepage": "https://avatars.outpace.systems",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/outpacelabs/avatars.git",
+		"directory": "packages/avatars"
+	},
+	"bugs": {
+		"url": "https://github.com/outpacelabs/avatars/issues"
+	},
+	"author": "Outpace Studios (https://outpacestudios.com)",
+	"license": "CC-BY-4.0",
+	"type": "module",
+	"sideEffects": false,
+	"main": "./dist/index.cjs",
+	"module": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js",
+			"require": "./dist/index.cjs"
+		},
+		"./assets/*": "./assets/*",
+		"./package.json": "./package.json"
+	},
+	"files": [
+		"dist",
+		"assets",
+		"README.md",
+		"LICENSE"
+	],
+	"scripts": {
+		"build": "tsup",
+		"dev": "tsup --watch",
+		"typecheck": "tsc --noEmit",
+		"prepublishOnly": "pnpm build"
+	},
+	"devDependencies": {
+		"tsup": "^8.3.5",
+		"typescript": "^5.9.3"
+	},
+	"publishConfig": {
+		"access": "public",
+		"registry": "https://registry.npmjs.org/"
+	}
+}

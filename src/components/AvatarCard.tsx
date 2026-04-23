@@ -4,6 +4,7 @@ import gsap from "gsap";
 import Image from "next/image";
 import posthog from "posthog-js";
 import { useEffect, useRef, useState } from "react";
+import { usePrefersReducedMotion } from "@/lib/utils/useReducedMotion";
 import { IconButton } from "./IconButton";
 
 interface AvatarCardProps {
@@ -59,6 +60,7 @@ export function AvatarCard({
 	const circleRef = useRef<HTMLDivElement>(null);
 	const buttonsRef = useRef<HTMLDivElement>(null);
 	const [supportsClipboard, setSupportsClipboard] = useState(false);
+	const reducedMotion = usePrefersReducedMotion();
 
 	// Check if device supports clipboard write for images (client-side only)
 	useEffect(() => {
@@ -70,25 +72,28 @@ export function AvatarCard({
 	}, []);
 
 	useEffect(() => {
-		if (cardRef.current) {
-			gsap.fromTo(
-				cardRef.current,
-				{
-					opacity: 0,
-					y: 24,
-					scale: 0.95,
-				},
-				{
-					opacity: 1,
-					y: 0,
-					scale: 1,
-					duration: 0.5,
-					delay: index * 0.03,
-					ease: "power2.out",
-				},
-			);
+		if (!cardRef.current) return;
+		if (reducedMotion) {
+			gsap.set(cardRef.current, { opacity: 1, y: 0, scale: 1 });
+			return;
 		}
-	}, [index]);
+		gsap.fromTo(
+			cardRef.current,
+			{
+				opacity: 0,
+				y: 24,
+				scale: 0.95,
+			},
+			{
+				opacity: 1,
+				y: 0,
+				scale: 1,
+				duration: 0.3,
+				delay: index * 0.03,
+				ease: "power2.out",
+			},
+		);
+	}, [index, reducedMotion]);
 
 	const handleCopyToClipboard = async () => {
 		// Show toast immediately for instant feedback
@@ -161,36 +166,73 @@ export function AvatarCard({
 	};
 
 	const handleMouseEnter = () => {
-		gsap.to(circleRef.current, {
-			scale: 1.08,
-			duration: 0.4,
-			ease: "power2.out",
-		});
-		gsap.to(buttonsRef.current, {
-			opacity: 1,
-			y: 0,
-			filter: "blur(0px)",
-			duration: 0.4,
-			ease: "power2.out",
-		});
+		if (reducedMotion) {
+			gsap.set(circleRef.current, { scale: 1.05 });
+			gsap.set(buttonsRef.current, {
+				opacity: 1,
+				y: 0,
+				filter: "blur(0px)",
+			});
+		} else {
+			gsap.to(circleRef.current, {
+				scale: 1.05,
+				duration: 0.18,
+				ease: "power2.out",
+			});
+			gsap.to(buttonsRef.current, {
+				opacity: 1,
+				y: 0,
+				filter: "blur(0px)",
+				duration: 0.18,
+				ease: "power2.out",
+			});
+		}
 
-		// Track avatar hover engagement
 		posthog.capture("Avatar Hovered", {
 			avatar_id: id,
 		});
 	};
 
 	const handleMouseLeave = () => {
+		if (reducedMotion) {
+			gsap.set(cardRef.current, { scale: 1 });
+			gsap.set(circleRef.current, { scale: 1 });
+			gsap.set(buttonsRef.current, {
+				opacity: 0,
+				y: 8,
+				filter: "blur(4px)",
+			});
+			return;
+		}
+		gsap.to(cardRef.current, { scale: 1, duration: 0.18, ease: "power2.out" });
 		gsap.to(circleRef.current, {
 			scale: 1,
-			duration: 0.4,
+			duration: 0.18,
 			ease: "power2.out",
 		});
 		gsap.to(buttonsRef.current, {
 			opacity: 0,
 			y: 8,
 			filter: "blur(4px)",
-			duration: 0.4,
+			duration: 0.18,
+			ease: "power2.out",
+		});
+	};
+
+	const handlePointerDown = () => {
+		if (reducedMotion) return;
+		gsap.to(cardRef.current, {
+			scale: 0.98,
+			duration: 0.1,
+			ease: "power2.out",
+		});
+	};
+
+	const handlePointerUp = () => {
+		if (reducedMotion) return;
+		gsap.to(cardRef.current, {
+			scale: 1,
+			duration: 0.18,
 			ease: "power2.out",
 		});
 	};
@@ -209,6 +251,9 @@ export function AvatarCard({
 			className="relative flex aspect-square items-center justify-center rounded-[20px] bg-white/[0.04] cursor-pointer opacity-0"
 			onMouseEnter={handleMouseEnter}
 			onMouseLeave={handleMouseLeave}
+			onPointerDown={handlePointerDown}
+			onPointerUp={handlePointerUp}
+			onPointerCancel={handlePointerUp}
 			onClick={supportsClipboard ? handleCopyToClipboard : undefined}
 			onKeyDown={
 				supportsClipboard

@@ -1,0 +1,59 @@
+{
+	"name": "@outpacelabs/avatars-solid",
+	"version": "0.1.0",
+	"description": "SolidJS component for @outpacelabs/avatars — 50 handcrafted gradient avatars.",
+	"keywords": [
+		"avatars",
+		"gradient",
+		"solid",
+		"solidjs",
+		"profile-pictures"
+	],
+	"homepage": "https://avatars.outpace.systems",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/outpacelabs/avatars.git",
+		"directory": "packages/avatars-solid"
+	},
+	"author": "Outpace Studios (https://outpacestudios.com)",
+	"license": "CC-BY-4.0",
+	"type": "module",
+	"sideEffects": false,
+	"main": "./dist/index.js",
+	"module": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js"
+		},
+		"./package.json": "./package.json"
+	},
+	"files": [
+		"dist",
+		"README.md",
+		"LICENSE"
+	],
+	"scripts": {
+		"build": "tsup",
+		"dev": "tsup --watch",
+		"typecheck": "tsc --noEmit",
+		"prepublishOnly": "pnpm build"
+	},
+	"dependencies": {
+		"@outpacelabs/avatars": "workspace:*"
+	},
+	"peerDependencies": {
+		"solid-js": "^1.8.0"
+	},
+	"devDependencies": {
+		"esbuild-plugin-solid": "^0.6.0",
+		"solid-js": "^1.9.0",
+		"tsup": "^8.3.5",
+		"typescript": "^5.9.3"
+	},
+	"publishConfig": {
+		"access": "public",
+		"registry": "https://registry.npmjs.org/"
+	}
+}

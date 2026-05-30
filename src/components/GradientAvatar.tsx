@@ -1,40 +1,60 @@
 "use client";
 
-import { hashString } from "@/lib/utils/colors";
-
-export const TOTAL_GRADIENTS = 50;
+import { useEffect, useRef } from "react";
+import { drawMeshGradient } from "@/lib/avatars/mesh-gradient";
 
 interface GradientAvatarProps {
-	/** Session ID or user ID (used for hashing if gradientIndex not provided) */
-	sessionId: string;
-	/** Explicit gradient index (0-49). If provided, overrides sessionId hash. */
-	gradientIndex?: number;
-	/** Size in pixels (default: 32) */
+	/** Any string or number — each unique seed produces a unique gradient. */
+	seed: number | string;
+	/** Rendered size in pixels (default: 32). */
 	size?: number;
-	/** Additional CSS classes */
+	/** Additional CSS classes. */
 	className?: string;
 }
 
+/** Internal render resolution. Higher than display size so the CSS blur is smooth. */
+const RENDER_SIZE = 256;
+/** Blur radius as a fraction of display size — matches the baked-image look. */
+const BLUR_FRACTION = 0.06;
+
 /**
- * Displays a mesh gradient avatar.
- * Uses explicit gradientIndex if provided, otherwise hashes sessionId.
+ * Renders a deterministic mesh-gradient avatar on a `<canvas>`.
+ * The same seed always produces the same gradient.
  */
 export function GradientAvatar({
-	sessionId,
-	gradientIndex,
+	seed,
 	size = 32,
 	className = "",
 }: GradientAvatarProps) {
-	// Use explicit index if provided, otherwise hash the session ID
-	const index = gradientIndex ?? hashString(sessionId) % TOTAL_GRADIENTS;
+	const canvasRef = useRef<HTMLCanvasElement>(null);
+
+	useEffect(() => {
+		const canvas = canvasRef.current;
+		if (!canvas) return;
+		const ctx = canvas.getContext("2d");
+		if (!ctx) return;
+		ctx.clearRect(0, 0, RENDER_SIZE, RENDER_SIZE);
+		drawMeshGradient(ctx, seed, RENDER_SIZE);
+	}, [seed]);
+
+	const blurPx = Math.max(1, Math.round(size * BLUR_FRACTION));
 
 	return (
-		<img
-			src={`/avatars/gradient-${index}.jpg`}
-			alt="User avatar"
-			className={`rounded-full ${className}`}
+		<span
+			className={`inline-block overflow-hidden rounded-full ${className}`}
 			style={{ width: size, height: size }}
-			draggable={false}
-		/>
+		>
+			<canvas
+				ref={canvasRef}
+				width={RENDER_SIZE}
+				height={RENDER_SIZE}
+				style={{
+					width: "100%",
+					height: "100%",
+					display: "block",
+					filter: `blur(${blurPx}px)`,
+				}}
+			/>
+		</span>
 	);
 }

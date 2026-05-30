@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from "next";
-import { SmoothScroll } from "@/components/SmoothScroll";
 import "./globals.css";
 
 const jsonLd = {
@@ -115,9 +114,7 @@ export default function RootLayout({
 					dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
 				/>
 			</head>
-			<body>
-				<SmoothScroll>{children}</SmoothScroll>
-			</body>
+			<body>{children}</body>
 		</html>
 	);
 }

@@ -1,11 +1,12 @@
 "use client";
 
-import gsap from "gsap";
+import { AnimatePresence, motion } from "framer-motion";
 import posthog from "posthog-js";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { usePrefersReducedMotion } from "@/lib/utils/useReducedMotion";
 
 const MAX_TOASTS = 4;
+const TOAST_DURATION = 1400;
 
 interface ToastData {
 	id: number;
@@ -14,19 +15,15 @@ interface ToastData {
 function SingleToast({
 	index,
 	total,
-	isNewest,
-	onAnimationComplete,
+	onDismiss,
 }: {
 	index: number;
 	total: number;
-	isNewest: boolean;
-	onAnimationComplete?: () => void;
+	onDismiss: () => void;
 }) {
-	const toastRef = useRef<HTMLDivElement>(null);
-	const checkRef = useRef<SVGPathElement>(null);
-	const hasAnimatedIn = useRef(false);
 	const reducedMotion = usePrefersReducedMotion();
 
+	// Newest toast sits in front; older ones recede up and shrink.
 	const depth = total - 1 - index;
 	const scale = 1 - depth * 0.05;
 	const yOffset = depth * -6;
@@ -34,79 +31,26 @@ function SingleToast({
 	const zIndex = total - depth;
 
 	useEffect(() => {
-		if (!toastRef.current || !checkRef.current) return;
-
-		const toast = toastRef.current;
-		const check = checkRef.current;
-
-		if (isNewest && !hasAnimatedIn.current) {
-			hasAnimatedIn.current = true;
-
-			if (reducedMotion) {
-				gsap.set(toast, { opacity, y: yOffset, scale });
-				gsap.set(check, { strokeDashoffset: 0 });
-				return;
-			}
-
-			gsap.set(check, { strokeDashoffset: 18 });
-			gsap.fromTo(
-				toast,
-				{ opacity: 0, y: 16, scale: scale * 0.95 },
-				{ opacity, y: yOffset, scale, duration: 0.25, ease: "back.out(2)" },
-			);
-			gsap.to(check, {
-				strokeDashoffset: 0,
-				duration: 0.2,
-				delay: 0.1,
-				ease: "power2.out",
-			});
-		} else if (hasAnimatedIn.current) {
-			if (reducedMotion) {
-				gsap.set(toast, { y: yOffset, scale, opacity });
-				return;
-			}
-			gsap.to(toast, {
-				y: yOffset,
-				scale,
-				opacity,
-				duration: 0.2,
-				ease: "power2.out",
-			});
-		}
-	}, [isNewest, scale, yOffset, opacity, reducedMotion]);
-
-	useEffect(() => {
-		if (!toastRef.current || index !== 0) return;
-
-		const timer = setTimeout(() => {
-			if (!toastRef.current) return;
-			if (reducedMotion) {
-				gsap.set(toastRef.current, { opacity: 0 });
-				onAnimationComplete?.();
-				return;
-			}
-			gsap.to(toastRef.current, {
-				opacity: 0,
-				y: yOffset + 8,
-				duration: 0.2,
-				ease: "power2.in",
-				onComplete: onAnimationComplete,
-			});
-		}, 1400);
-
+		const timer = setTimeout(onDismiss, TOAST_DURATION);
 		return () => clearTimeout(timer);
-	}, [index, yOffset, onAnimationComplete, reducedMotion]);
+	}, [onDismiss]);
 
 	return (
-		<div
-			ref={toastRef}
+		<motion.div
+			style={{ zIndex }}
+			initial={
+				reducedMotion
+					? { opacity, y: yOffset, scale }
+					: { opacity: 0, y: 16, scale: scale * 0.95 }
+			}
+			animate={{ opacity, y: yOffset, scale }}
+			exit={{ opacity: 0, y: yOffset + 8 }}
+			transition={
+				reducedMotion
+					? { duration: 0 }
+					: { type: "spring", stiffness: 500, damping: 30 }
+			}
 			className="absolute left-1/2 -translate-x-1/2 flex items-center gap-2 px-[14px] py-2 rounded-full bg-white/[0.12] backdrop-blur-[12px] border border-white/[0.12] whitespace-nowrap"
-			style={{
-				zIndex,
-				opacity: 0,
-				boxShadow:
-					"0 3px 6px rgba(10, 10, 10, 0.06), 0 11px 11px rgba(10, 10, 10, 0.05), 0 25px 15px rgba(10, 10, 10, 0.03), 0 44px 18px rgba(10, 10, 10, 0.01)",
-			}}
 		>
 			<svg
 				aria-hidden="true"
@@ -117,20 +61,22 @@ function SingleToast({
 				xmlns="http://www.w3.org/2000/svg"
 				className="shrink-0"
 			>
-				<path
-					ref={checkRef}
+				<motion.path
 					d="M1.60416 8.80469L5.24999 11.8125L12.3958 2.1875"
 					stroke="white"
 					strokeWidth="1.25"
 					strokeLinecap="square"
-					strokeDasharray="18"
-					strokeDashoffset="18"
+					initial={reducedMotion ? { pathLength: 1 } : { pathLength: 0 }}
+					animate={{ pathLength: 1 }}
+					transition={
+						reducedMotion ? { duration: 0 } : { duration: 0.2, delay: 0.1 }
+					}
 				/>
 			</svg>
 			<span className="text-sm font-medium text-white/[0.88] leading-5 tracking-[0.14px]">
 				Copied to clipboard
 			</span>
-		</div>
+		</motion.div>
 	);
 }
 
@@ -141,12 +87,8 @@ export function Toast() {
 	useEffect(() => {
 		const handleShowToast = () => {
 			const id = idRef.current++;
-			setToasts((prev) => {
-				const updated = [...prev, { id }];
-				return updated.slice(-MAX_TOASTS);
-			});
+			setToasts((prev) => [...prev, { id }].slice(-MAX_TOASTS));
 
-			// Track toast display
 			posthog.capture("Toast Displayed", {
 				toast_id: id,
 				toast_message: "Copied to clipboard",
@@ -158,24 +100,23 @@ export function Toast() {
 		return () => window.removeEventListener("show-toast", handleShowToast);
 	}, []);
 
-	const handleRemoveOldest = useCallback(() => {
-		setToasts((prev) => prev.slice(1));
+	const dismiss = useCallback((id: number) => {
+		setToasts((prev) => prev.filter((t) => t.id !== id));
 	}, []);
-
-	if (toasts.length === 0) return null;
 
 	return (
 		<div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50">
 			<div className="relative h-9">
-				{toasts.map((toast, index) => (
-					<SingleToast
-						key={toast.id}
-						index={index}
-						total={toasts.length}
-						isNewest={index === toasts.length - 1}
-						onAnimationComplete={index === 0 ? handleRemoveOldest : undefined}
-					/>
-				))}
+				<AnimatePresence>
+					{toasts.map((toast, index) => (
+						<SingleToast
+							key={toast.id}
+							index={index}
+							total={toasts.length}
+							onDismiss={() => dismiss(toast.id)}
+						/>
+					))}
+				</AnimatePresence>
 			</div>
 		</div>
 	);

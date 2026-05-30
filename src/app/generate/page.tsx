@@ -1,6 +1,6 @@
 "use client";
 
-import gsap from "gsap";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { GradientAvatar } from "@/components/GradientAvatar";
 import { IconButton } from "@/components/IconButton";
@@ -56,6 +56,20 @@ function randomSeed(): string {
 
 function randomPool(): string[] {
 	return Array.from({ length: POOL_SIZE }, randomSeed);
+}
+
+/**
+ * Deterministic first batch so the grid renders server-side at full height —
+ * no post-hydration layout shift or flash. Subsequent batches are random.
+ * An LCG keeps the seeds varied-looking while staying identical on server
+ * and client (avoids hydration mismatch that Math.random() would cause).
+ */
+function initialPool(): string[] {
+	let s = 0x9e3779b9;
+	return Array.from({ length: POOL_SIZE }, () => {
+		s = (Math.imul(s ^ (s >>> 15), s | 1) >>> 0) >>> 0;
+		return (s >>> 0).toString(36).padStart(7, "0").slice(0, 7);
+	});
 }
 
 function sanitizeFilename(seed: string): string {
@@ -152,7 +166,6 @@ function GradientCard({
 	index: number;
 	canCopy: boolean;
 }) {
-	const cardRef = useRef<HTMLDivElement>(null);
 	const reducedMotion = usePrefersReducedMotion();
 
 	const copy = () => {
@@ -161,30 +174,16 @@ function GradientCard({
 		});
 	};
 
-	useEffect(() => {
-		if (!cardRef.current) return;
-		if (reducedMotion) {
-			gsap.set(cardRef.current, { opacity: 1, y: 0, scale: 1 });
-			return;
-		}
-		gsap.fromTo(
-			cardRef.current,
-			{ opacity: 0, y: 16, scale: 0.96 },
-			{
-				opacity: 1,
-				y: 0,
-				scale: 1,
-				duration: 0.4,
-				delay: (index % POOL_SIZE) * 0.02,
-				ease: "power2.out",
-			},
-		);
-	}, [index, reducedMotion]);
-
 	return (
-		<div
-			ref={cardRef}
-			className="group relative aspect-square rounded-[20px] bg-white/[0.04] hover:bg-white/[0.06] transition-colors opacity-0"
+		<motion.div
+			initial={reducedMotion ? false : { opacity: 0, y: 12, scale: 0.97 }}
+			animate={{ opacity: 1, y: 0, scale: 1 }}
+			transition={{
+				duration: 0.45,
+				delay: (index % POOL_SIZE) * 0.025,
+				ease: [0.22, 1, 0.36, 1],
+			}}
+			className="group relative aspect-square rounded-[20px] bg-white/[0.04] hover:bg-white/[0.06] transition-colors"
 		>
 			{/* Click target: copy this gradient to the clipboard */}
 			<button
@@ -215,24 +214,32 @@ function GradientCard({
 					<DownloadIcon />
 				</IconButton>
 			</div>
-		</div>
+		</motion.div>
 	);
 }
 
 export default function TestGradientsPage() {
 	const [heroSeed, setHeroSeed] = useState(DEFAULT_HERO_SEED);
-	const [pool, setPool] = useState<string[]>([]);
+	const [pool, setPool] = useState<string[]>(initialPool);
 	const [showTopBlur, setShowTopBlur] = useState(false);
 	const [canCopy, setCanCopy] = useState(false);
-	const heroRef = useRef<HTMLDivElement>(null);
-	const heroWrapperRef = useRef<HTMLDivElement>(null);
-	const inputRef = useRef<HTMLInputElement>(null);
 	const sentinelRef = useRef<HTMLDivElement>(null);
 	const reducedMotion = usePrefersReducedMotion();
 
+	// Cursor parallax for the hero gradient (spring-smoothed tilt).
+	const tiltX = useMotionValue(0);
+	const tiltY = useMotionValue(0);
+	const rotateY = useSpring(useTransform(tiltX, [-0.5, 0.5], [-12, 12]), {
+		stiffness: 150,
+		damping: 18,
+	});
+	const rotateX = useSpring(useTransform(tiltY, [-0.5, 0.5], [12, -12]), {
+		stiffness: 150,
+		damping: 18,
+	});
+
 	useEffect(() => {
 		// eslint-disable-next-line react-hooks/set-state-in-effect
-		setPool(randomPool());
 		setCanCopy(clipboardSupported());
 	}, []);
 
@@ -260,46 +267,16 @@ export default function TestGradientsPage() {
 		return () => window.removeEventListener("scroll", handleScroll);
 	}, []);
 
-	useEffect(() => {
-		if (!heroRef.current || reducedMotion) return;
-		const tween = gsap.to(heroRef.current, {
-			scale: 1.04,
-			duration: 4,
-			yoyo: true,
-			repeat: -1,
-			ease: "sine.inOut",
-		});
-		return () => {
-			tween.kill();
-		};
-	}, [reducedMotion]);
-
-	// Subtle parallax: tilt the hero toward the cursor.
+	// Cursor parallax: feed normalized pointer position into the tilt springs.
 	useEffect(() => {
 		if (reducedMotion) return;
-		const wrapper = heroWrapperRef.current;
-		if (!wrapper) return;
 		const onMove = (e: MouseEvent) => {
-			const rect = wrapper.getBoundingClientRect();
-			const cx = rect.left + rect.width / 2;
-			const cy = rect.top + rect.height / 2;
-			const dx = (e.clientX - cx) / window.innerWidth;
-			const dy = (e.clientY - cy) / window.innerHeight;
-			gsap.to(wrapper, {
-				rotationY: dx * 14,
-				rotationX: -dy * 14,
-				duration: 0.8,
-				ease: "power2.out",
-				transformPerspective: 800,
-			});
+			tiltX.set(e.clientX / window.innerWidth - 0.5);
+			tiltY.set(e.clientY / window.innerHeight - 0.5);
 		};
 		const onLeave = () => {
-			gsap.to(wrapper, {
-				rotationY: 0,
-				rotationX: 0,
-				duration: 0.8,
-				ease: "power2.out",
-			});
+			tiltX.set(0);
+			tiltY.set(0);
 		};
 		window.addEventListener("mousemove", onMove);
 		window.addEventListener("mouseleave", onLeave);
@@ -307,20 +284,7 @@ export default function TestGradientsPage() {
 			window.removeEventListener("mousemove", onMove);
 			window.removeEventListener("mouseleave", onLeave);
 		};
-	}, [reducedMotion]);
-
-	// Animate hero on seed change (subtle flash + scale punch).
-	const heroSeedAnimRef = useRef(heroSeed);
-	useEffect(() => {
-		if (heroSeed === heroSeedAnimRef.current) return;
-		heroSeedAnimRef.current = heroSeed;
-		if (reducedMotion || !heroRef.current) return;
-		gsap.fromTo(
-			heroRef.current,
-			{ scale: 0.94 },
-			{ scale: 1, duration: 0.5, ease: "elastic.out(1, 0.6)" },
-		);
-	}, [heroSeed, reducedMotion]);
+	}, [reducedMotion, tiltX, tiltY]);
 
 	const copyHero = useCallback(() => {
 		void copyGradient(heroSeed).then((ok) => {
@@ -334,16 +298,6 @@ export default function TestGradientsPage() {
 
 	return (
 		<div className="relative flex flex-col items-center min-h-screen pb-24 overflow-x-clip">
-			{/* Ambient backdrop glow that subtly tracks the hero seed */}
-			<div
-				aria-hidden="true"
-				className="pointer-events-none fixed inset-0 -z-10 opacity-60"
-				style={{
-					background:
-						"radial-gradient(ellipse 80% 50% at 50% 0%, rgba(120, 80, 200, 0.18), transparent 60%)",
-				}}
-			/>
-
 			{/* Top scroll fade */}
 			<div
 				className={`fixed top-0 left-0 right-0 h-[80px] z-[5] pointer-events-none transition-opacity duration-300 ${
@@ -365,22 +319,29 @@ export default function TestGradientsPage() {
 					<div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 w-full">
 						{/* HERO (2 cols × 2 rows) — the whole card focuses the seed input */}
 						<label className="col-span-2 row-span-2 relative flex flex-col items-center justify-center gap-4 rounded-[20px] bg-white/[0.04] p-4 sm:p-6 cursor-text">
-							<div ref={heroWrapperRef} className="will-change-transform">
-								<div
-									ref={heroRef}
+							<motion.div
+								className="will-change-transform"
+								style={{ rotateX, rotateY, transformPerspective: 800 }}
+							>
+								<motion.div
 									className="will-change-transform"
 									style={{
 										filter:
-											"drop-shadow(0 24px 48px rgba(120, 80, 200, 0.25)) drop-shadow(0 10px 20px rgba(0,0,0,0.4))",
+											"drop-shadow(0 16px 32px rgba(0,0,0,0.45)) drop-shadow(0 6px 12px rgba(0,0,0,0.35))",
 									}}
+									animate={reducedMotion ? undefined : { scale: [1, 1.04, 1] }}
+									transition={
+										reducedMotion
+											? undefined
+											: { duration: 8, repeat: Infinity, ease: "easeInOut" }
+									}
 								>
 									<GradientAvatar seed={heroSeed} size={160} />
-								</div>
-							</div>
+								</motion.div>
+							</motion.div>
 
 							<div className="flex flex-col items-center gap-4 w-full max-w-[260px]">
 								<input
-									ref={inputRef}
 									type="text"
 									value={heroSeed}
 									onChange={(e) => setHeroSeed(e.target.value)}

@@ -1,9 +1,9 @@
 "use client";
 
-import gsap from "gsap";
+import { motion } from "framer-motion";
 import Image from "next/image";
 import posthog from "posthog-js";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { usePrefersReducedMotion } from "@/lib/utils/useReducedMotion";
 import { IconButton } from "./IconButton";
 
@@ -56,10 +56,8 @@ export function AvatarCard({
 	previewSrc,
 	fullSrc,
 }: AvatarCardProps) {
-	const cardRef = useRef<HTMLDivElement>(null);
-	const circleRef = useRef<HTMLDivElement>(null);
-	const buttonsRef = useRef<HTMLDivElement>(null);
 	const [supportsClipboard, setSupportsClipboard] = useState(false);
+	const [hovered, setHovered] = useState(false);
 	const reducedMotion = usePrefersReducedMotion();
 
 	// Check if device supports clipboard write for images (client-side only)
@@ -70,30 +68,6 @@ export function AvatarCard({
 			!/iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 		queueMicrotask(() => setSupportsClipboard(supported));
 	}, []);
-
-	useEffect(() => {
-		if (!cardRef.current) return;
-		if (reducedMotion) {
-			gsap.set(cardRef.current, { opacity: 1, y: 0, scale: 1 });
-			return;
-		}
-		gsap.fromTo(
-			cardRef.current,
-			{
-				opacity: 0,
-				y: 24,
-				scale: 0.95,
-			},
-			{
-				opacity: 1,
-				y: 0,
-				scale: 1,
-				duration: 0.3,
-				delay: index * 0.03,
-				ease: "power2.out",
-			},
-		);
-	}, [index, reducedMotion]);
 
 	const handleCopyToClipboard = async () => {
 		// Show toast immediately for instant feedback
@@ -165,76 +139,9 @@ export function AvatarCard({
 		});
 	};
 
-	const handleMouseEnter = () => {
-		if (reducedMotion) {
-			gsap.set(circleRef.current, { scale: 1.05 });
-			gsap.set(buttonsRef.current, {
-				opacity: 1,
-				y: 0,
-				filter: "blur(0px)",
-			});
-		} else {
-			gsap.to(circleRef.current, {
-				scale: 1.05,
-				duration: 0.18,
-				ease: "power2.out",
-			});
-			gsap.to(buttonsRef.current, {
-				opacity: 1,
-				y: 0,
-				filter: "blur(0px)",
-				duration: 0.18,
-				ease: "power2.out",
-			});
-		}
-
-		posthog.capture("Avatar Hovered", {
-			avatar_id: id,
-		});
-	};
-
-	const handleMouseLeave = () => {
-		if (reducedMotion) {
-			gsap.set(cardRef.current, { scale: 1 });
-			gsap.set(circleRef.current, { scale: 1 });
-			gsap.set(buttonsRef.current, {
-				opacity: 0,
-				y: 8,
-				filter: "blur(4px)",
-			});
-			return;
-		}
-		gsap.to(cardRef.current, { scale: 1, duration: 0.18, ease: "power2.out" });
-		gsap.to(circleRef.current, {
-			scale: 1,
-			duration: 0.18,
-			ease: "power2.out",
-		});
-		gsap.to(buttonsRef.current, {
-			opacity: 0,
-			y: 8,
-			filter: "blur(4px)",
-			duration: 0.18,
-			ease: "power2.out",
-		});
-	};
-
-	const handlePointerDown = () => {
-		if (reducedMotion) return;
-		gsap.to(cardRef.current, {
-			scale: 0.98,
-			duration: 0.1,
-			ease: "power2.out",
-		});
-	};
-
-	const handlePointerUp = () => {
-		if (reducedMotion) return;
-		gsap.to(cardRef.current, {
-			scale: 1,
-			duration: 0.18,
-			ease: "power2.out",
-		});
+	const handleEnter = () => {
+		setHovered(true);
+		posthog.capture("Avatar Hovered", { avatar_id: id });
 	};
 
 	const handleDownloadClick = (e: React.MouseEvent) => {
@@ -243,17 +150,22 @@ export function AvatarCard({
 	};
 
 	return (
-		// biome-ignore lint/a11y/noStaticElementInteractions: role is conditionally set based on clipboard support
-		<div
-			ref={cardRef}
+		<motion.div
 			role={supportsClipboard ? "button" : undefined}
 			tabIndex={supportsClipboard ? 0 : undefined}
-			className="relative flex aspect-square items-center justify-center rounded-[20px] bg-white/[0.04] cursor-pointer opacity-0"
-			onMouseEnter={handleMouseEnter}
-			onMouseLeave={handleMouseLeave}
-			onPointerDown={handlePointerDown}
-			onPointerUp={handlePointerUp}
-			onPointerCancel={handlePointerUp}
+			className="relative flex aspect-square items-center justify-center rounded-[20px] bg-white/[0.04] cursor-pointer"
+			initial={reducedMotion ? false : { opacity: 0, y: 24, scale: 0.95 }}
+			animate={{ opacity: 1, y: 0, scale: 1 }}
+			transition={{
+				duration: 0.3,
+				delay: index * 0.03,
+				ease: [0.22, 1, 0.36, 1],
+			}}
+			whileTap={reducedMotion ? undefined : { scale: 0.98 }}
+			onMouseEnter={handleEnter}
+			onMouseLeave={() => setHovered(false)}
+			onFocus={handleEnter}
+			onBlur={() => setHovered(false)}
 			onClick={supportsClipboard ? handleCopyToClipboard : undefined}
 			onKeyDown={
 				supportsClipboard
@@ -266,9 +178,10 @@ export function AvatarCard({
 					: undefined
 			}
 		>
-			<div
-				ref={circleRef}
+			<motion.div
 				className="relative size-[88px] md:size-[96px] rounded-full overflow-hidden"
+				animate={{ scale: hovered && !reducedMotion ? 1.05 : 1 }}
+				transition={{ duration: 0.18, ease: "easeOut" }}
 			>
 				<Image
 					src={previewSrc}
@@ -278,15 +191,21 @@ export function AvatarCard({
 					loading={index < 10 ? "eager" : "lazy"}
 					className="object-cover"
 				/>
-			</div>
+			</motion.div>
 
 			<span className="absolute top-4 left-4 md:top-5 md:left-5 text-xs font-medium text-white/[0.48] leading-4 tracking-[0.12px]">
 				{id.toString().padStart(3, "0")}
 			</span>
 
-			<div
-				ref={buttonsRef}
-				className="absolute bottom-3 right-3 md:bottom-4 md:right-4 flex gap-1 items-center opacity-0 translate-y-2 blur-[4px]"
+			<motion.div
+				className="absolute bottom-3 right-3 md:bottom-4 md:right-4 flex gap-1 items-center"
+				initial={false}
+				animate={
+					hovered
+						? { opacity: 1, y: 0, filter: "blur(0px)" }
+						: { opacity: 0, y: 8, filter: "blur(4px)" }
+				}
+				transition={{ duration: 0.18, ease: "easeOut" }}
 			>
 				{supportsClipboard && (
 					<IconButton
@@ -302,7 +221,7 @@ export function AvatarCard({
 				<IconButton onClick={handleDownloadClick} title="Download">
 					<DownloadIcon />
 				</IconButton>
-			</div>
-		</div>
+			</motion.div>
+		</motion.div>
 	);
 }

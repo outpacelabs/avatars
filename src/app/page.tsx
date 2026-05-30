@@ -336,10 +336,6 @@ export default function Home() {
 							>
 								<motion.div
 									className="will-change-transform"
-									style={{
-										filter:
-											"drop-shadow(0 16px 32px rgba(0,0,0,0.45)) drop-shadow(0 6px 12px rgba(0,0,0,0.35))",
-									}}
 									animate={reducedMotion ? undefined : { scale: [1, 1.04, 1] }}
 									transition={
 										reducedMotion

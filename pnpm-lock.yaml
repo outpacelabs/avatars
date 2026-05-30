@@ -159,6 +159,34 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
+  packages/gradient-avatars:
+    devDependencies:
+      tsup:
+        specifier: ^8.3.5
+        version: 8.5.1(jiti@2.6.1)(postcss@8.5.10)(tsx@4.21.0)(typescript@5.9.3)
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+  packages/gradient-avatars-react:
+    dependencies:
+      '@outpacelabs/gradient-avatars':
+        specifier: workspace:*
+        version: link:../gradient-avatars
+    devDependencies:
+      '@types/react':
+        specifier: ^19.2.10
+        version: 19.2.10
+      react:
+        specifier: ^19.2.4
+        version: 19.2.4
+      tsup:
+        specifier: ^8.3.5
+        version: 8.5.1(jiti@2.6.1)(postcss@8.5.10)(tsx@4.21.0)(typescript@5.9.3)
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
 packages:
 
   '@alloc/quick-lru@5.2.0':

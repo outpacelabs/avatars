@@ -15,6 +15,7 @@ import { GradientAvatar } from "@outpacelabs/gradient-avatars-react";
 
 <GradientAvatar seed={user.id} size={40} />
 <GradientAvatar seed="jane@example.com" size={96} className="ring-2 ring-white/10" />
+<GradientAvatar seed="square" size={64} radius={12} />
 ```
 
 ### Props
@@ -22,8 +23,10 @@ import { GradientAvatar } from "@outpacelabs/gradient-avatars-react";
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `seed` | `string \| number` | — | Any value; each unique seed is a unique gradient. |
-| `size` | `number` | `32` | Rendered size in pixels (square, circular crop). |
-| `className` | `string` | `""` | Extra classes on the wrapper `<span>`. |
+| `size` | `number` | `32` | Rendered size in pixels. |
+| `radius` | `number \| string` | `"9999px"` | Corner radius. Number = pixels, string = any CSS length. Defaults to a full circle; pass `0` for a square. |
+| `className` | `string` | — | Extra classes on the wrapper `<span>`. |
+| `style` | `CSSProperties` | — | Extra inline styles merged onto the wrapper. |
 
 The engine helpers (`renderGradient`, `gradientToDataURL`, `gradientToBlob`,
 `generatePalette`, …) are re-exported for convenience — e.g. to offer a

@@ -1,4 +1,5 @@
 import { drawMeshGradient } from "@outpacelabs/gradient-avatars";
+import type { CSSProperties } from "react";
 import { useEffect, useRef } from "react";
 
 export interface GradientAvatarProps {
@@ -6,8 +7,16 @@ export interface GradientAvatarProps {
 	seed: number | string;
 	/** Rendered size in pixels. Default: 32. */
 	size?: number;
+	/**
+	 * Corner radius. Number = pixels, string = any CSS length.
+	 * Defaults to a full circle; pass `0` for a square or e.g. `12` for a
+	 * rounded square. Default: "9999px".
+	 */
+	radius?: number | string;
 	/** Additional CSS classes on the wrapper. */
 	className?: string;
+	/** Extra inline styles merged onto the wrapper. */
+	style?: CSSProperties;
 }
 
 /** Internal render resolution. Higher than display size so the CSS blur is smooth. */
@@ -22,7 +31,9 @@ const BLUR_FRACTION = 0.06;
 export function GradientAvatar({
 	seed,
 	size = 32,
-	className = "",
+	radius = "9999px",
+	className,
+	style,
 }: GradientAvatarProps) {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -39,8 +50,15 @@ export function GradientAvatar({
 
 	return (
 		<span
-			className={`inline-block overflow-hidden rounded-full ${className}`.trim()}
-			style={{ width: size, height: size }}
+			className={className}
+			style={{
+				display: "inline-block",
+				overflow: "hidden",
+				borderRadius: radius,
+				width: size,
+				height: size,
+				...style,
+			}}
 		>
 			<canvas
 				ref={canvasRef}

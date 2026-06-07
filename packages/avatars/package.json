@@ -1,15 +1,16 @@
 {
 	"name": "@outpacelabs/avatars",
-	"version": "0.1.0",
-	"description": "50 handcrafted gradient avatars by Outpace Studios. Framework-agnostic core with assets and URL helpers.",
+	"version": "0.2.0",
+	"description": "React component for deterministic mesh-gradient avatars — a unique gradient for every seed, no stored images.",
 	"keywords": [
 		"avatars",
 		"gradient",
-		"profile-pictures",
-		"design-resources",
-		"free"
+		"mesh-gradient",
+		"generative",
+		"react",
+		"profile-pictures"
 	],
-	"homepage": "https://avatars.outpace.systems",
+	"homepage": "https://avatars.outpacestudios.com",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/outpacelabs/avatars.git",
@@ -31,12 +32,10 @@
 			"import": "./dist/index.js",
 			"require": "./dist/index.cjs"
 		},
-		"./assets/*": "./assets/*",
 		"./package.json": "./package.json"
 	},
 	"files": [
 		"dist",
-		"assets",
 		"README.md",
 		"LICENSE"
 	],
@@ -46,7 +45,12 @@
 		"typecheck": "tsc --noEmit",
 		"prepublishOnly": "pnpm build"
 	},
+	"peerDependencies": {
+		"react": ">=18"
+	},
 	"devDependencies": {
+		"@types/react": "^19.2.10",
+		"react": "^19.2.4",
 		"tsup": "^8.3.5",
 		"typescript": "^5.9.3"
 	},

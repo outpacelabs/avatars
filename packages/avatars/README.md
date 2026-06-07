@@ -1,65 +1,37 @@
 # @outpacelabs/avatars
 
-50 beautifully handcrafted gradient avatars by [Outpace Studios](https://outpacestudios.com). Free to use under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+React component that renders a deterministic mesh-gradient avatar for any seed
+on a `<canvas>` — the same seed always yields the same gradient, with no stored
+images and no network. Self-contained: the gradient engine is bundled in.
 
-Browse them at [avatars.outpace.systems](https://avatars.outpace.systems).
-
-This is the **framework-agnostic core** — it ships the image assets and URL helpers. If you want a ready-made component, install one of the framework wrappers:
-
-- React: [`@outpacelabs/avatars-react`](https://www.npmjs.com/package/@outpacelabs/avatars-react)
-- Vue: [`@outpacelabs/avatars-vue`](https://www.npmjs.com/package/@outpacelabs/avatars-vue)
-- Svelte: [`@outpacelabs/avatars-svelte`](https://www.npmjs.com/package/@outpacelabs/avatars-svelte)
-- Solid: [`@outpacelabs/avatars-solid`](https://www.npmjs.com/package/@outpacelabs/avatars-solid)
-- Web Component (any framework / vanilla): [`@outpacelabs/avatars-wc`](https://www.npmjs.com/package/@outpacelabs/avatars-wc)
-
-## Install
-
-```sh
-pnpm add @outpacelabs/avatars
+```bash
+npm i @outpacelabs/avatars
 ```
 
-## Serve the assets
+## Usage
 
-The package ships the avatar files inside `assets/`. You need to serve them from somewhere your app can reach. Pick one:
+```tsx
+import { GradientAvatar } from "@outpacelabs/avatars";
 
-**Copy to your public folder:**
-
-```sh
-cp -R node_modules/@outpacelabs/avatars/assets public/avatars
+<GradientAvatar seed={user.id} size={40} />
+<GradientAvatar seed="jane@example.com" size={96} className="ring-2 ring-white/10" />
+<GradientAvatar seed="square" size={64} radius={12} />
 ```
 
-Assets are then available at `/avatars/avatar-1.jpg`, `/avatars/previews/avatar-1.webp`, etc.
+### Props
 
-**Or upload to a CDN** and pass the CDN URL as `basePath`.
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `seed` | `string \| number` | — | Any value; each unique seed is a unique gradient. |
+| `size` | `number` | `32` | Rendered size in pixels. |
+| `radius` | `number \| string` | `"9999px"` | Corner radius. Number = pixels, string = any CSS length. Defaults to a full circle; pass `0` for a square. |
+| `className` | `string` | — | Extra classes on the wrapper `<span>`. |
+| `style` | `CSSProperties` | — | Extra inline styles merged onto the wrapper. |
 
-## API
-
-```ts
-import {
-  AVATARS,
-  AVATAR_COUNT,
-  getAvatarById,
-  getAvatarBySeed,
-  getAvatarUrl,
-} from "@outpacelabs/avatars";
-
-AVATAR_COUNT;
-// 50
-
-getAvatarUrl(7, { basePath: "/avatars" });
-// "/avatars/avatar-7.jpg"
-
-getAvatarUrl("jesse@outpace.com", { preview: true });
-// "/avatars/previews/avatar-42.webp"
-```
-
-| Function | Returns |
-| --- | --- |
-| `getAvatarById(id)` | `Avatar \| undefined` — lookup by 1–50 id |
-| `getAvatarBySeed(seed)` | `Avatar` — deterministic hash of any string |
-| `getAvatarUrl(idOrSeed, { basePath?, preview? })` | `string` — URL to render |
-| `hashSeed(seed)` | `number` — internal hash helper |
+The engine helpers (`renderGradient`, `gradientToDataURL`, `gradientToBlob`,
+`generatePalette`, …) are re-exported for convenience — e.g. to offer a
+download/copy of the full-resolution image.
 
 ## License
 
-[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Please credit Outpace Studios with a link to [avatars.outpace.systems](https://avatars.outpace.systems).
+[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) — free to use with attribution. By [Outpace Studios](https://outpacestudios.com).

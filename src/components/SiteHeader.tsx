@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import posthog from "posthog-js";
 
 export const OutpaceLogo = () => (
@@ -30,16 +32,41 @@ export const OutpaceLogo = () => (
 );
 
 /**
- * Sticky page header shared by the index and generate pages.
+ * Sticky page header shared by the index and docs pages.
  * `position: sticky` only works when no ancestor establishes a scroll
  * container — keep page roots free of `overflow-x: hidden` (use `clip`).
  */
 export function SiteHeader() {
+	const pathname = usePathname();
+	const onDocs = pathname?.startsWith("/docs");
+	const onHome = !onDocs;
+
 	return (
 		<header className="sticky top-4 z-10 flex items-center justify-between w-full rounded-[10px] px-4 md:px-5 py-3">
-			<p className="text-sm font-semibold text-white/[0.88] leading-5 tracking-[0.14px]">
-				Avatars
-			</p>
+			<nav className="flex items-center gap-4 md:gap-5">
+				<Link
+					href="/"
+					aria-current={onHome ? "page" : undefined}
+					className={`text-sm font-semibold leading-5 tracking-[0.14px] transition-colors ${
+						onHome
+							? "text-white/[0.88]"
+							: "text-white/[0.48] hover:text-white/[0.88]"
+					}`}
+				>
+					Avatars
+				</Link>
+				<Link
+					href="/docs"
+					aria-current={onDocs ? "page" : undefined}
+					className={`text-sm font-semibold leading-5 tracking-[0.14px] transition-colors ${
+						onDocs
+							? "text-white/[0.88]"
+							: "text-white/[0.48] hover:text-white/[0.88]"
+					}`}
+				>
+					Docs
+				</Link>
+			</nav>
 			<p className="text-sm font-semibold text-white/[0.88] leading-5 tracking-[0.14px]">
 				by{" "}
 				<a

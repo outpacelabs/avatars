@@ -1,6 +1,6 @@
-import { drawMeshGradient } from "@outpacelabs/gradient-avatars";
 import type { CSSProperties } from "react";
 import { useEffect, useRef } from "react";
+import { drawMeshGradient } from "./engine";
 
 export interface GradientAvatarProps {
 	/** Any string or number — each unique seed produces a unique gradient. */
@@ -80,7 +80,7 @@ export type {
 	GradientPalette,
 	Harmony,
 	RenderOptions,
-} from "@outpacelabs/gradient-avatars";
+} from "./engine";
 export {
 	drawMeshGradient,
 	generatePalette,
@@ -89,4 +89,4 @@ export {
 	renderGradient,
 	seedFromString,
 	toSeed,
-} from "@outpacelabs/gradient-avatars";
+} from "./engine";

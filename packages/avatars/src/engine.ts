@@ -1,5 +1,5 @@
 /**
- * @outpacelabs/gradient-avatars
+ * Gradient engine for @outpacelabs/avatars.
  *
  * Framework-agnostic mesh-gradient avatar generator. Every seed (string or
  * number) deterministically produces a unique gradient — no stored images,

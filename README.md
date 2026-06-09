@@ -1,36 +1,70 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<a href="https://avatars.outpacestudios.com">
+  <img src="https://avatars.outpacestudios.com/meta.jpg" alt="@outpacelabs/avatars — a row of unique mesh-gradient avatars" width="100%" />
+</a>
 
-## Getting Started
+<h1 align="center">@outpacelabs/avatars</h1>
 
-First, run the development server:
+<p align="center">
+  A unique mesh-gradient avatar for every seed — deterministic, no stored images, no network.
+</p>
+
+<p align="center">
+  <a href="https://www.npmjs.com/package/@outpacelabs/avatars"><img src="https://img.shields.io/npm/v/@outpacelabs/avatars?color=000&labelColor=000" alt="npm version" /></a>
+  <img src="https://img.shields.io/badge/gzipped-2.3_kB-000?labelColor=000" alt="gzipped size" />
+  <img src="https://img.shields.io/badge/dependencies-0-000?labelColor=000" alt="zero dependencies" />
+  <img src="https://img.shields.io/badge/types-included-000?labelColor=000" alt="types included" />
+  <a href="https://creativecommons.org/licenses/by/4.0/"><img src="https://img.shields.io/badge/license-CC--BY--4.0-000?labelColor=000" alt="license" /></a>
+</p>
+
+<p align="center">
+  <a href="https://avatars.outpacestudios.com"><b>Live playground →</b></a> &nbsp;·&nbsp;
+  <a href="https://avatars.outpacestudios.com/docs"><b>Docs →</b></a> &nbsp;·&nbsp;
+  <a href="https://www.npmjs.com/package/@outpacelabs/avatars"><b>npm →</b></a>
+</p>
+
+---
+
+Give it any string or number — a user id, an email, a username — and it paints a
+unique, good-looking gradient on a `<canvas>`. The same seed always yields the
+same gradient, so you get stable avatars with **nothing to store and nothing to
+fetch**.
+
+## Quick start
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm i @outpacelabs/avatars
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+```tsx
+import { GradientAvatar } from "@outpacelabs/avatars";
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+function UserAvatar({ user }) {
+  return <GradientAvatar seed={user.id} size={40} />;
+}
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Full API, props, and engine helpers are in the
+**[package README](./packages/avatars/README.md)** and the
+**[docs site](https://avatars.outpacestudios.com/docs)**.
 
-## Learn More
+## What's in this repo
 
-To learn more about Next.js, take a look at the following resources:
+| Path | What |
+|------|------|
+| [`packages/avatars`](./packages/avatars) | **`@outpacelabs/avatars`** — the published React component + bundled gradient engine. |
+| [`src`](./src) | The Next.js site at [avatars.outpacestudios.com](https://avatars.outpacestudios.com) — the live generator and docs. |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Local development
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+bun install      # install deps
+bun dev          # run the site → http://localhost:3000
+bun run build    # production build
+bun run lint     # biome + eslint
+```
 
-## Deploy on Vercel
+The package lives in [`packages/avatars`](./packages/avatars); `bun run build` from that directory produces the npm bundle.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## License
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) — free to use with attribution. By [Outpace Studios](https://outpacestudios.com).

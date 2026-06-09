@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { GradientAvatar } from "@/components/GradientAvatar";
 import { IconButton } from "@/components/IconButton";
@@ -44,6 +45,48 @@ const ClipboardIcon = () => (
 		/>
 	</svg>
 );
+
+/** Copyable `npm i @outpacelabs/avatars` command — the hero's primary CTA. */
+function NpmInstall() {
+	return (
+		<button
+			type="button"
+			title="Copy install command"
+			onClick={() => {
+				void navigator.clipboard
+					?.writeText("npm i @outpacelabs/avatars")
+					.then(() => {
+						window.dispatchEvent(new CustomEvent("show-toast"));
+					});
+			}}
+			className="group/npm flex items-center gap-3 rounded-[12px] border border-white/[0.1] bg-white/[0.04] py-3 pl-4 pr-3 transition-colors hover:bg-white/[0.07] cursor-pointer"
+		>
+			<span className="font-mono text-sm leading-5 text-white/[0.4] select-none">
+				$
+			</span>
+			<span className="font-mono text-sm leading-5 text-white/[0.88]">
+				npm i @outpacelabs/avatars
+			</span>
+			<span className="grid size-7 shrink-0 place-items-center rounded-[8px] text-white/[0.4] transition-colors group-hover/npm:bg-white/[0.08] group-hover/npm:text-white/[0.88]">
+				<svg
+					aria-hidden="true"
+					width="14"
+					height="14"
+					viewBox="0 0 16 16"
+					fill="none"
+					xmlns="http://www.w3.org/2000/svg"
+				>
+					<path
+						d="M10.1667 3.16634H12.8334V14.1663H3.16675V3.16634H5.83341M5.83341 1.83301H10.1667V4.83301H5.83341V1.83301Z"
+						stroke="currentColor"
+						strokeWidth="1.25"
+						strokeLinecap="square"
+					/>
+				</svg>
+			</span>
+		</button>
+	);
+}
 
 const POOL_SIZE = 30;
 const EXPORT_SIZE = 2000;
@@ -326,6 +369,29 @@ export default function Home() {
 				{/* WALL — the hero lives as a 2×2 feature in the top-left */}
 				<section className="w-full px-4 flex flex-col gap-3">
 					<SiteHeader />
+
+					{/* HERO */}
+					<div className="flex flex-col items-center text-center gap-6 px-4 pt-14 pb-12 sm:pt-20 sm:pb-16">
+						<div className="flex flex-col items-center gap-4 max-w-2xl">
+							<h1 className="text-4xl sm:text-5xl md:text-[56px] font-semibold tracking-[-0.03em] leading-[1.05] text-white">
+								Beautifully handcrafted gradients
+							</h1>
+							<p className="text-base sm:text-lg text-white/[0.56] leading-7 max-w-md">
+								A unique, deterministic avatar for every seed — no stored
+								images, no network. Drop the React component in, or copy any
+								gradient below.
+							</p>
+						</div>
+						<div className="flex flex-col sm:flex-row items-center gap-3">
+							<NpmInstall />
+							<Link
+								href="/docs"
+								className="flex items-center justify-center rounded-[12px] bg-white/[0.08] px-5 py-3 text-sm font-semibold leading-5 text-white/[0.88] transition-colors hover:bg-white/[0.12]"
+							>
+								Documentation
+							</Link>
+						</div>
+					</div>
 
 					<div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 w-full">
 						{/* HERO (2 cols × 2 rows) — the whole card focuses the seed input */}

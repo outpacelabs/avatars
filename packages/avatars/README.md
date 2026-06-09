@@ -1,24 +1,71 @@
-# @outpacelabs/avatars
+<a href="https://avatars.outpacestudios.com">
+  <img src="https://avatars.outpacestudios.com/meta.jpg" alt="@outpacelabs/avatars — a row of unique mesh-gradient avatars" width="100%" />
+</a>
 
-React component that renders a deterministic mesh-gradient avatar for any seed
-on a `<canvas>` — the same seed always yields the same gradient, with no stored
-images and no network. Self-contained: the gradient engine is bundled in.
+<h1 align="center">@outpacelabs/avatars</h1>
+
+<p align="center">
+  A unique mesh-gradient avatar for every seed — deterministic, no stored images, no network.
+</p>
+
+<p align="center">
+  <a href="https://www.npmjs.com/package/@outpacelabs/avatars"><img src="https://img.shields.io/npm/v/@outpacelabs/avatars?color=000&labelColor=000" alt="npm version" /></a>
+  <a href="https://bundlephobia.com/package/@outpacelabs/avatars"><img src="https://img.shields.io/badge/gzipped-2.3_kB-000?labelColor=000" alt="gzipped size" /></a>
+  <img src="https://img.shields.io/badge/dependencies-0-000?labelColor=000" alt="zero dependencies" />
+  <img src="https://img.shields.io/badge/types-included-000?labelColor=000" alt="types included" />
+  <a href="https://creativecommons.org/licenses/by/4.0/"><img src="https://img.shields.io/badge/license-CC--BY--4.0-000?labelColor=000" alt="license" /></a>
+</p>
+
+<p align="center">
+  <a href="https://avatars.outpacestudios.com"><b>Live playground →</b></a> &nbsp;·&nbsp;
+  <a href="https://avatars.outpacestudios.com/docs"><b>Docs →</b></a>
+</p>
+
+---
+
+Give it any string or number — a user id, an email, a username — and it paints a
+unique, good-looking gradient on a `<canvas>`. The same seed always yields the
+same gradient, so you get stable avatars with **nothing to store and nothing to
+fetch**. The gradient engine is bundled in, so this is the only thing you install.
+
+## Install
 
 ```bash
 npm i @outpacelabs/avatars
 ```
+
+`react >= 18` is the only peer dependency. Works with React 18 and 19.
 
 ## Usage
 
 ```tsx
 import { GradientAvatar } from "@outpacelabs/avatars";
 
-<GradientAvatar seed={user.id} size={40} />
-<GradientAvatar seed="jane@example.com" size={96} className="ring-2 ring-white/10" />
-<GradientAvatar seed="square" size={64} radius={12} />
+function UserAvatar({ user }) {
+  return <GradientAvatar seed={user.id} size={40} />;
+}
 ```
 
-### Props
+That's the whole API surface for most apps. A few more:
+
+```tsx
+<GradientAvatar seed="jane@example.com" size={96} />            {/* circle (default) */}
+<GradientAvatar seed="jane@example.com" size={96} radius={16} /> {/* rounded square */}
+<GradientAvatar seed="jane@example.com" size={96} radius={0} />  {/* square */}
+<GradientAvatar seed={42} size={64} className="ring-2 ring-white/10" />
+```
+
+## Why @outpacelabs/avatars
+
+- **Deterministic** — same seed, same gradient, every time. A user id or email *is* the avatar; you never store or migrate an image.
+- **No images, no network** — rendered at runtime on a `<canvas>`. No CDN, no requests, no broken `<img>` links, no upload pipeline.
+- **Tiny & zero-dependency** — ~2.3 kB gzipped; `react` is the only peer.
+- **Actually pretty** — soft mesh gradients, not blocky identicons.
+- **Any size, any shape** — circles, rounded squares, squares — your call.
+- **Exports anywhere** — built-in helpers turn a seed into a data URL, a `Blob`, or a full-resolution image for downloads and clipboard.
+- **Typed** — ships with TypeScript declarations.
+
+## Props
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
@@ -28,9 +75,36 @@ import { GradientAvatar } from "@outpacelabs/avatars";
 | `className` | `string` | — | Extra classes on the wrapper `<span>`. |
 | `style` | `CSSProperties` | — | Extra inline styles merged onto the wrapper. |
 
-The engine helpers (`renderGradient`, `gradientToDataURL`, `gradientToBlob`,
-`generatePalette`, …) are re-exported for convenience — e.g. to offer a
-download/copy of the full-resolution image.
+## Beyond React: the engine
+
+The framework-agnostic engine is re-exported, so you can generate gradients
+without rendering a component — handy for an `<img src>`, a download button, or
+a server-rendered preview.
+
+```ts
+import { gradientToDataURL, generatePalette } from "@outpacelabs/avatars";
+
+// A 512×512 PNG data URL — drop straight into an <img>.
+const src = gradientToDataURL("jane@example.com", { size: 512 });
+
+// Just the colors behind a seed.
+const { colors, harmony } = generatePalette("jane@example.com");
+```
+
+| Helper | Description |
+|--------|-------------|
+| `drawMeshGradient(ctx, seed, size)` | Paint the raw mesh into a 2D canvas context. |
+| `renderGradient(canvas, seed, options?)` | Render a seed into a canvas with the signature soft blur. |
+| `gradientToDataURL(seed, options?)` | Render and return a data URL. |
+| `gradientToBlob(seed, options?)` | Render and resolve a `Blob` (e.g. for the clipboard). |
+| `generatePalette(seed)` | The colors and harmony rule behind a seed. |
+| `seedFromString(input)` / `toSeed(seed)` | The deterministic hashing that turns any value into a numeric seed. |
+
+Types `GradientPalette`, `Harmony`, `RenderOptions`, and `ExportOptions` are exported too.
+
+## Playground
+
+Type any seed and watch the gradient at **[avatars.outpacestudios.com](https://avatars.outpacestudios.com)** — copy it to your clipboard or download a 2000×2000 image. Full docs at **[/docs](https://avatars.outpacestudios.com/docs)**.
 
 ## License
 

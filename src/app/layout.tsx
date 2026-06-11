@@ -9,12 +9,12 @@ const jsonLd = {
 			"@id": "https://avatars.outpace.systems/#webpage",
 			name: "Beautifully handcrafted gradients",
 			description:
-				"Beautifully handcrafted gradient avatars, free to use under CC BY 4.0",
+				"Beautifully handcrafted gradient avatars, free to use under the MIT license",
 			url: "https://avatars.outpace.systems",
 			publisher: {
 				"@id": "https://avatars.outpace.systems/#organization",
 			},
-			license: "https://creativecommons.org/licenses/by/4.0/",
+			license: "https://opensource.org/license/mit",
 			isAccessibleForFree: true,
 		},
 		{

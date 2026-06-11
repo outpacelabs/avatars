@@ -358,7 +358,7 @@ export function DocsContent() {
 										>
 											GitHub ↗
 										</a>
-										<span className="text-white/[0.32]">CC BY 4.0</span>
+										<span className="text-white/[0.32]">MIT</span>
 									</div>
 								</section>
 
@@ -524,17 +524,17 @@ const { colors, harmony } = generatePalette("jane@example.com");`}
 
 								<Section id="license" eyebrow="Legal" title="License">
 									<p className="text-sm text-white/[0.56] leading-6 tracking-[0.14px]">
-										Free to use under{" "}
+										Free to use under the{" "}
 										<a
-											href="https://creativecommons.org/licenses/by/4.0/"
+											href="https://opensource.org/license/mit"
 											target="_blank"
 											rel="noopener"
 											className="text-white/[0.88] hover:underline"
 										>
-											CC BY 4.0
+											MIT license
 										</a>{" "}
-										— use it anywhere, just keep the attribution to Outpace
-										Studios.
+										— use it anywhere, commercial or not, no attribution
+										required.
 									</p>
 								</Section>
 							</div>

@@ -464,13 +464,13 @@ export default function Home() {
 					</a>
 				</div>
 				<p className="text-xs font-medium text-white/[0.48] leading-4 tracking-[0.12px]">
-					Free to use, licensed under{" "}
+					Free to use, licensed under the{" "}
 					<a
-						href="https://creativecommons.org/licenses/by/4.0/"
+						href="https://opensource.org/license/mit"
 						target="_blank"
 						rel="noopener"
 					>
-						CC BY 4.0
+						MIT license
 					</a>
 					.
 				</p>

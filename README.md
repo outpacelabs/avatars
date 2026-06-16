@@ -13,7 +13,7 @@
   <img src="https://img.shields.io/badge/gzipped-2.3_kB-000?labelColor=000" alt="gzipped size" />
   <img src="https://img.shields.io/badge/dependencies-0-000?labelColor=000" alt="zero dependencies" />
   <img src="https://img.shields.io/badge/types-included-000?labelColor=000" alt="types included" />
-  <a href="https://creativecommons.org/licenses/by/4.0/"><img src="https://img.shields.io/badge/license-CC--BY--4.0-000?labelColor=000" alt="license" /></a>
+  <a href="./LICENSE"><img src="https://img.shields.io/badge/license-MIT-000?labelColor=000" alt="license" /></a>
 </p>
 
 <p align="center">
@@ -67,4 +67,4 @@ The package lives in [`packages/avatars`](./packages/avatars); `bun run build` f
 
 ## License
 
-[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) — free to use with attribution. By [Outpace Studios](https://outpacestudios.com).
+[MIT](./LICENSE) — free to use. By [Outpace Studios](https://outpacestudios.com).

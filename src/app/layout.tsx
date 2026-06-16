@@ -7,9 +7,9 @@ const jsonLd = {
 		{
 			"@type": "WebPage",
 			"@id": "https://avatars.outpace.systems/#webpage",
-			name: "Beautifully handcrafted gradients",
+			name: "A unique gradient for every seed",
 			description:
-				"Beautifully handcrafted gradient avatars, free to use under the MIT license",
+				"Deterministic gradient avatars — a unique gradient for every seed, free to use under the MIT license",
 			url: "https://avatars.outpace.systems",
 			publisher: {
 				"@id": "https://avatars.outpace.systems/#organization",
@@ -42,11 +42,11 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
 	metadataBase: new URL("https://avatars.outpace.systems"),
 	title: {
-		default: "Beautifully handcrafted gradients - Outpace Studios",
+		default: "Gradient avatars for every seed - Outpace Studios",
 		template: "%s - Outpace Studios",
 	},
 	description:
-		"Beautifully handcrafted gradient avatars, free to use. Beautiful colorful profile pictures for apps, products, and brands.",
+		"Deterministic gradient avatars — a unique gradient for every seed. Free, colorful profile pictures for apps, products, and brands.",
 	keywords: [
 		"gradient avatars",
 		"free avatars",
@@ -64,22 +64,23 @@ export const metadata: Metadata = {
 		locale: "en_US",
 		url: "https://avatars.outpace.systems",
 		siteName: "Outpace Studios",
-		title: "Beautifully handcrafted gradients - by Outpace Studios",
+		title: "Gradient avatars for every seed - by Outpace Studios",
 		description:
-			"Beautifully handcrafted gradient avatars, free to use. Beautiful colorful profile pictures for apps, products, and brands",
+			"Deterministic gradient avatars — a unique gradient for every seed. Free, colorful profile pictures for apps, products, and brands",
 		images: [
 			{
 				url: "/meta.jpg",
 				width: 1200,
 				height: 630,
-				alt: "Beautifully handcrafted gradients by Outpace Studios",
+				alt: "Gradient avatars by Outpace Studios",
 			},
 		],
 	},
 	twitter: {
 		card: "summary_large_image",
-		title: "Beautifully handcrafted gradients - by Outpace Studios",
-		description: "Beautifully handcrafted gradient avatars, free to use.",
+		title: "Gradient avatars for every seed - by Outpace Studios",
+		description:
+			"Deterministic gradient avatars — a unique gradient for every seed. Free to use.",
 		images: ["/meta.jpg"],
 		site: "@outpacestudios",
 		creator: "@outpacestudios",

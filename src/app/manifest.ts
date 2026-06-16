@@ -4,7 +4,8 @@ export default function manifest(): MetadataRoute.Manifest {
 	return {
 		name: "Gradient Avatars by Outpace Studios",
 		short_name: "Avatars",
-		description: "50 handcrafted gradient avatars, free to use",
+		description:
+			"Deterministic gradient avatars — a unique gradient for every seed, free to use",
 		start_url: "/",
 		display: "standalone",
 		background_color: "#0A0A0A",

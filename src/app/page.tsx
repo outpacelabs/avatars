@@ -59,7 +59,7 @@ function NpmInstall() {
 						window.dispatchEvent(new CustomEvent("show-toast"));
 					});
 			}}
-			className="group/npm flex items-center gap-3 rounded-[12px] border border-white/[0.1] bg-white/[0.04] py-3 pl-4 pr-3 transition-colors hover:bg-white/[0.07] cursor-pointer"
+			className="group/npm flex h-12 items-center gap-3 rounded-full border border-white/[0.08] bg-white/[0.05] pl-5 pr-2 transition-colors hover:bg-white/[0.08] cursor-pointer"
 		>
 			<span className="font-mono text-sm leading-5 text-white/[0.4] select-none">
 				$
@@ -67,7 +67,7 @@ function NpmInstall() {
 			<span className="font-mono text-sm leading-5 text-white/[0.88]">
 				npm i @outpacelabs/avatars
 			</span>
-			<span className="grid size-7 shrink-0 place-items-center rounded-[8px] text-white/[0.4] transition-colors group-hover/npm:bg-white/[0.08] group-hover/npm:text-white/[0.88]">
+			<span className="grid size-8 shrink-0 place-items-center rounded-full text-white/[0.4] transition-colors group-hover/npm:bg-white/[0.08] group-hover/npm:text-white/[0.88]">
 				<svg
 					aria-hidden="true"
 					width="14"
@@ -374,10 +374,10 @@ export default function Home() {
 					<div className="flex flex-col items-center text-center gap-6 px-4 pt-14 pb-12 sm:pt-20 sm:pb-16">
 						<div className="flex flex-col items-center gap-4 max-w-2xl">
 							<h1 className="text-4xl sm:text-5xl md:text-[56px] font-semibold tracking-[-0.03em] leading-[1.05] text-white">
-								Beautifully handcrafted gradients
+								A unique gradient for every seed
 							</h1>
 							<p className="text-base sm:text-lg text-white/[0.56] leading-7 max-w-md">
-								A unique, deterministic avatar for every seed — no stored
+								The same seed always renders the same gradient — no stored
 								images, no network. Drop the React component in, or copy any
 								gradient below.
 							</p>
@@ -386,7 +386,7 @@ export default function Home() {
 							<NpmInstall />
 							<Link
 								href="/docs"
-								className="flex items-center justify-center rounded-[12px] bg-white/[0.08] px-5 py-3 text-sm font-semibold leading-5 text-white/[0.88] transition-colors hover:bg-white/[0.12]"
+								className="flex h-12 items-center justify-center rounded-full border border-white/[0.08] bg-white/[0.05] px-6 text-sm font-semibold leading-5 text-white/[0.88] transition-colors hover:bg-white/[0.08]"
 							>
 								Documentation
 							</Link>

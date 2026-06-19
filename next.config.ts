@@ -2,6 +2,17 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
 	/* config options here */
+	// Consolidate the legacy domain onto avatars.outpacestudios.com (308, all paths).
+	async redirects() {
+		return [
+			{
+				source: "/:path*",
+				has: [{ type: "host", value: "avatars.outpace.systems" }],
+				destination: "https://avatars.outpacestudios.com/:path*",
+				permanent: true,
+			},
+		];
+	},
 	async rewrites() {
 		return [
 			{

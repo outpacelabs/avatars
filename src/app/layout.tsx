@@ -6,20 +6,20 @@ const jsonLd = {
 	"@graph": [
 		{
 			"@type": "WebPage",
-			"@id": "https://avatars.outpace.systems/#webpage",
+			"@id": "https://avatars.outpacestudios.com/#webpage",
 			name: "A unique gradient for every seed",
 			description:
 				"Deterministic gradient avatars — a unique gradient for every seed, free to use under the MIT license",
-			url: "https://avatars.outpace.systems",
+			url: "https://avatars.outpacestudios.com",
 			publisher: {
-				"@id": "https://avatars.outpace.systems/#organization",
+				"@id": "https://avatars.outpacestudios.com/#organization",
 			},
 			license: "https://opensource.org/license/mit",
 			isAccessibleForFree: true,
 		},
 		{
 			"@type": "Organization",
-			"@id": "https://avatars.outpace.systems/#organization",
+			"@id": "https://avatars.outpacestudios.com/#organization",
 			name: "Outpace Studios",
 			url: "https://outpacestudios.com",
 			logo: {
@@ -40,7 +40,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-	metadataBase: new URL("https://avatars.outpace.systems"),
+	metadataBase: new URL("https://avatars.outpacestudios.com"),
 	title: {
 		default: "Gradient avatars for every seed - Outpace Studios",
 		template: "%s - Outpace Studios",
@@ -62,7 +62,7 @@ export const metadata: Metadata = {
 	openGraph: {
 		type: "website",
 		locale: "en_US",
-		url: "https://avatars.outpace.systems",
+		url: "https://avatars.outpacestudios.com",
 		siteName: "Outpace Studios",
 		title: "Gradient avatars for every seed - by Outpace Studios",
 		description:
@@ -97,7 +97,7 @@ export const metadata: Metadata = {
 		},
 	},
 	alternates: {
-		canonical: "https://avatars.outpace.systems",
+		canonical: "https://avatars.outpacestudios.com",
 	},
 	category: "Design Resources",
 };

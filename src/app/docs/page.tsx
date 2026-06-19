@@ -6,13 +6,13 @@ export const metadata: Metadata = {
 	description:
 		"Documentation for @outpacelabs/avatars — a React component for deterministic mesh-gradient avatars. Installation, props, examples, and engine helpers.",
 	alternates: {
-		canonical: "https://avatars.outpace.systems/docs",
+		canonical: "https://avatars.outpacestudios.com/docs",
 	},
 	openGraph: {
 		title: "@outpacelabs/avatars — Docs",
 		description:
 			"A React component for deterministic mesh-gradient avatars. A unique gradient for every seed, no stored images.",
-		url: "https://avatars.outpace.systems/docs",
+		url: "https://avatars.outpacestudios.com/docs",
 	},
 };
 

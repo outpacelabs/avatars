@@ -59,7 +59,7 @@ function NpmInstall() {
 						window.dispatchEvent(new CustomEvent("show-toast"));
 					});
 			}}
-			className="group/npm flex h-12 items-center gap-3 rounded-full bg-white/[0.05] pl-5 pr-2 transition-colors hover:bg-white/[0.08] cursor-pointer"
+			className="group/npm flex h-12 items-center gap-3 rounded-full bg-white/[0.08] pl-5 pr-2 transition-colors hover:bg-white/[0.12] cursor-pointer"
 		>
 			<span className="font-mono text-sm leading-5 text-white/[0.4] select-none">
 				$
@@ -67,7 +67,7 @@ function NpmInstall() {
 			<span className="font-mono text-sm leading-5 text-white/[0.88]">
 				npm i @outpacelabs/avatars
 			</span>
-			<span className="grid size-8 shrink-0 place-items-center rounded-full text-white/[0.4] transition-colors group-hover/npm:bg-white/[0.08] group-hover/npm:text-white/[0.88]">
+			<span className="grid size-8 shrink-0 place-items-center rounded-full text-white/[0.4] transition-colors group-hover/npm:bg-white/[0.12] group-hover/npm:text-white/[0.88]">
 				<svg
 					aria-hidden="true"
 					width="14"
@@ -379,7 +379,7 @@ export default function Home() {
 							<NpmInstall />
 							<Link
 								href="/docs"
-								className="flex h-12 items-center justify-center rounded-full bg-white/[0.05] px-6 text-sm font-semibold leading-5 text-white/[0.88] transition-colors hover:bg-white/[0.08]"
+								className="flex h-12 items-center justify-center rounded-full bg-white/[0.08] px-6 text-sm font-semibold leading-5 text-white/[0.88] transition-colors hover:bg-white/[0.12]"
 							>
 								Documentation
 							</Link>

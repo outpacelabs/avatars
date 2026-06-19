@@ -372,16 +372,9 @@ export default function Home() {
 
 					{/* HERO */}
 					<div className="flex flex-col items-center text-center gap-6 px-4 pt-14 pb-12 sm:pt-20 sm:pb-16">
-						<div className="flex flex-col items-center gap-4 max-w-2xl">
-							<h1 className="text-4xl sm:text-5xl md:text-[56px] font-semibold tracking-[-0.03em] leading-[1.05] text-white">
-								A unique gradient for every seed
-							</h1>
-							<p className="text-base sm:text-lg text-white/[0.56] leading-7 max-w-md">
-								The same seed always renders the same gradient — no stored
-								images, no network. Drop the React component in, or copy any
-								gradient below.
-							</p>
-						</div>
+						<h1 className="text-4xl sm:text-5xl md:text-[56px] font-semibold tracking-[-0.03em] leading-[1.05] text-white">
+							Avatars
+						</h1>
 						<div className="flex flex-col sm:flex-row items-center gap-3">
 							<NpmInstall />
 							<Link

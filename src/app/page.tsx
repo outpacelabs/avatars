@@ -59,7 +59,7 @@ function NpmInstall() {
 						window.dispatchEvent(new CustomEvent("show-toast"));
 					});
 			}}
-			className="group/npm flex h-12 items-center gap-3 rounded-full border border-white/[0.08] bg-white/[0.05] pl-5 pr-2 transition-colors hover:bg-white/[0.08] cursor-pointer"
+			className="group/npm flex h-12 items-center gap-3 rounded-full bg-white/[0.05] pl-5 pr-2 transition-colors hover:bg-white/[0.08] cursor-pointer"
 		>
 			<span className="font-mono text-sm leading-5 text-white/[0.4] select-none">
 				$
@@ -375,11 +375,11 @@ export default function Home() {
 						<h1 className="text-4xl sm:text-5xl md:text-[56px] font-semibold tracking-[-0.03em] leading-[1.05] text-white">
 							Avatars
 						</h1>
-						<div className="flex flex-col sm:flex-row items-center gap-3">
+						<div className="flex flex-col sm:flex-row items-center gap-2">
 							<NpmInstall />
 							<Link
 								href="/docs"
-								className="flex h-12 items-center justify-center rounded-full border border-white/[0.08] bg-white/[0.05] px-6 text-sm font-semibold leading-5 text-white/[0.88] transition-colors hover:bg-white/[0.08]"
+								className="flex h-12 items-center justify-center rounded-full bg-white/[0.05] px-6 text-sm font-semibold leading-5 text-white/[0.88] transition-colors hover:bg-white/[0.08]"
 							>
 								Documentation
 							</Link>

@@ -59,7 +59,7 @@ function NpmInstall() {
 						window.dispatchEvent(new CustomEvent("show-toast"));
 					});
 			}}
-			className="group/npm flex h-12 items-center gap-3 rounded-full bg-white/[0.08] pl-5 pr-2 transition-colors hover:bg-white/[0.12] cursor-pointer"
+			className="group/npm flex h-12 items-center gap-3 rounded-full bg-white/[0.08] pl-5 pr-2 transition hover:bg-white/[0.12] motion-safe:active:scale-[0.98] cursor-pointer"
 		>
 			<span className="font-mono text-sm leading-5 text-white/[0.4] select-none">
 				$
@@ -379,7 +379,7 @@ export default function Home() {
 							<NpmInstall />
 							<Link
 								href="/docs"
-								className="flex h-12 items-center justify-center rounded-full bg-white/[0.08] px-6 text-sm font-semibold leading-5 text-white/[0.88] transition-colors hover:bg-white/[0.12]"
+								className="flex h-12 items-center justify-center rounded-full bg-white/[0.08] px-6 text-sm font-semibold leading-5 text-white/[0.88] transition hover:bg-white/[0.12] motion-safe:active:scale-[0.98]"
 							>
 								Documentation
 							</Link>

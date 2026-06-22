@@ -430,23 +430,6 @@ export function DocsContent({
 										same gradient, with no stored images and no network.
 										Self-contained: the gradient engine is bundled in.
 									</P>
-									<div
-										style={{
-											display: "flex",
-											gap: 18,
-											marginTop: 24,
-											fontSize: 13,
-											color: MUTED,
-										}}
-									>
-										<A href="https://www.npmjs.com/package/@outpacelabs/avatars">
-											npm ↗
-										</A>
-										<A href="https://github.com/outpacelabs/avatars">
-											GitHub ↗
-										</A>
-										<span>MIT</span>
-									</div>
 								</Col>
 							</section>
 
@@ -532,21 +515,6 @@ export function DocsContent({
 										defaults to a full circle — pass a number for a rounded
 										square or <C>0</C> for a hard square.
 									</P>
-									<Preview>
-										<div
-											style={{
-												display: "flex",
-												flexWrap: "wrap",
-												alignItems: "flex-end",
-												gap: 20,
-											}}
-										>
-											<Avatar seed="outpace" size={32} />
-											<Avatar seed="outpace" size={48} />
-											<Avatar seed="outpace" size={72} />
-											<Avatar seed="outpace" size={96} />
-										</div>
-									</Preview>
 									<Preview>
 										<div
 											style={{

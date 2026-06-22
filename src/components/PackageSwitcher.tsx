@@ -47,7 +47,7 @@ function CopyMorphIcon({ copied }: { copied: boolean }) {
 						height="15"
 						viewBox="0 0 16 16"
 						fill="none"
-						style={{ position: "absolute", color: MUTED }}
+						style={{ position: "absolute", color: INK }}
 						initial={{ opacity: 0, scale: 0.8 }}
 						animate={{ opacity: 1, scale: 1 }}
 						exit={{ opacity: 0, scale: 0.8 }}
@@ -74,7 +74,7 @@ function CopyMorphIcon({ copied }: { copied: boolean }) {
 						height="15"
 						viewBox="0 0 16 16"
 						fill="none"
-						style={{ position: "absolute", color: MUTED }}
+						style={{ position: "absolute", color: "currentColor" }}
 						initial={{ opacity: 0, scale: 0.8 }}
 						animate={{ opacity: 1, scale: 1 }}
 						exit={{ opacity: 0, scale: 0.8 }}
@@ -135,14 +135,20 @@ export function PackageSwitcher({
 					borderBottom: `1px solid ${BORDER}`,
 				}}
 			>
-				<style>{`.pkg-tab{outline:none}.pkg-tab:focus-visible{box-shadow:0 0 0 2px rgba(255,255,255,0.22)}`}</style>
+				<style>{`
+					.pkg-tab{outline:none}
+					.pkg-tab:focus-visible{box-shadow:0 0 0 2px rgba(255,255,255,0.22)}
+					.pkg-mgr:not(.is-active):hover{color:rgba(255,255,255,0.74) !important}
+					.pkg-copy{color:rgba(255,255,255,0.42);transition:color 150ms ease}
+					.pkg-copy:hover{color:rgba(255,255,255,0.92)}
+				`}</style>
 				{items.map((it, i) => {
 					const isActive = i === active;
 					return (
 						<button
 							key={it.id}
 							type="button"
-							className="pkg-tab"
+							className={`pkg-tab pkg-mgr${isActive ? " is-active" : ""}`}
 							onClick={() => setActive(i)}
 							style={{
 								position: "relative",
@@ -178,7 +184,7 @@ export function PackageSwitcher({
 				})}
 				<button
 					type="button"
-					className="pkg-tab"
+					className="pkg-tab pkg-copy"
 					onClick={copy}
 					title="Copy to clipboard"
 					aria-label="Copy install command"

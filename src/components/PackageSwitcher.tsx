@@ -8,7 +8,6 @@ const MONO =
 const INK = "rgba(255,255,255,0.92)";
 const MUTED = "rgba(255,255,255,0.42)";
 const BORDER = "rgba(255,255,255,0.08)";
-const GREEN = "#6ee7a8";
 
 // Indicator slides share one spring across the docs (TOC dot uses the same),
 // per timing-consistent: similar elements use identical timing.
@@ -47,7 +46,7 @@ function CopyMorphIcon({ copied }: { copied: boolean }) {
 						height="15"
 						viewBox="0 0 16 16"
 						fill="none"
-						style={{ position: "absolute", color: GREEN }}
+						style={{ position: "absolute", color: MUTED }}
 						initial={{ opacity: 0, scale: 0.5, rotate: reduced ? 0 : -35 }}
 						animate={{ opacity: 1, scale: 1, rotate: 0 }}
 						exit={{ opacity: 0, scale: 0.5, rotate: reduced ? 0 : 35 }}

@@ -12,19 +12,20 @@ const BORDER = "rgba(255,255,255,0.08)";
 // Indicator slides share one spring across the docs (TOC dot uses the same),
 // per timing-consistent: similar elements use identical timing.
 const SLIDE_SPRING = { type: "spring", stiffness: 520, damping: 34 } as const;
-// Icon morph wants a touch of overshoot-and-settle (physics-spring-for-overshoot).
-const MORPH_SPRING = { type: "spring", stiffness: 600, damping: 26 } as const;
+// Confirming a copy is a quiet state change, not a celebration — a calm
+// ease with no overshoot (easing-for-state-change), kept under 300ms.
+const MORPH_EASE = { duration: 0.16, ease: "easeOut" } as const;
 
 /**
  * Copy → check icon morph. Both glyphs live in one 16×16 box and cross-fade
- * with a scale + rotate spring so the check appears to grow out of the
- * clipboard; the check also draws itself in via pathLength. Applies the wiki
- * morphing rules: shared viewBox, spring physics, round caps, aria-hidden,
- * reduced-motion fallback, and exit mirroring initial.
+ * with a subtle scale so the check settles in over the clipboard, the check
+ * drawing itself in via pathLength. Applies the wiki morphing rules: shared
+ * viewBox, round caps, aria-hidden, reduced-motion fallback, exit mirrors
+ * initial — restrained, no rotation or bounce.
  */
 function CopyMorphIcon({ copied }: { copied: boolean }) {
 	const reduced = useReducedMotion() ?? false;
-	const spring = reduced ? { duration: 0 } : MORPH_SPRING;
+	const t = reduced ? { duration: 0 } : MORPH_EASE;
 
 	return (
 		<span
@@ -47,10 +48,10 @@ function CopyMorphIcon({ copied }: { copied: boolean }) {
 						viewBox="0 0 16 16"
 						fill="none"
 						style={{ position: "absolute", color: MUTED }}
-						initial={{ opacity: 0, scale: 0.5, rotate: reduced ? 0 : -35 }}
-						animate={{ opacity: 1, scale: 1, rotate: 0 }}
-						exit={{ opacity: 0, scale: 0.5, rotate: reduced ? 0 : 35 }}
-						transition={spring}
+						initial={{ opacity: 0, scale: 0.8 }}
+						animate={{ opacity: 1, scale: 1 }}
+						exit={{ opacity: 0, scale: 0.8 }}
+						transition={t}
 					>
 						<motion.path
 							d="M3.5 8.4 6.6 11.5 12.5 4.5"
@@ -60,7 +61,9 @@ function CopyMorphIcon({ copied }: { copied: boolean }) {
 							strokeLinejoin="round"
 							initial={{ pathLength: reduced ? 1 : 0 }}
 							animate={{ pathLength: 1 }}
-							transition={reduced ? { duration: 0 } : { duration: 0.22 }}
+							transition={
+								reduced ? { duration: 0 } : { duration: 0.18, ease: "easeOut" }
+							}
 						/>
 					</motion.svg>
 				) : (
@@ -72,10 +75,10 @@ function CopyMorphIcon({ copied }: { copied: boolean }) {
 						viewBox="0 0 16 16"
 						fill="none"
 						style={{ position: "absolute", color: MUTED }}
-						initial={{ opacity: 0, scale: 0.5, rotate: reduced ? 0 : -35 }}
-						animate={{ opacity: 1, scale: 1, rotate: 0 }}
-						exit={{ opacity: 0, scale: 0.5, rotate: reduced ? 0 : 35 }}
-						transition={spring}
+						initial={{ opacity: 0, scale: 0.8 }}
+						animate={{ opacity: 1, scale: 1 }}
+						exit={{ opacity: 0, scale: 0.8 }}
+						transition={t}
 					>
 						<path
 							d="M10.1667 3.16634H12.8334V14.1663H3.16675V3.16634H5.83341M5.83341 1.83301H10.1667V4.83301H5.83341V1.83301Z"

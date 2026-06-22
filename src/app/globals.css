@@ -56,4 +56,11 @@ body {
 	font-family: var(--font-display);
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
+	/* Explicit weights are shipped per face — never synthesize bold/italic. */
+	font-synthesis: none;
+}
+
+/* Selection tuned to the dark surface rather than the browser default. */
+::selection {
+	background: rgba(255, 255, 255, 0.18);
 }

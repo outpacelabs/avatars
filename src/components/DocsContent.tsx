@@ -24,7 +24,7 @@ const INK = "rgba(255,255,255,0.92)";
 const BODY = "rgba(255,255,255,0.60)";
 const MUTED = "rgba(255,255,255,0.42)";
 const MONO =
-	"ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, monospace";
+	"var(--font-geist-mono), ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, monospace";
 
 /* ── reading column ── */
 function Col({ children }: { children: ReactNode }) {
@@ -197,7 +197,8 @@ function Preview({ children }: { children: ReactNode }) {
 			style={{
 				display: "flex",
 				flexWrap: "wrap",
-				alignItems: "flex-end",
+				alignItems: "center",
+				justifyContent: "center",
 				gap: 24,
 				margin: "22px 0 0",
 				borderRadius: 16,
@@ -376,8 +377,6 @@ const HELPERS: { sig: string; desc: string }[] = [
 	},
 ];
 
-const HERO_SEEDS = ["outpace", "jane@example.com", "avatars", "42", "studio"];
-
 export function DocsContent({
 	highlighted,
 }: {
@@ -419,18 +418,6 @@ export function DocsContent({
 										same gradient, with no stored images and no network.
 										Self-contained: the gradient engine is bundled in.
 									</P>
-									<div
-										style={{
-											display: "flex",
-											alignItems: "center",
-											gap: 12,
-											marginTop: 24,
-										}}
-									>
-										{HERO_SEEDS.map((seed) => (
-											<Avatar key={seed} seed={seed} size={56} />
-										))}
-									</div>
 									<Code html={highlighted.installOne} />
 									<div
 										style={{

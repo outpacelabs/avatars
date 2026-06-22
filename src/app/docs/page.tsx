@@ -1,3 +1,4 @@
+import { GeistMono } from "geist/font/mono";
 import type { Metadata } from "next";
 import { codeToHtml } from "shiki";
 import { DocsContent } from "@/components/DocsContent";
@@ -18,10 +19,9 @@ export const metadata: Metadata = {
 	},
 };
 
-// Muted, elegant dark theme for the code blocks (echoes the article's calm,
-// understated palette). Highlighting runs on the server so no Shiki ships to
-// the client; the docs receive ready-made HTML.
-const CODE_THEME = "vitesse-dark";
+// Vibrant dark theme for the code blocks. Highlighting runs on the server so
+// no Shiki ships to the client; the docs receive ready-made HTML.
+const CODE_THEME = "dracula";
 
 export default async function DocsPage() {
 	const entries = await Promise.all(
@@ -34,5 +34,10 @@ export default async function DocsPage() {
 		),
 	);
 	const highlighted = Object.fromEntries(entries) as Record<string, string>;
-	return <DocsContent highlighted={highlighted} />;
+	// GeistMono.variable exposes --font-geist-mono to the docs subtree.
+	return (
+		<div className={GeistMono.variable}>
+			<DocsContent highlighted={highlighted} />
+		</div>
+	);
 }

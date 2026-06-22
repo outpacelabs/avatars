@@ -1,5 +1,6 @@
 "use client";
 
+import { motion, useReducedMotion } from "framer-motion";
 import {
 	type CSSProperties,
 	type ReactNode,
@@ -9,6 +10,7 @@ import {
 } from "react";
 import { OutpaceLogo, SiteHeader } from "@/components/SiteHeader";
 import { drawMeshGradient } from "@/lib/avatars/mesh-gradient";
+import { useScrollSpy } from "@/lib/use-scroll-spy";
 
 /*
  * Docs styled after the Outpace "Liquid Glass" article (outpacelabs/glass):
@@ -121,31 +123,21 @@ function C({ children }: { children: ReactNode }) {
 	);
 }
 
-/* Borderless rounded code surface, matching the article. */
-function Code({
-	children,
-	style,
-}: {
-	children: string;
-	style?: CSSProperties;
-}) {
+/* Borderless rounded code surface with server-rendered Shiki highlighting.
+   The container owns the surface; the theme only colors the tokens (its own
+   background is overridden to transparent in the global style below). */
+function Code({ html }: { html: string }) {
 	return (
-		<pre
+		<div
+			className="docs-code"
 			style={{
 				margin: "22px 0 0",
 				borderRadius: 16,
-				overflowX: "auto",
+				overflow: "hidden",
 				background: "rgba(255,255,255,0.04)",
-				padding: "16px 18px",
-				fontFamily: MONO,
-				fontSize: 13,
-				lineHeight: 1.65,
-				color: "rgba(255,255,255,0.82)",
-				...style,
 			}}
-		>
-			<code>{children}</code>
-		</pre>
+			dangerouslySetInnerHTML={{ __html: html }}
+		/>
 	);
 }
 
@@ -237,56 +229,21 @@ const TOC: { id: string; label: string }[] = [
 	{ id: "license", label: "License" },
 ];
 
-const TOC_ITEM_H = 32;
+const TOC_ITEM_H = 28;
 
 function TableOfContents() {
+	const reduced = useReducedMotion() ?? false;
 	const [wide, setWide] = useState(false);
-	const [active, setActive] = useState(0);
-	const ptsRef = useRef<number[]>(TOC.map((_, i) => i * 1000));
+	const { active, scrollToId } = useScrollSpy({
+		ids: TOC.map((it) => it.id),
+		topOffset: 96,
+	});
 
 	useEffect(() => {
 		const setW = () => setWide(window.innerWidth >= 1080);
 		setW();
 		window.addEventListener("resize", setW);
 		return () => window.removeEventListener("resize", setW);
-	}, []);
-
-	useEffect(() => {
-		const pickActive = (y: number) => {
-			const p = ptsRef.current;
-			let idx = 0;
-			for (let i = 0; i < p.length; i++) if (y >= p[i]) idx = i;
-			setActive(idx);
-		};
-		const measure = () => {
-			const maxScroll = Math.max(
-				1,
-				document.documentElement.scrollHeight - window.innerHeight,
-			);
-			const p = TOC.map((it, i) => {
-				const el = document.getElementById(it.id);
-				return el
-					? el.getBoundingClientRect().top +
-							window.scrollY -
-							window.innerHeight * 0.4
-					: i * 1000;
-			});
-			p[p.length - 1] = maxScroll;
-			for (let i = p.length - 2; i >= 0; i--)
-				if (p[i] >= p[i + 1]) p[i] = p[i + 1] - 1;
-			ptsRef.current = p;
-			pickActive(window.scrollY);
-		};
-		measure();
-		const t = setTimeout(measure, 150);
-		const onScroll = () => pickActive(window.scrollY);
-		window.addEventListener("resize", measure);
-		window.addEventListener("scroll", onScroll, { passive: true });
-		return () => {
-			clearTimeout(t);
-			window.removeEventListener("resize", measure);
-			window.removeEventListener("scroll", onScroll);
-		};
 	}, []);
 
 	if (!wide) return null;
@@ -307,23 +264,28 @@ function TableOfContents() {
 					position: "sticky",
 					top: 128,
 					marginTop: 100,
-					paddingLeft: 18,
+					paddingLeft: 13,
 					display: "flex",
 					flexDirection: "column",
 				}}
 			>
 				<style>{`.toc-link:hover{color:rgba(255,255,255,0.74) !important}`}</style>
-				<span
+				<motion.span
 					aria-hidden
+					animate={{ y: active * TOC_ITEM_H + TOC_ITEM_H / 2 - 3 }}
+					transition={
+						reduced
+							? { duration: 0 }
+							: { type: "spring", stiffness: 520, damping: 34 }
+					}
 					style={{
 						position: "absolute",
 						left: 0,
-						top: active * TOC_ITEM_H + TOC_ITEM_H / 2 - 3,
+						top: 0,
 						width: 6,
 						height: 6,
 						borderRadius: 99,
 						background: "rgba(255,255,255,0.92)",
-						transition: "top 240ms cubic-bezier(0.22,1,0.36,1)",
 						pointerEvents: "none",
 					}}
 				/>
@@ -332,11 +294,10 @@ function TableOfContents() {
 						key={it.id}
 						href={`#${it.id}`}
 						className="toc-link"
+						aria-current={i === active ? "true" : undefined}
 						onClick={(e) => {
 							e.preventDefault();
-							document
-								.getElementById(it.id)
-								?.scrollIntoView({ behavior: "smooth", block: "start" });
+							scrollToId(it.id);
 						}}
 						style={{
 							display: "flex",
@@ -417,7 +378,11 @@ const HELPERS: { sig: string; desc: string }[] = [
 
 const HERO_SEEDS = ["outpace", "jane@example.com", "avatars", "42", "studio"];
 
-export function DocsContent() {
+export function DocsContent({
+	highlighted,
+}: {
+	highlighted: Record<string, string>;
+}) {
 	return (
 		<div
 			style={{
@@ -427,6 +392,10 @@ export function DocsContent() {
 				overflowX: "clip",
 			}}
 		>
+			{/* Shiki blocks: let our flat surface own the background; the theme
+			    only colors the tokens. */}
+			<style>{`.docs-code .shiki{margin:0;padding:16px 18px;overflow-x:auto;line-height:1.65;background:transparent !important;font-family:${MONO};font-size:13px}
+.docs-code .shiki code{font-family:inherit;background:transparent;padding:0}`}</style>
 			<div className="flex flex-col items-center w-full pt-16 sm:pt-10 gap-6">
 				<OutpaceLogo />
 
@@ -466,7 +435,7 @@ export function DocsContent() {
 											<Avatar key={seed} seed={seed} size={56} />
 										))}
 									</div>
-									<Code>npm i @outpacelabs/avatars</Code>
+									<Code html={highlighted.installOne} />
 									<div
 										style={{
 											display: "flex",
@@ -495,10 +464,7 @@ export function DocsContent() {
 										Install with your package manager of choice. React 18 or
 										newer is the only peer dependency.
 									</P>
-									<Code>{`npm i @outpacelabs/avatars
-pnpm add @outpacelabs/avatars
-yarn add @outpacelabs/avatars
-bun add @outpacelabs/avatars`}</Code>
+									<Code html={highlighted.installManagers} />
 								</Col>
 							</section>
 
@@ -511,11 +477,7 @@ bun add @outpacelabs/avatars`}</Code>
 										it — the same seed always renders the same gradient, so a
 										user id or email is a stable avatar with nothing to store.
 									</P>
-									<Code>{`import { GradientAvatar } from "@outpacelabs/avatars";
-
-export function Avatar({ user }) {
-  return <GradientAvatar seed={user.id} size={96} />;
-}`}</Code>
+									<Code html={highlighted.usage} />
 									<Preview>
 										<div
 											style={{
@@ -650,9 +612,7 @@ export function Avatar({ user }) {
 											<PreviewLabel>radius=&#123;0&#125;</PreviewLabel>
 										</div>
 									</Preview>
-									<Code>{`<GradientAvatar seed="studio" size={84} />            // circle
-<GradientAvatar seed="studio" size={84} radius={18} /> // rounded square
-<GradientAvatar seed="studio" size={84} radius={0} />  // square`}</Code>
+									<Code html={highlighted.examples} />
 								</Col>
 							</section>
 
@@ -705,13 +665,7 @@ export function Avatar({ user }) {
 											</div>
 										))}
 									</div>
-									<Code>{`import { gradientToDataURL, generatePalette } from "@outpacelabs/avatars";
-
-// A 512×512 PNG data URL, no React required.
-const src = gradientToDataURL("jane@example.com", { size: 512 });
-
-// Just the colors behind a seed.
-const { colors, harmony } = generatePalette("jane@example.com");`}</Code>
+									<Code html={highlighted.engine} />
 									<P muted>
 										Types are exported too: <C>GradientPalette</C>,{" "}
 										<C>Harmony</C>, <C>RenderOptions</C>, and{" "}

@@ -18,7 +18,8 @@
 		"posthog-js": "^1.336.1",
 		"posthog-node": "^5.24.5",
 		"react": "19.2.4",
-		"react-dom": "19.2.4"
+		"react-dom": "19.2.4",
+		"shiki": "^4.2.0"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.3.13",

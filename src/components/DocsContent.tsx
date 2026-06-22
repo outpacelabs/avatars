@@ -264,8 +264,8 @@ function TableOfContents() {
 			<nav
 				style={{
 					position: "sticky",
-					top: 128,
-					marginTop: 100,
+					top: 80,
+					marginTop: 32,
 					paddingLeft: 13,
 					display: "flex",
 					flexDirection: "column",

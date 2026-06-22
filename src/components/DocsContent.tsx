@@ -422,7 +422,7 @@ export function DocsContent({
 							<section id="overview" style={SECTION}>
 								<Col>
 									<div style={{ paddingTop: 8 }}>
-										<H1>@outpacelabs/avatars</H1>
+										<H1>Avatars</H1>
 									</div>
 									<P>
 										A deterministic mesh-gradient avatar for any seed, rendered

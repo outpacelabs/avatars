@@ -7,7 +7,6 @@ const MONO =
 	"var(--font-geist-mono), ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, monospace";
 const INK = "rgba(255,255,255,0.92)";
 const MUTED = "rgba(255,255,255,0.42)";
-const BORDER = "rgba(255,255,255,0.08)";
 
 // Indicator slides share one spring across the docs (TOC dot uses the same),
 // per timing-consistent: similar elements use identical timing.
@@ -131,8 +130,10 @@ export function PackageSwitcher({
 					display: "flex",
 					alignItems: "center",
 					gap: 2,
-					padding: "8px 10px 8px 12px",
-					borderBottom: `1px solid ${BORDER}`,
+					// Borderless: the tabs float over the shared surface. Left pad
+					// aligns the tab labels with the command text below (shiki pads
+					// 18px; tabs add 9px of their own → 9px here).
+					padding: "12px 12px 4px 9px",
 				}}
 			>
 				<style>{`

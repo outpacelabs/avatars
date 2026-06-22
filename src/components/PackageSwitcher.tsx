@@ -245,12 +245,12 @@ export function PackageSwitcher({
 							style={{
 								position: "relative",
 								fontFamily: MONO,
-								fontSize: 13,
-								lineHeight: 1,
-								// Match the inline-code chip's rendered height (21px: 11.76px
-								// text in line-height 1.72). At 13px/lh-1 the pill needs 4px
-								// vertical to reach 21px; 5px sides match the chip's sides.
-								padding: "4px 5px",
+								// Clone the inline-code chip exactly: same text size (it renders
+								// 11.76px there) and same box — lineHeight matched to the font's
+								// content area (~1.28) so the chip is 21px with 3/5 padding.
+								fontSize: 11.76,
+								lineHeight: 1.28,
+								padding: "3px 5px",
 								borderRadius: 6,
 								border: 0,
 								background: "transparent",

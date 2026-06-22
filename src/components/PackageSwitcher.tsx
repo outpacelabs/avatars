@@ -8,23 +8,6 @@ const INK = "rgba(255,255,255,0.92)";
 const MUTED = "rgba(255,255,255,0.42)";
 const BORDER = "rgba(255,255,255,0.08)";
 
-const TerminalIcon = () => (
-	<svg
-		aria-hidden="true"
-		width="15"
-		height="15"
-		viewBox="0 0 24 24"
-		fill="none"
-		stroke="currentColor"
-		strokeWidth="2"
-		strokeLinecap="round"
-		strokeLinejoin="round"
-	>
-		<path d="m4 17 6-6-6-6" />
-		<path d="M12 19h8" />
-	</svg>
-);
-
 const ClipboardIcon = () => (
 	<svg
 		aria-hidden="true"
@@ -96,13 +79,10 @@ export function PackageSwitcher({
 					display: "flex",
 					alignItems: "center",
 					gap: 2,
-					padding: "8px 10px 8px 14px",
+					padding: "8px 10px 8px 12px",
 					borderBottom: `1px solid ${BORDER}`,
 				}}
 			>
-				<span style={{ color: MUTED, display: "flex", marginRight: 8 }}>
-					<TerminalIcon />
-				</span>
 				{items.map((it, i) => (
 					<button
 						key={it.id}
@@ -114,12 +94,12 @@ export function PackageSwitcher({
 							lineHeight: 1,
 							padding: "5px 9px",
 							borderRadius: 7,
-							border:
-								i === active ? `1px solid ${BORDER}` : "1px solid transparent",
-							background: "transparent",
+							border: 0,
+							background:
+								i === active ? "rgba(255,255,255,0.05)" : "transparent",
 							color: i === active ? INK : MUTED,
 							cursor: "pointer",
-							transition: "color 150ms ease",
+							transition: "color 150ms ease, background 150ms ease",
 						}}
 					>
 						{it.id}

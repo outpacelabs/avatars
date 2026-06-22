@@ -383,7 +383,7 @@ export function DocsContent({
 	install,
 }: {
 	highlighted: Record<string, string>;
-	install: { id: string; command: string; html: string }[];
+	install: { id: string; command: string }[];
 }) {
 	return (
 		<div

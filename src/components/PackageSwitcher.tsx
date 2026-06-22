@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const MONO =
 	"var(--font-geist-mono), ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, monospace";
@@ -93,16 +93,107 @@ function CopyMorphIcon({ copied }: { copied: boolean }) {
 	);
 }
 
+// github-dark-ish colors for the command's three segments: manager, sub, pkg.
+const TOKEN_COLORS = ["#d2a8ff", "#79c0ff", "#a5d6ff"];
+const GLYPHS =
+	"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@/._-";
+
+type Cell = { ch: string; color: string };
+
+/** Split `pnpm add @outpacelabs/avatars` into colored character cells. */
+function toCells(command: string): Cell[] {
+	const cells: Cell[] = [];
+	const parts = command.split(" ");
+	parts.forEach((part, pi) => {
+		const color = TOKEN_COLORS[Math.min(pi, TOKEN_COLORS.length - 1)];
+		for (const ch of part) cells.push({ ch, color });
+		if (pi < parts.length - 1) cells.push({ ch: " ", color: INK });
+	});
+	return cells;
+}
+
+/**
+ * The command line, "decoded" into place on switch: each glyph cycles through
+ * random characters then locks to its target, staggered left-to-right. The
+ * resting state is the plain command (correct on the server, no scramble on
+ * first mount); reduced motion sets it instantly.
+ */
+function ScrambleCommand({ command }: { command: string }) {
+	const reduced = useReducedMotion() ?? false;
+	const target = toCells(command);
+	// While animating, `scramble` holds the in-flight glyphs; otherwise null and
+	// we render `target` directly (correct on the server, no first-mount jump).
+	const [scramble, setScramble] = useState<Cell[] | null>(null);
+	const mounted = useRef(false);
+
+	useEffect(() => {
+		if (!mounted.current) {
+			mounted.current = true;
+			return;
+		}
+		if (reduced) {
+			// eslint-disable-next-line react-hooks/set-state-in-effect
+			setScramble(null);
+			return;
+		}
+		const next = toCells(command);
+		const PER = 11; // ms of stagger per character
+		const DUR = 170; // ms each character spends scrambling
+		const start = performance.now();
+		let raf = 0;
+		const tick = (now: number) => {
+			const elapsed = now - start;
+			let settled = true;
+			const frame = next.map((cell, i) => {
+				if (cell.ch === " " || elapsed >= i * PER + DUR) return cell;
+				settled = false;
+				return {
+					ch: GLYPHS[Math.floor(Math.random() * GLYPHS.length)],
+					color: cell.color,
+				};
+			});
+			setScramble(settled ? null : frame);
+			if (!settled) raf = requestAnimationFrame(tick);
+		};
+		raf = requestAnimationFrame(tick);
+		return () => cancelAnimationFrame(raf);
+	}, [command, reduced]);
+
+	const cells = scramble ?? target;
+
+	return (
+		<pre
+			style={{
+				margin: 0,
+				padding: "16px 18px",
+				overflowX: "auto",
+				lineHeight: 1.65,
+				fontFamily: MONO,
+				fontSize: 13,
+			}}
+		>
+			<code>
+				{cells.map((cell, i) => (
+					// biome-ignore lint/suspicious/noArrayIndexKey: positional glyph cells
+					<span key={i} style={{ color: cell.color, whiteSpace: "pre" }}>
+						{cell.ch}
+					</span>
+				))}
+			</code>
+		</pre>
+	);
+}
+
 /**
  * shadcn-style package-manager switcher: a tab per manager and a copy button,
- * over the highlighted command. The active-tab fill is one shared element that
- * glides between tabs (layoutId), the command body blurs in on switch, and the
- * copy icon morphs to a check — all via framer-motion.
+ * over the install command. The active-tab fill is one shared element that
+ * glides between tabs (layoutId), the command decodes into place on switch
+ * (scramble), and the copy icon morphs to a check — all via framer-motion.
  */
 export function PackageSwitcher({
 	items,
 }: {
-	items: { id: string; command: string; html: string }[];
+	items: { id: string; command: string }[];
 }) {
 	const [active, setActive] = useState(0);
 	const [copied, setCopied] = useState(false);
@@ -130,10 +221,10 @@ export function PackageSwitcher({
 					display: "flex",
 					alignItems: "center",
 					gap: 2,
-					// Borderless: the tabs float over the shared surface. Left pad
-					// aligns the tab labels with the command text below (shiki pads
-					// 18px; tabs add 9px of their own → 9px here).
-					padding: "12px 12px 4px 9px",
+					// Borderless: tabs float over the shared surface. Equal top/left
+					// inset to the active pill; left also lands the tab labels on the
+					// command text below (13 + the tab's own 5px = shiki's 18px).
+					padding: "13px 13px 5px 13px",
 				}}
 			>
 				<style>{`
@@ -156,8 +247,9 @@ export function PackageSwitcher({
 								fontFamily: MONO,
 								fontSize: 13,
 								lineHeight: 1,
-								padding: "5px 9px",
-								borderRadius: 7,
+								// Matches the inline-code chip (padding 3/5, radius 6).
+								padding: "3px 5px",
+								borderRadius: 6,
 								border: 0,
 								background: "transparent",
 								color: isActive ? INK : MUTED,
@@ -173,8 +265,8 @@ export function PackageSwitcher({
 									style={{
 										position: "absolute",
 										inset: 0,
-										borderRadius: 7,
-										background: "rgba(255,255,255,0.05)",
+										borderRadius: 6,
+										background: "rgba(255,255,255,0.06)",
 										zIndex: 0,
 									}}
 								/>
@@ -193,7 +285,9 @@ export function PackageSwitcher({
 						marginLeft: "auto",
 						display: "grid",
 						placeItems: "center",
-						padding: 7,
+						// Match the tab height (15px icon + 2px = 19px) so flex-centering
+						// doesn't push the tabs down — keeps the pill's top inset == left.
+						padding: "2px 7px",
 						borderRadius: 7,
 						border: 0,
 						background: "transparent",
@@ -203,23 +297,7 @@ export function PackageSwitcher({
 					<CopyMorphIcon copied={copied} />
 				</button>
 			</div>
-			{/* Command body blurs in on switch. mode="wait" doubles duration, so
-			    each leg stays short (easing-for-state-change, sub-300ms total). */}
-			<div style={{ position: "relative" }}>
-				<AnimatePresence initial={false} mode="wait">
-					<motion.div
-						key={cur.id}
-						className="docs-code"
-						initial={{ opacity: 0, filter: reduced ? "none" : "blur(6px)" }}
-						animate={{ opacity: 1, filter: "blur(0px)" }}
-						exit={{ opacity: 0, filter: reduced ? "none" : "blur(6px)" }}
-						transition={
-							reduced ? { duration: 0 } : { duration: 0.13, ease: "easeOut" }
-						}
-						dangerouslySetInnerHTML={{ __html: cur.html }}
-					/>
-				</AnimatePresence>
-			</div>
+			<ScrambleCommand command={cur.command} />
 		</div>
 	);
 }

@@ -472,30 +472,6 @@ export function DocsContent({
 										user id or email is a stable avatar with nothing to store.
 									</P>
 									<Code html={highlighted.usage} />
-									<Preview>
-										<div
-											style={{
-												display: "flex",
-												flexDirection: "column",
-												alignItems: "center",
-												gap: 8,
-											}}
-										>
-											<Avatar seed="jane@example.com" size={96} />
-											<PreviewLabel>jane@example.com</PreviewLabel>
-										</div>
-										<div
-											style={{
-												display: "flex",
-												flexDirection: "column",
-												alignItems: "center",
-												gap: 8,
-											}}
-										>
-											<Avatar seed="jane@example.com" size={96} />
-											<PreviewLabel>same seed → same gradient</PreviewLabel>
-										</div>
-									</Preview>
 								</Col>
 							</section>
 

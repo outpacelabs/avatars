@@ -247,8 +247,10 @@ export function PackageSwitcher({
 								fontFamily: MONO,
 								fontSize: 13,
 								lineHeight: 1,
-								// Matches the inline-code chip (padding 3/5, radius 6).
-								padding: "3px 5px",
+								// Match the inline-code chip's rendered height (21px: 11.76px
+								// text in line-height 1.72). At 13px/lh-1 the pill needs 4px
+								// vertical to reach 21px; 5px sides match the chip's sides.
+								padding: "4px 5px",
 								borderRadius: 6,
 								border: 0,
 								background: "transparent",

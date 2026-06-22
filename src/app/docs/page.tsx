@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import { codeToHtml } from "shiki";
 import { DocsContent } from "@/components/DocsContent";
+import { SNIPPETS } from "@/lib/docs-snippets";
 
 export const metadata: Metadata = {
 	title: "Docs",
@@ -16,6 +18,21 @@ export const metadata: Metadata = {
 	},
 };
 
-export default function DocsPage() {
-	return <DocsContent />;
+// Muted, elegant dark theme for the code blocks (echoes the article's calm,
+// understated palette). Highlighting runs on the server so no Shiki ships to
+// the client; the docs receive ready-made HTML.
+const CODE_THEME = "vitesse-dark";
+
+export default async function DocsPage() {
+	const entries = await Promise.all(
+		Object.entries(SNIPPETS).map(
+			async ([key, s]) =>
+				[
+					key,
+					await codeToHtml(s.code, { lang: s.lang, theme: CODE_THEME }),
+				] as const,
+		),
+	);
+	const highlighted = Object.fromEntries(entries) as Record<string, string>;
+	return <DocsContent highlighted={highlighted} />;
 }

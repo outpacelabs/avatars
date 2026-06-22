@@ -67,7 +67,7 @@ function NpmInstall() {
 			<span className="font-mono text-sm leading-5 text-white/[0.88]">
 				npm i @outpacelabs/avatars
 			</span>
-			<span className="grid size-8 shrink-0 place-items-center rounded-full text-white/[0.4] transition-colors group-hover/npm:bg-white/[0.12] group-hover/npm:text-white/[0.88]">
+			<span className="grid size-8 shrink-0 place-items-center rounded-full text-white/[0.4] transition-colors group-hover/npm:text-white/[0.88]">
 				<svg
 					aria-hidden="true"
 					width="14"

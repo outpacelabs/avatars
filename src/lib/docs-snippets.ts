@@ -3,14 +3,6 @@
  * syntax-highlight them with Shiki and pass the HTML to the client docs.
  */
 export const SNIPPETS = {
-	installOne: { lang: "bash", code: "npm i @outpacelabs/avatars" },
-	installManagers: {
-		lang: "bash",
-		code: `npm i @outpacelabs/avatars
-pnpm add @outpacelabs/avatars
-yarn add @outpacelabs/avatars
-bun add @outpacelabs/avatars`,
-	},
 	usage: {
 		lang: "tsx",
 		code: `import { GradientAvatar } from "@outpacelabs/avatars";
@@ -38,3 +30,11 @@ const { colors, harmony } = generatePalette("jane@example.com");`,
 } as const;
 
 export type SnippetKey = keyof typeof SNIPPETS;
+
+/** Package-manager install commands for the shadcn-style switcher. */
+export const INSTALL = [
+	{ id: "pnpm", command: "pnpm add @outpacelabs/avatars" },
+	{ id: "npm", command: "npm i @outpacelabs/avatars" },
+	{ id: "yarn", command: "yarn add @outpacelabs/avatars" },
+	{ id: "bun", command: "bun add @outpacelabs/avatars" },
+] as const;

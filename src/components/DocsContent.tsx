@@ -8,6 +8,7 @@ import {
 	useRef,
 	useState,
 } from "react";
+import { PackageSwitcher } from "@/components/PackageSwitcher";
 import { OutpaceLogo, SiteHeader } from "@/components/SiteHeader";
 import { drawMeshGradient } from "@/lib/avatars/mesh-gradient";
 import { useScrollSpy } from "@/lib/use-scroll-spy";
@@ -379,8 +380,10 @@ const HELPERS: { sig: string; desc: string }[] = [
 
 export function DocsContent({
 	highlighted,
+	install,
 }: {
 	highlighted: Record<string, string>;
+	install: { id: string; command: string; html: string }[];
 }) {
 	return (
 		<div
@@ -401,8 +404,17 @@ export function DocsContent({
 				<section className="w-full px-4 flex flex-col gap-3">
 					<SiteHeader />
 
-					{/* article body: centered 640 column + right-gutter TOC */}
-					<div style={{ position: "relative", width: "100%", paddingTop: 24 }}>
+					{/* article body: 1080 container (like the glass article) holding the
+					    centered 640 column + the right-gutter TOC */}
+					<div
+						style={{
+							position: "relative",
+							maxWidth: 1080,
+							margin: "0 auto",
+							width: "100%",
+							paddingTop: 24,
+						}}
+					>
 						<TableOfContents />
 
 						<main>
@@ -418,12 +430,11 @@ export function DocsContent({
 										same gradient, with no stored images and no network.
 										Self-contained: the gradient engine is bundled in.
 									</P>
-									<Code html={highlighted.installOne} />
 									<div
 										style={{
 											display: "flex",
 											gap: 18,
-											marginTop: 18,
+											marginTop: 24,
 											fontSize: 13,
 											color: MUTED,
 										}}
@@ -447,7 +458,7 @@ export function DocsContent({
 										Install with your package manager of choice. React 18 or
 										newer is the only peer dependency.
 									</P>
-									<Code html={highlighted.installManagers} />
+									<PackageSwitcher items={install} />
 								</Col>
 							</section>
 

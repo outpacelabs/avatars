@@ -1,0 +1,59 @@
+# @outpacelabs/avatars
+
+> Free, zero-dependency React component that renders a unique, deterministic
+> gradient avatar for any seed (user id, email, username) on an HTML canvas.
+> No network requests, no stored images. MIT-licensed.
+
+@outpacelabs/avatars turns any seed string or number into a unique, reproducible
+mesh-gradient avatar. The same seed always yields the same gradient, so a user id
+or email becomes a stable profile picture with nothing to store and nothing to
+fetch. It ships a self-contained gradient engine that is also re-exported for use
+outside React (canvas, PNG data URL, or Blob). React 18+ is the only peer
+dependency.
+
+## Install
+
+```
+npm i @outpacelabs/avatars
+```
+
+## Usage
+
+```tsx
+import { GradientAvatar } from "@outpacelabs/avatars";
+
+<GradientAvatar seed={user.id} size={96} />
+```
+
+## Props
+
+- seed (string | number): any value; each unique seed is a unique gradient.
+- size (number, default 32): rendered size in pixels.
+- radius (number | string, default "9999px"): corner radius; pass 0 for a square.
+- className (string): extra classes on the wrapper span.
+- style (CSSProperties): extra inline styles merged onto the wrapper.
+
+## Engine helpers (no React required)
+
+- drawMeshGradient(ctx, seed, size): paint the raw mesh into a 2D canvas context.
+- renderGradient(canvas, seed, options?): render with the signature soft blur baked in.
+- gradientToDataURL(seed, options?): render and return a PNG data URL.
+- gradientToBlob(seed, options?): render and resolve a Blob (e.g. for the clipboard).
+- generatePalette(seed): the colors and harmony rule behind a seed.
+- seedFromString(input) / toSeed(seed): the deterministic hashing used internally.
+
+## Key facts
+
+- Deterministic: the same seed always produces the same avatar, on every device and reload.
+- Zero dependencies; renders client-side on HTML canvas; no network calls, no third-party requests.
+- Privacy-friendly: nothing is uploaded, hashed to a remote service, or stored.
+- MIT-licensed, free for commercial use; TypeScript types included.
+- A maintained, canvas-based gradient alternative to SVG avatar libraries like Boring Avatars and DiceBear.
+
+## Links
+
+- Documentation: https://avatars.outpacestudios.com/docs
+- Source: https://github.com/outpacelabs/avatars
+- Package: https://www.npmjs.com/package/@outpacelabs/avatars
+- License: MIT (https://opensource.org/license/mit)
+- Author: Outpace Studios (https://outpacestudios.com)

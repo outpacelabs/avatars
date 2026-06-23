@@ -2,13 +2,86 @@
 
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import Link from "next/link";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import { GradientAvatar } from "@/components/GradientAvatar";
 import { IconButton } from "@/components/IconButton";
 import { OutpaceLogo, SiteHeader } from "@/components/SiteHeader";
 import { Toast } from "@/components/Toast";
 import { drawMeshGradient } from "@/lib/avatars/mesh-gradient";
+import { FAQ } from "@/lib/seo";
 import { usePrefersReducedMotion } from "@/lib/utils/useReducedMotion";
+
+/**
+ * Visually hidden, but present in the initial HTML for crawlers, LLMs, and
+ * screen readers — the home page is otherwise a keyword-free <canvas> grid.
+ * The FAQ text mirrors the FAQPage JSON-LD in layout.tsx (must stay in sync).
+ */
+function SeoContent() {
+	return (
+		<section className="sr-only">
+			<h1>Deterministic gradient avatars for React</h1>
+			<p>
+				<strong>@outpacelabs/avatars</strong> is a free, open-source React
+				component that renders deterministic mesh-gradient avatars on an HTML
+				canvas. The same seed — a user id, email, or username — always produces
+				the same gradient, so you get a stable profile picture with no stored
+				images and no network requests. Zero dependencies, MIT licensed.
+			</p>
+			<p>
+				Install with <code>npm i @outpacelabs/avatars</code>, then render a{" "}
+				<code>GradientAvatar</code> with any <code>seed</code>.
+			</p>
+			<nav aria-label="Primary">
+				<a href="/docs">Read the documentation</a>
+				<a href="https://github.com/outpacelabs/avatars">
+					View source on GitHub
+				</a>
+				<a href="https://www.npmjs.com/package/@outpacelabs/avatars">
+					View the package on npm
+				</a>
+			</nav>
+
+			<h2>What is @outpacelabs/avatars?</h2>
+			<p>
+				A zero-dependency React avatar component for deterministic, colorful
+				gradient profile pictures. Drop in any seed string or number and get a
+				unique, reproducible mesh gradient — ideal for user avatars, placeholder
+				and fallback images, team logos, and brand artwork. Render to a canvas,
+				a PNG data URL, a Blob, or export at 2000×2000.
+			</p>
+
+			<h2>Same seed, same avatar — every time</h2>
+			<p>
+				Gradients are derived deterministically from the seed, so the same input
+				renders identically across devices and reloads. A user id or email
+				becomes a stable avatar you never have to store or migrate.
+			</p>
+
+			<h2>Zero dependencies, no network</h2>
+			<p>
+				Everything renders client-side on an HTML canvas. There are no API
+				calls, no stored images, and nothing leaves the user&apos;s device —
+				great for privacy, offline use, and avoiding third-party requests.
+			</p>
+
+			<h2>A canvas alternative to Boring Avatars and DiceBear</h2>
+			<p>
+				Most avatar libraries render SVG and many depend on an API.
+				@outpacelabs/avatars renders gradient/mesh fills on canvas with zero
+				dependencies and no network — a maintained, privacy-first alternative
+				when you want gradient avatars instead of shapes or illustrations.
+			</p>
+
+			<h2>Frequently asked questions</h2>
+			{FAQ.map(({ q, a }) => (
+				<Fragment key={q}>
+					<h3>{q}</h3>
+					<p>{a}</p>
+				</Fragment>
+			))}
+		</section>
+	);
+}
 
 const DownloadIcon = () => (
 	<svg
@@ -352,6 +425,7 @@ export default function Home() {
 
 	return (
 		<div className="relative flex flex-col items-center min-h-screen pb-24 overflow-x-clip">
+			<SeoContent />
 			{/* Top scroll fade */}
 			<div
 				className={`fixed top-0 left-0 right-0 h-[80px] z-[5] pointer-events-none transition-opacity duration-300 ${
@@ -372,9 +446,7 @@ export default function Home() {
 
 					{/* HERO */}
 					<div className="flex flex-col items-center text-center gap-6 px-4 pt-14 pb-12 sm:pt-20 sm:pb-16">
-						<h1 className="text-4xl sm:text-5xl md:text-[56px] font-semibold tracking-[-0.03em] leading-[1.05] text-white">
-							Avatars
-						</h1>
+						{/* Headline hidden by design — the page H1 lives in <SeoContent>. */}
 						<div className="flex flex-col sm:flex-row items-center gap-2">
 							<NpmInstall />
 							<Link

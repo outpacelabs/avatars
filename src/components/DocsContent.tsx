@@ -22,7 +22,7 @@ import { useScrollSpy } from "@/lib/use-scroll-spy";
 
 // Dark-mode equivalents of the article's ink/body/muted text tokens.
 const INK = "rgba(255,255,255,0.92)";
-const BODY = "rgba(255,255,255,0.60)";
+const BODY = "rgba(255,255,255,0.62)";
 const MUTED = "rgba(255,255,255,0.42)";
 const MONO =
 	"var(--font-geist-mono), ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, monospace";
@@ -97,7 +97,7 @@ function A({ href, children }: { href: string; children: ReactNode }) {
 			style={{
 				color: INK,
 				textDecoration: "underline",
-				textDecorationColor: "rgba(255,255,255,0.6)",
+				textDecorationColor: "rgba(255,255,255,0.9)",
 				textUnderlineOffset: "2px",
 			}}
 		>
@@ -113,7 +113,7 @@ function C({ children }: { children: ReactNode }) {
 			style={{
 				fontFamily: MONO,
 				fontSize: "0.84em",
-				background: "rgba(255,255,255,0.06)",
+				background: "rgba(255,255,255,0.05)",
 				borderRadius: 6,
 				padding: "3px 5px",
 				color: INK,

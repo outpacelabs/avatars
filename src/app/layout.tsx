@@ -1,3 +1,4 @@
+import { GeistMono } from "geist/font/mono";
 import type { Metadata, Viewport } from "next";
 import { FAQ, SITE } from "@/lib/seo";
 import "./globals.css";
@@ -161,7 +162,7 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang="en">
+		<html lang="en" className={GeistMono.variable}>
 			<head>
 				<script
 					type="application/ld+json"

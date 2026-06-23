@@ -1,25 +1,70 @@
 import type { Metadata, Viewport } from "next";
+import { FAQ, SITE } from "@/lib/seo";
 import "./globals.css";
 
 const jsonLd = {
 	"@context": "https://schema.org",
 	"@graph": [
 		{
-			"@type": "WebPage",
-			"@id": "https://avatars.outpacestudios.com/#webpage",
-			name: "A unique gradient for every seed",
+			"@type": "WebSite",
+			"@id": `${SITE}/#website`,
+			url: SITE,
+			name: "@outpacelabs/avatars",
 			description:
-				"Deterministic gradient avatars — a unique gradient for every seed, free to use under the MIT license",
-			url: "https://avatars.outpacestudios.com",
-			publisher: {
-				"@id": "https://avatars.outpacestudios.com/#organization",
-			},
+				"Free deterministic gradient avatars — a unique gradient for every seed.",
+			publisher: { "@id": `${SITE}/#organization` },
+			inLanguage: "en",
+		},
+		{
+			"@type": ["SoftwareApplication", "SoftwareSourceCode"],
+			"@id": `${SITE}/#software`,
+			name: "@outpacelabs/avatars",
+			alternateName: "Gradient Avatars",
+			description:
+				"A free, open-source React component that renders deterministic mesh-gradient avatars on a canvas. The same seed always produces the same gradient — no stored images, no network. MIT licensed.",
+			url: SITE,
+			applicationCategory: "DeveloperApplication",
+			operatingSystem: "Web, Cross-platform",
+			softwareRequirements: "React 18 or newer",
+			programmingLanguage: "TypeScript",
+			codeRepository: "https://github.com/outpacelabs/avatars",
 			license: "https://opensource.org/license/mit",
 			isAccessibleForFree: true,
+			offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+			author: { "@id": `${SITE}/#organization` },
+			publisher: { "@id": `${SITE}/#organization` },
+			sameAs: [
+				"https://github.com/outpacelabs/avatars",
+				"https://www.npmjs.com/package/@outpacelabs/avatars",
+			],
+		},
+		{
+			"@type": "WebPage",
+			"@id": `${SITE}/#webpage`,
+			url: SITE,
+			name: "Gradient avatars for every seed",
+			description:
+				"Deterministic gradient avatars — a unique gradient for every seed, free to use under the MIT license.",
+			isPartOf: { "@id": `${SITE}/#website` },
+			about: { "@id": `${SITE}/#software` },
+			publisher: { "@id": `${SITE}/#organization` },
+			license: "https://opensource.org/license/mit",
+			isAccessibleForFree: true,
+			inLanguage: "en",
+		},
+		{
+			"@type": "FAQPage",
+			"@id": `${SITE}/#faq`,
+			isPartOf: { "@id": `${SITE}/#webpage` },
+			mainEntity: FAQ.map(({ q, a }) => ({
+				"@type": "Question",
+				name: q,
+				acceptedAnswer: { "@type": "Answer", text: a },
+			})),
 		},
 		{
 			"@type": "Organization",
-			"@id": "https://avatars.outpacestudios.com/#organization",
+			"@id": `${SITE}/#organization`,
 			name: "Outpace Studios",
 			url: "https://outpacestudios.com",
 			logo: {
@@ -29,6 +74,7 @@ const jsonLd = {
 			sameAs: [
 				"https://www.linkedin.com/company/outpacestudios/",
 				"https://twitter.com/outpacestudios",
+				"https://github.com/outpacelabs",
 			],
 		},
 	],
@@ -42,31 +88,38 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
 	metadataBase: new URL("https://avatars.outpacestudios.com"),
 	title: {
-		default: "Gradient avatars for every seed - Outpace Studios",
-		template: "%s - Outpace Studios",
+		default: "Gradient Avatars for React — a unique gradient for every seed",
+		template: "%s — @outpacelabs/avatars",
 	},
+	applicationName: "@outpacelabs/avatars",
 	description:
-		"Deterministic gradient avatars — a unique gradient for every seed. Free, colorful profile pictures for apps, products, and brands.",
+		"Free, zero-dependency React component for deterministic gradient avatars. Turn any seed — user id, email, username — into a unique mesh gradient on canvas. No stored images, no network. MIT licensed.",
 	keywords: [
 		"gradient avatars",
+		"@outpacelabs/avatars",
+		"react avatar component",
+		"deterministic avatars",
+		"mesh gradient avatar",
+		"generate avatar from string",
 		"free avatars",
-		"profile pictures",
-		"colorful avatars",
-		"gradient pfp",
-		"free profile pics",
-		"abstract avatars",
+		"open source avatars",
+		"profile picture generator",
+		"placeholder avatars",
+		"boring avatars alternative",
+		"dicebear alternative",
 	],
 	authors: [{ name: "Outpace Studios", url: "https://outpacestudios.com" }],
 	creator: "Outpace Studios",
 	publisher: "Outpace Studios",
+	formatDetection: { email: false, address: false, telephone: false },
 	openGraph: {
 		type: "website",
 		locale: "en_US",
 		url: "https://avatars.outpacestudios.com",
-		siteName: "Outpace Studios",
-		title: "Gradient avatars for every seed - by Outpace Studios",
+		siteName: "@outpacelabs/avatars",
+		title: "Gradient Avatars for React — a unique gradient for every seed",
 		description:
-			"Deterministic gradient avatars — a unique gradient for every seed. Free, colorful profile pictures for apps, products, and brands",
+			"Free, zero-dependency React component for deterministic gradient avatars. A unique mesh gradient for every seed — no stored images, no network. MIT licensed.",
 		images: [
 			{
 				url: "/meta.jpg",
@@ -78,9 +131,9 @@ export const metadata: Metadata = {
 	},
 	twitter: {
 		card: "summary_large_image",
-		title: "Gradient avatars for every seed - by Outpace Studios",
+		title: "Gradient Avatars for React — a unique gradient for every seed",
 		description:
-			"Deterministic gradient avatars — a unique gradient for every seed. Free to use.",
+			"Free, zero-dependency React component for deterministic gradient avatars. MIT licensed.",
 		images: ["/meta.jpg"],
 		site: "@outpacestudios",
 		creator: "@outpacestudios",
@@ -97,9 +150,9 @@ export const metadata: Metadata = {
 		},
 	},
 	alternates: {
-		canonical: "https://avatars.outpacestudios.com",
+		canonical: "/",
 	},
-	category: "Design Resources",
+	category: "Developer Tools",
 };
 
 export default function RootLayout({

@@ -19,6 +19,41 @@ export const metadata: Metadata = {
 	},
 };
 
+const SITE = "https://avatars.outpacestudios.com";
+
+// Page-scoped structured data: breadcrumb + a TechArticle for the docs. The
+// `about`/`author` @ids resolve against the root-layout graph on the same page.
+const docsJsonLd = {
+	"@context": "https://schema.org",
+	"@graph": [
+		{
+			"@type": "BreadcrumbList",
+			"@id": `${SITE}/docs/#breadcrumbs`,
+			itemListElement: [
+				{ "@type": "ListItem", position: 1, name: "Home", item: SITE },
+				{
+					"@type": "ListItem",
+					position: 2,
+					name: "Docs",
+					item: `${SITE}/docs`,
+				},
+			],
+		},
+		{
+			"@type": "TechArticle",
+			"@id": `${SITE}/docs/#article`,
+			headline: "@outpacelabs/avatars — Documentation",
+			description:
+				"Installation, props, usage, and engine helpers for @outpacelabs/avatars, a React component for deterministic mesh-gradient avatars.",
+			url: `${SITE}/docs`,
+			about: { "@id": `${SITE}/#software` },
+			author: { "@id": `${SITE}/#organization` },
+			license: "https://opensource.org/license/mit",
+			inLanguage: "en",
+		},
+	],
+};
+
 // shadcn's code theme. Highlighting runs on the server so no Shiki ships to
 // the client; the docs receive ready-made HTML.
 const CODE_THEME = "github-dark";
@@ -42,6 +77,10 @@ export default async function DocsPage() {
 	// GeistMono.variable exposes --font-geist-mono to the docs subtree.
 	return (
 		<div className={GeistMono.variable}>
+			<script
+				type="application/ld+json"
+				dangerouslySetInnerHTML={{ __html: JSON.stringify(docsJsonLd) }}
+			/>
 			<DocsContent highlighted={highlighted} install={install} />
 		</div>
 	);

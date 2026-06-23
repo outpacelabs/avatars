@@ -134,10 +134,10 @@ function NpmInstall() {
 			}}
 			className="group/npm flex h-12 items-center gap-3 rounded-full bg-white/[0.08] pl-5 pr-2 transition hover:bg-white/[0.12] motion-safe:active:scale-[0.98] cursor-pointer"
 		>
-			<span className="font-mono text-sm leading-5 text-white/[0.4] select-none">
+			<span className="font-mono text-[13px] leading-5 text-white/[0.4] select-none">
 				$
 			</span>
-			<span className="font-mono text-sm leading-5 text-white/[0.88]">
+			<span className="font-mono text-[13px] leading-5 text-white/[0.88]">
 				npm i @outpacelabs/avatars
 			</span>
 			<span className="grid size-8 shrink-0 place-items-center rounded-full text-white/[0.4] transition-colors group-hover/npm:text-white/[0.88]">
@@ -295,8 +295,10 @@ function GradientCard({
 			initial={reducedMotion ? false : { opacity: 0, y: 12, scale: 0.97 }}
 			animate={{ opacity: 1, y: 0, scale: 1 }}
 			transition={{
-				duration: 0.45,
-				delay: (index % POOL_SIZE) * 0.025,
+				duration: 0.28,
+				// Cap the stagger window so a 30-card batch reveals as one wave,
+				// not a ~0.7s cascade (physics-no-excessive-stagger).
+				delay: Math.min(index % POOL_SIZE, 8) * 0.025,
 				ease: [0.22, 1, 0.36, 1],
 			}}
 			className="group relative aspect-square rounded-[20px] bg-white/[0.04] hover:bg-white/[0.06] transition-colors"
@@ -314,7 +316,7 @@ function GradientCard({
 				</div>
 			</button>
 
-			<span className="absolute top-4 left-4 md:top-5 md:left-5 text-[10px] font-medium text-white/[0.4] leading-4 tracking-[0.12px] tabular-nums pointer-events-none">
+			<span className="absolute top-4 left-4 md:top-5 md:left-5 text-[10px] font-medium text-white/[0.4] leading-4 tracking-[0.04em] tabular-nums pointer-events-none">
 				{(index + 1).toString().padStart(3, "0")}
 			</span>
 
@@ -432,8 +434,7 @@ export default function Home() {
 					showTopBlur ? "opacity-100" : "opacity-0"
 				}`}
 				style={{
-					background:
-						"linear-gradient(to bottom, #0A0A0A 0%, transparent 100%)",
+					background: "linear-gradient(to bottom, #000 0%, transparent 100%)",
 				}}
 			/>
 
@@ -503,7 +504,7 @@ export default function Home() {
 
 						{pool.map((seed, index) => (
 							<GradientCard
-								key={seed}
+								key={`${index}-${seed}`}
 								seed={seed}
 								index={index}
 								canCopy={canCopy}

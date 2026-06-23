@@ -27,12 +27,26 @@ const MUTED = "rgba(255,255,255,0.42)";
 const MONO =
 	"var(--font-geist-mono), ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, monospace";
 
-/* ── reading column ── */
+/* ── reading column ──
+ * Each section's column fades + slides up as it scrolls into view (the docs'
+ * equivalent of the home grid's entrance). Same ease-out curve as the home
+ * cards (timing-consistent); reduced motion renders it statically. Transform +
+ * opacity only — no reflow, so the sticky header and TOC scroll-spy are
+ * unaffected. */
 function Col({ children }: { children: ReactNode }) {
+	const reduced = useReducedMotion() ?? false;
 	return (
-		<div style={{ maxWidth: 640, margin: "0 auto", padding: "0 24px" }}>
+		<motion.div
+			style={{ maxWidth: 640, margin: "0 auto", padding: "0 24px" }}
+			initial={reduced ? false : { opacity: 0, y: 12 }}
+			whileInView={{ opacity: 1, y: 0 }}
+			viewport={{ once: true, margin: "0px 0px -64px 0px" }}
+			transition={
+				reduced ? { duration: 0 } : { duration: 0.4, ease: [0.22, 1, 0.36, 1] }
+			}
+		>
 			{children}
-		</div>
+		</motion.div>
 	);
 }
 
@@ -261,7 +275,11 @@ function TableOfContents() {
 				width: 196,
 			}}
 		>
-			<nav
+			<motion.nav
+				// Opacity-only fade-in (a transform would break the sticky nav).
+				initial={reduced ? false : { opacity: 0 }}
+				animate={{ opacity: 1 }}
+				transition={reduced ? { duration: 0 } : { duration: 0.4, delay: 0.15 }}
 				style={{
 					position: "sticky",
 					top: 80,
@@ -316,7 +334,7 @@ function TableOfContents() {
 						{it.label}
 					</a>
 				))}
-			</nav>
+			</motion.nav>
 		</aside>
 	);
 }

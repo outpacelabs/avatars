@@ -1,7 +1,17 @@
 import { GeistMono } from "geist/font/mono";
 import type { Metadata, Viewport } from "next";
+import { Inter } from "next/font/google";
 import { FAQ, SITE } from "@/lib/seo";
 import "./globals.css";
+
+// Sans face — Inter (variable), the same as the glass article. next/font
+// self-hosts it; the variable font gives continuous weights so the docs' 450
+// and 550 render exactly (the old static InterDisplay couldn't).
+const inter = Inter({
+	subsets: ["latin"],
+	display: "swap",
+	variable: "--font-display",
+});
 
 const jsonLd = {
 	"@context": "https://schema.org",
@@ -162,7 +172,7 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang="en" className={GeistMono.variable}>
+		<html lang="en" className={`${inter.variable} ${GeistMono.variable}`}>
 			<head>
 				<script
 					type="application/ld+json"

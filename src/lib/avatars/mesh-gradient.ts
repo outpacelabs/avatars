@@ -29,7 +29,7 @@ const HARMONY_TYPES: Harmony[] = [
 
 const GOLDEN_ANGLE = 137.5;
 
-export function seededRandom(seed: number): () => number {
+function seededRandom(seed: number): () => number {
 	let s = seed;
 	return () => {
 		s += 0x6d2b79f5;

@@ -4,7 +4,6 @@ import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import Link from "next/link";
 import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import { GradientAvatar } from "@/components/GradientAvatar";
-import { HeroShader } from "@/components/HeroShader";
 import { IconButton } from "@/components/IconButton";
 import { OutpaceLogo, SiteHeader } from "@/components/SiteHeader";
 import { Toast } from "@/components/Toast";
@@ -429,8 +428,6 @@ export default function Home() {
 	return (
 		<div className="relative flex flex-col items-center min-h-screen pb-24 overflow-x-clip">
 			<SeoContent />
-			{/* Ambient grayscale mesh behind the hero */}
-			<HeroShader />
 			{/* Top scroll fade */}
 			<div
 				className={`fixed top-0 left-0 right-0 h-[80px] z-[5] pointer-events-none transition-opacity duration-300 ${

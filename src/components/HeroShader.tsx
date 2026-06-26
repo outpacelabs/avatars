@@ -148,7 +148,11 @@ export function HeroShader() {
 				width={RES}
 				height={RES}
 				className="h-full w-full object-cover"
-				style={{ filter: "blur(26px)", transform: "scale(1.15)", opacity: 0.62 }}
+				style={{
+					filter: "blur(26px)",
+					transform: "scale(1.15)",
+					opacity: 0.62,
+				}}
 			/>
 		</div>
 	);

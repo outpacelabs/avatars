@@ -416,7 +416,7 @@ export default function Home() {
 					<div className="flex flex-col items-center text-center gap-6 px-4 pt-14 pb-12 sm:pt-20 sm:pb-16">
 						{/* Docs-H1 type at hero scale: weight 550, tight tracking, ink. */}
 						<h1 className="text-2xl font-[550] leading-[1.2] tracking-[-0.4px] text-white/[0.92] text-balance">
-							A unique gradient avatar for every seed
+							Generative gradient avatars
 						</h1>
 						<NpmInstall />
 					</div>

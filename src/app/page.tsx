@@ -310,7 +310,7 @@ function GradientCard({
 				disabled={!canCopy}
 				className="absolute inset-0 flex items-center justify-center rounded-[20px] enabled:cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-white/40"
 			>
-				<div className="size-[80px] md:size-[96px] transition-transform duration-200 motion-safe:group-hover:scale-105">
+				<div className="size-[80px] md:size-[96px] transition-transform duration-150 motion-safe:group-hover:scale-105">
 					<GradientAvatar seed={seed} size={96} />
 				</div>
 			</button>
@@ -323,7 +323,7 @@ function GradientCard({
 				{seed}
 			</span>
 
-			<div className="absolute inset-x-3 bottom-3 md:inset-x-4 md:bottom-4 flex items-center justify-end gap-1 opacity-0 translate-y-1 transition-all duration-200 group-hover:opacity-100 group-hover:translate-y-0 group-focus-within:opacity-100 group-focus-within:translate-y-0">
+			<div className="absolute inset-x-3 bottom-3 md:inset-x-4 md:bottom-4 flex items-center justify-end gap-1 opacity-0 translate-y-1 transition-all duration-150 group-hover:opacity-100 group-hover:translate-y-0 group-focus-within:opacity-100 group-focus-within:translate-y-0">
 				{canCopy && (
 					<IconButton
 						onClick={(e) => {

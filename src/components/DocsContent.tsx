@@ -29,10 +29,10 @@ const MONO =
 
 /* ── reading column ──
  * Each section's column fades + slides up as it scrolls into view (the docs'
- * equivalent of the home grid's entrance). Same ease-out curve as the home
- * cards (timing-consistent); reduced motion renders it statically. Transform +
- * opacity only — no reflow, so the sticky header and TOC scroll-spy are
- * unaffected. */
+ * equivalent of the home grid's entrance). Same ease-out curve AND duration as
+ * the home cards (timing-consistent); reduced motion renders it statically.
+ * Transform + opacity only — no reflow, so the sticky header and TOC
+ * scroll-spy are unaffected. */
 function Col({ children }: { children: ReactNode }) {
 	const reduced = useReducedMotion() ?? false;
 	return (
@@ -42,7 +42,7 @@ function Col({ children }: { children: ReactNode }) {
 			whileInView={{ opacity: 1, y: 0 }}
 			viewport={{ once: true, margin: "0px 0px -64px 0px" }}
 			transition={
-				reduced ? { duration: 0 } : { duration: 0.4, ease: [0.22, 1, 0.36, 1] }
+				reduced ? { duration: 0 } : { duration: 0.28, ease: [0.22, 1, 0.36, 1] }
 			}
 		>
 			{children}

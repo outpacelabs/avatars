@@ -57,13 +57,13 @@ Full API, props, and engine helpers are in the
 ## Local development
 
 ```bash
-bun install      # install deps
-bun dev          # run the site → http://localhost:3000
-bun run build    # production build
-bun run lint     # biome + eslint
+pnpm install     # install deps
+pnpm dev         # run the site → http://localhost:3000
+pnpm build       # production build
+pnpm lint        # biome + eslint
 ```
 
-The package lives in [`packages/avatars`](./packages/avatars); `bun run build` from that directory produces the npm bundle.
+The package lives in [`packages/avatars`](./packages/avatars); `pnpm packages:build` from the root (or `pnpm build` inside the package) produces the npm bundle.
 
 ## License
 

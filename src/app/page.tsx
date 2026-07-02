@@ -1,7 +1,6 @@
 "use client";
 
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
-import Link from "next/link";
 import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import { GradientAvatar } from "@/components/GradientAvatar";
 import { IconButton } from "@/components/IconButton";
@@ -446,15 +445,7 @@ export default function Home() {
 					{/* HERO */}
 					<div className="flex flex-col items-center text-center gap-6 px-4 pt-14 pb-12 sm:pt-20 sm:pb-16">
 						{/* Headline hidden by design — the page H1 lives in <SeoContent>. */}
-						<div className="flex flex-col sm:flex-row items-center gap-2">
-							<NpmInstall />
-							<Link
-								href="/docs"
-								className="flex h-12 items-center justify-center rounded-full bg-white/[0.08] px-6 text-sm font-semibold leading-5 text-white/[0.88] transition hover:bg-white/[0.12] motion-safe:active:scale-[0.98]"
-							>
-								Documentation
-							</Link>
-						</div>
+						<NpmInstall />
 					</div>
 
 					<div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 w-full">

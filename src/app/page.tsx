@@ -415,14 +415,26 @@ export default function Home() {
 				<section className="w-full px-4 flex flex-col gap-3">
 					<SiteHeader />
 
-					{/* HERO */}
-					<div className="flex flex-col items-center text-center gap-6 px-4 pt-14 pb-12 sm:pt-20 sm:pb-16">
+					{/* HERO — slides up + fades on mount, the same reveal the docs' first
+					    section uses (same curve/duration), so arriving at either page
+					    animates its top content identically. Safe to transform: the
+					    sticky header is a preceding sibling, not an ancestor. */}
+					<motion.div
+						className="flex flex-col items-center text-center gap-6 px-4 pt-14 pb-12 sm:pt-20 sm:pb-16"
+						initial={reducedMotion ? false : { opacity: 0, y: 12 }}
+						animate={{ opacity: 1, y: 0 }}
+						transition={
+							reducedMotion
+								? { duration: 0 }
+								: { duration: 0.28, ease: [0.22, 1, 0.36, 1] }
+						}
+					>
 						{/* Docs-H1 type at hero scale: weight 550, tight tracking, ink. */}
 						<h1 className="text-2xl font-[550] leading-[1.2] tracking-[-0.4px] text-white/[0.92] text-balance">
 							{TAGLINE}
 						</h1>
 						<NpmInstall />
-					</div>
+					</motion.div>
 					<SeoContent />
 
 					<div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 w-full">

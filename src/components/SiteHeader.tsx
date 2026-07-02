@@ -44,6 +44,14 @@ export function SiteHeader() {
 	return (
 		<header className="sticky top-4 z-10 flex items-center justify-between w-full rounded-[10px] px-4 md:px-5 py-3">
 			<nav className="flex items-center gap-4 md:gap-5">
+				{/* Brand mark on the left (glass-style), doubles as the home link. */}
+				<Link
+					href="/"
+					aria-label="Avatars — home"
+					className="mr-1 flex items-center text-white/[0.88] transition-opacity hover:opacity-80"
+				>
+					<OutpaceLogo />
+				</Link>
 				<Link
 					href="/"
 					aria-current={onHome ? "page" : undefined}

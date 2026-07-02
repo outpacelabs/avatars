@@ -9,7 +9,7 @@ import {
 	useState,
 } from "react";
 import { PackageSwitcher } from "@/components/PackageSwitcher";
-import { OutpaceLogo, SiteHeader } from "@/components/SiteHeader";
+import { SiteHeader } from "@/components/SiteHeader";
 import { drawMeshGradient } from "@/lib/avatars/mesh-gradient";
 import { useScrollSpy } from "@/lib/use-scroll-spy";
 
@@ -416,9 +416,7 @@ export function DocsContent({
 			    only colors the tokens. */}
 			<style>{`.docs-code .shiki{margin:0;padding:16px 18px;overflow-x:auto;line-height:1.65;background:transparent !important;font-family:${MONO};font-size:13px}
 .docs-code .shiki code{font-family:inherit;background:transparent;padding:0}`}</style>
-			<div className="flex flex-col items-center w-full pt-16 sm:pt-10 gap-6">
-				<OutpaceLogo />
-
+			<div className="flex flex-col items-center w-full pt-3 gap-6">
 				<section className="w-full px-4 flex flex-col gap-3">
 					<SiteHeader />
 

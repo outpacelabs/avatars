@@ -1,7 +1,7 @@
 import { GeistMono } from "geist/font/mono";
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
-import { FAQ, SITE } from "@/lib/seo";
+import { FAQ, SITE, TAGLINE } from "@/lib/seo";
 import "./globals.css";
 
 // Sans face — Inter (variable), the same as the glass article. next/font
@@ -13,6 +13,18 @@ const inter = Inter({
 	variable: "--font-display",
 });
 
+// Published version of @outpacelabs/avatars (packages/avatars/package.json),
+// surfaced in the SoftwareApplication JSON-LD as a freshness signal.
+const PACKAGE_VERSION = "0.2.1";
+
+const TITLE = "Generative Gradient Avatars for React | Free & Open Source";
+const DESCRIPTION =
+	"Free, zero-dependency React component for generative gradient avatars. Any seed becomes a unique mesh gradient, with no stored images or network calls.";
+const OG_DESCRIPTION =
+	"Free, zero-dependency React component for generative gradient avatars. Any seed becomes a unique mesh gradient, with no stored images or network. MIT licensed.";
+const TWITTER_DESCRIPTION =
+	"Free, zero-dependency React component for generative gradient avatars. MIT licensed.";
+
 const jsonLd = {
 	"@context": "https://schema.org",
 	"@graph": [
@@ -22,7 +34,7 @@ const jsonLd = {
 			url: SITE,
 			name: "@outpacelabs/avatars",
 			description:
-				"Free deterministic gradient avatars — a unique gradient for every seed.",
+				"Free, generative gradient avatars. A unique gradient for every seed.",
 			publisher: { "@id": `${SITE}/#organization` },
 			inLanguage: "en",
 		},
@@ -30,20 +42,23 @@ const jsonLd = {
 			"@type": ["SoftwareApplication", "SoftwareSourceCode"],
 			"@id": `${SITE}/#software`,
 			name: "@outpacelabs/avatars",
-			alternateName: "Gradient Avatars",
+			alternateName: "Generative Gradient Avatars",
 			description:
-				"A free, open-source React component that renders deterministic mesh-gradient avatars on a canvas. The same seed always produces the same gradient — no stored images, no network. MIT licensed.",
+				"A free, open-source React component that renders generative, deterministic mesh-gradient avatars on a canvas. The same seed always produces the same gradient, with no stored images and no network calls. MIT licensed.",
 			url: SITE,
 			applicationCategory: "DeveloperApplication",
 			operatingSystem: "Web, Cross-platform",
 			softwareRequirements: "React 18 or newer",
 			programmingLanguage: "TypeScript",
+			softwareVersion: PACKAGE_VERSION,
 			codeRepository: "https://github.com/outpacelabs/avatars",
 			license: "https://opensource.org/license/mit",
 			isAccessibleForFree: true,
 			offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
 			author: { "@id": `${SITE}/#organization` },
 			publisher: { "@id": `${SITE}/#organization` },
+			keywords:
+				"generative avatars, gradient avatars, react avatar component, mesh gradient, deterministic avatars",
 			sameAs: [
 				"https://github.com/outpacelabs/avatars",
 				"https://www.npmjs.com/package/@outpacelabs/avatars",
@@ -53,9 +68,9 @@ const jsonLd = {
 			"@type": "WebPage",
 			"@id": `${SITE}/#webpage`,
 			url: SITE,
-			name: "Gradient avatars for every seed",
+			name: `${TAGLINE}, for every seed`,
 			description:
-				"Deterministic gradient avatars — a unique gradient for every seed, free to use under the MIT license.",
+				"Generative gradient avatars, free to use under the MIT license. Every seed renders a unique mesh gradient.",
 			isPartOf: { "@id": `${SITE}/#website` },
 			about: { "@id": `${SITE}/#software` },
 			publisher: { "@id": `${SITE}/#organization` },
@@ -99,13 +114,14 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
 	metadataBase: new URL("https://avatars.outpacestudios.com"),
 	title: {
-		default: "Gradient Avatars for React — a unique gradient for every seed",
-		template: "%s — @outpacelabs/avatars",
+		default: TITLE,
+		template: "%s | @outpacelabs/avatars",
 	},
 	applicationName: "@outpacelabs/avatars",
-	description:
-		"Free, zero-dependency React component for deterministic gradient avatars. Turn any seed — user id, email, username — into a unique mesh gradient on canvas. No stored images, no network. MIT licensed.",
+	description: DESCRIPTION,
 	keywords: [
+		"generative avatars",
+		"generative gradient avatars",
 		"gradient avatars",
 		"@outpacelabs/avatars",
 		"react avatar component",
@@ -115,7 +131,6 @@ export const metadata: Metadata = {
 		"free avatars",
 		"open source avatars",
 		"profile picture generator",
-		"placeholder avatars",
 		"boring avatars alternative",
 		"dicebear alternative",
 	],
@@ -128,23 +143,21 @@ export const metadata: Metadata = {
 		locale: "en_US",
 		url: "https://avatars.outpacestudios.com",
 		siteName: "@outpacelabs/avatars",
-		title: "Gradient Avatars for React — a unique gradient for every seed",
-		description:
-			"Free, zero-dependency React component for deterministic gradient avatars. A unique mesh gradient for every seed — no stored images, no network. MIT licensed.",
+		title: TITLE,
+		description: OG_DESCRIPTION,
 		images: [
 			{
 				url: "/meta.jpg",
 				width: 1200,
 				height: 630,
-				alt: "Gradient avatars by Outpace Studios",
+				alt: "Generative gradient avatars by Outpace Studios",
 			},
 		],
 	},
 	twitter: {
 		card: "summary_large_image",
-		title: "Gradient Avatars for React — a unique gradient for every seed",
-		description:
-			"Free, zero-dependency React component for deterministic gradient avatars. MIT licensed.",
+		title: TITLE,
+		description: TWITTER_DESCRIPTION,
 		images: ["/meta.jpg"],
 		site: "@outpacestudios",
 		creator: "@outpacestudios",

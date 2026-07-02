@@ -7,14 +7,14 @@ import { INSTALL, SNIPPETS } from "@/lib/docs-snippets";
 export const metadata: Metadata = {
 	title: "Docs",
 	description:
-		"Documentation for @outpacelabs/avatars — a React component for deterministic mesh-gradient avatars. Installation, props, examples, and engine helpers.",
+		"Documentation for @outpacelabs/avatars, a React component for generative gradient avatars. Installation, props, examples, and engine helpers.",
 	alternates: {
 		canonical: "https://avatars.outpacestudios.com/docs",
 	},
 	openGraph: {
-		title: "@outpacelabs/avatars — Docs",
+		title: "@outpacelabs/avatars | Docs",
 		description:
-			"A React component for deterministic mesh-gradient avatars. A unique gradient for every seed, no stored images.",
+			"A React component for generative gradient avatars. Every seed renders a unique mesh gradient, with no stored images.",
 		url: "https://avatars.outpacestudios.com/docs",
 	},
 };
@@ -42,9 +42,9 @@ const docsJsonLd = {
 		{
 			"@type": "TechArticle",
 			"@id": `${SITE}/docs/#article`,
-			headline: "@outpacelabs/avatars — Documentation",
+			headline: "@outpacelabs/avatars: Documentation",
 			description:
-				"Installation, props, usage, and engine helpers for @outpacelabs/avatars, a React component for deterministic mesh-gradient avatars.",
+				"Installation, props, usage, and engine helpers for @outpacelabs/avatars, a React component for generative gradient avatars.",
 			url: `${SITE}/docs`,
 			about: { "@id": `${SITE}/#software` },
 			author: { "@id": `${SITE}/#organization` },

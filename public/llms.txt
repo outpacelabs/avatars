@@ -1,8 +1,9 @@
 # @outpacelabs/avatars
 
-> Free, zero-dependency React component that renders a unique, deterministic
-> gradient avatar for any seed (user id, email, username) on an HTML canvas.
-> No network requests, no stored images. MIT-licensed.
+> Generative gradient avatars for React. Free, zero-dependency, and
+> deterministic: the same seed (user id, email, username) always renders the
+> same gradient on an HTML canvas. No network requests, no stored images.
+> MIT-licensed.
 
 @outpacelabs/avatars turns any seed string or number into a unique, reproducible
 mesh-gradient avatar. The same seed always yields the same gradient, so a user id

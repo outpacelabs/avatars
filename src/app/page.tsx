@@ -7,13 +7,13 @@ import { IconButton } from "@/components/IconButton";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Toast } from "@/components/Toast";
 import { drawMeshGradient } from "@/lib/avatars/mesh-gradient";
-import { FAQ } from "@/lib/seo";
+import { FAQ, TAGLINE } from "@/lib/seo";
 import { usePrefersReducedMotion } from "@/lib/utils/useReducedMotion";
 
 /**
  * Visually hidden, but present in the initial HTML for crawlers, LLMs, and
- * screen readers — the home page is otherwise a keyword-free <canvas> grid.
- * The page's H1 is the visible hero headline; this section carries the
+ * screen readers, since the home page is otherwise a keyword-free <canvas>
+ * grid. The page's H1 is the visible hero headline; this section carries the
  * supporting copy (h2s only). Rendered after the hero so heading order stays
  * sequential. The FAQ text mirrors the FAQPage JSON-LD in layout.tsx (must
  * stay in sync).
@@ -23,10 +23,11 @@ function SeoContent() {
 		<section className="sr-only">
 			<p>
 				<strong>@outpacelabs/avatars</strong> is a free, open-source React
-				component that renders deterministic mesh-gradient avatars on an HTML
-				canvas. The same seed — a user id, email, or username — always produces
-				the same gradient, so you get a stable profile picture with no stored
-				images and no network requests. Zero dependencies, MIT licensed.
+				component that renders generative, deterministic mesh-gradient avatars
+				on an HTML canvas. The same seed, whether a user id, email, or username,
+				always produces the same gradient, so you get a stable profile picture
+				with no stored images and no network requests. Zero dependencies, MIT
+				licensed.
 			</p>
 			<p>
 				Install with <code>npm i @outpacelabs/avatars</code>, then render a{" "}
@@ -44,14 +45,14 @@ function SeoContent() {
 
 			<h2>What is @outpacelabs/avatars?</h2>
 			<p>
-				A zero-dependency React avatar component for deterministic, colorful
+				A zero-dependency React avatar component for generative, colorful
 				gradient profile pictures. Drop in any seed string or number and get a
-				unique, reproducible mesh gradient — ideal for user avatars, placeholder
+				unique, reproducible mesh gradient, ideal for user avatars, placeholder
 				and fallback images, team logos, and brand artwork. Render to a canvas,
 				a PNG data URL, a Blob, or export at 2000×2000.
 			</p>
 
-			<h2>Same seed, same avatar — every time</h2>
+			<h2>Same seed, same avatar, every time</h2>
 			<p>
 				Gradients are derived deterministically from the seed, so the same input
 				renders identically across devices and reloads. A user id or email
@@ -61,16 +62,18 @@ function SeoContent() {
 			<h2>Zero dependencies, no network</h2>
 			<p>
 				Everything renders client-side on an HTML canvas. There are no API
-				calls, no stored images, and nothing leaves the user&apos;s device —
-				great for privacy, offline use, and avoiding third-party requests.
+				calls, no stored images, and nothing leaves the user&apos;s device,
+				which is great for privacy, offline use, and avoiding third-party
+				requests.
 			</p>
 
 			<h2>A canvas alternative to Boring Avatars and DiceBear</h2>
 			<p>
 				Most avatar libraries render SVG and many depend on an API.
 				@outpacelabs/avatars renders gradient/mesh fills on canvas with zero
-				dependencies and no network — a maintained, privacy-first alternative
-				when you want gradient avatars instead of shapes or illustrations.
+				dependencies and no network calls, a maintained, privacy-first
+				alternative when you want gradient avatars instead of shapes or
+				illustrations.
 			</p>
 
 			<h2>Frequently asked questions</h2>
@@ -416,7 +419,7 @@ export default function Home() {
 					<div className="flex flex-col items-center text-center gap-6 px-4 pt-14 pb-12 sm:pt-20 sm:pb-16">
 						{/* Docs-H1 type at hero scale: weight 550, tight tracking, ink. */}
 						<h1 className="text-2xl font-[550] leading-[1.2] tracking-[-0.4px] text-white/[0.92] text-balance">
-							Generative gradient avatars
+							{TAGLINE}
 						</h1>
 						<NpmInstall />
 					</div>

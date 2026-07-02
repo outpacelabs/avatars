@@ -265,7 +265,10 @@ function TableOfContents() {
 				style={{
 					position: "sticky",
 					top: 80,
-					marginTop: 32,
+					// Lands the first item on the first line of body copy. The TOC only
+					// shows at ≥1080px, where the container's sm:pt-20 (80px) always
+					// applies, so a fixed offset stays aligned across the range.
+					marginTop: 94,
 					paddingLeft: 13,
 					display: "flex",
 					flexDirection: "column",

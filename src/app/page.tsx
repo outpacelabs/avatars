@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import { GradientAvatar } from "@/components/GradientAvatar";
 import { IconButton } from "@/components/IconButton";
-import { OutpaceLogo, SiteHeader } from "@/components/SiteHeader";
+import { SiteHeader } from "@/components/SiteHeader";
 import { Toast } from "@/components/Toast";
 import { drawMeshGradient } from "@/lib/avatars/mesh-gradient";
 import { FAQ } from "@/lib/seo";
@@ -438,9 +438,7 @@ export default function Home() {
 				}}
 			/>
 
-			<div className="flex flex-col items-center w-full pt-16 sm:pt-10 gap-6">
-				<OutpaceLogo />
-
+			<div className="flex flex-col items-center w-full pt-3 gap-6">
 				{/* WALL — the hero lives as a 2×2 feature in the top-left */}
 				<section className="w-full px-4 flex flex-col gap-3">
 					<SiteHeader />

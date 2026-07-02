@@ -404,14 +404,16 @@ export function DocsContent({
 					<SiteHeader />
 
 					{/* article body: 1080 container (like the glass article) holding the
-					    centered 640 column + the right-gutter TOC */}
+					    centered 640 column + the right-gutter TOC. Top padding matches
+					    the home hero's (pt-14/sm:pt-20) so both pages start the same
+					    distance below the header. */}
 					<div
+						className="pt-14 sm:pt-20"
 						style={{
 							position: "relative",
 							maxWidth: 1080,
 							margin: "0 auto",
 							width: "100%",
-							paddingTop: 24,
 						}}
 					>
 						<TableOfContents />
@@ -422,15 +424,12 @@ export function DocsContent({
 								<Col>
 									{/* Headline hidden by design, kept for SEO/accessibility. */}
 									<h1 className="sr-only">Avatars</h1>
-									<div style={{ paddingTop: 8 }}>
-										<P>
-											A deterministic mesh-gradient avatar for any seed,
-											rendered on a <C>&lt;canvas&gt;</C>. The same seed always
-											yields the same gradient, with no stored images and no
-											network. Self-contained: the gradient engine is bundled
-											in.
-										</P>
-									</div>
+									<P>
+										A deterministic mesh-gradient avatar for any seed, rendered
+										on a <C>&lt;canvas&gt;</C>. The same seed always yields the
+										same gradient, with no stored images and no network.
+										Self-contained: the gradient engine is bundled in.
+									</P>
 								</Col>
 							</section>
 

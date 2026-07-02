@@ -646,20 +646,60 @@ export function DocsContent({
 				</section>
 			</div>
 
-			{/* Footer */}
-			<div className="flex flex-col gap-10 items-center text-center mt-20 px-4">
-				<div className="flex flex-col gap-1.5 items-center text-sm leading-5 tracking-[0.14px]">
-					<p className="font-medium text-white/[0.48]">Handcrafted by</p>
-					<a
-						href="https://outpacestudios.com"
-						target="_blank"
-						className="font-semibold text-white/[0.88]"
-						rel="noopener"
+			{/* Footer — the glass article's sign-off, dark-mode adapted. */}
+			<footer style={{ padding: "64px 24px 96px", textAlign: "center" }}>
+				<div
+					style={{
+						display: "inline-flex",
+						flexDirection: "column",
+						alignItems: "center",
+						gap: 24,
+					}}
+				>
+					<div
+						style={{
+							display: "flex",
+							flexDirection: "column",
+							alignItems: "center",
+							gap: 8,
+						}}
 					>
-						Outpace Studios
-					</a>
+						{/* name — <H2> weight/tracking/colour at body size (14) */}
+						<p
+							style={{
+								margin: 0,
+								fontSize: 14,
+								lineHeight: 1.3,
+								fontWeight: 450,
+								letterSpacing: "-0.1px",
+								color: INK,
+							}}
+						>
+							By Outpace Studios
+						</p>
+						{/* tagline — <P> size/colour, tighter leading; the manual break
+						    keeps "for" on the first line */}
+						<p
+							style={{
+								margin: 0,
+								fontSize: 14,
+								lineHeight: 1.45,
+								letterSpacing: "0.1px",
+								color: BODY,
+							}}
+						>
+							Brands, interfaces, and motion for
+							<br />
+							venture-backed companies
+						</p>
+					</div>
+					{/* links use our <A> style, at the 14px body size */}
+					<div style={{ display: "flex", gap: 16, fontSize: 14 }}>
+						<A href="https://outpacestudios.com">Website</A>
+						<A href="https://x.com/outpacestudios">X / Twitter</A>
+					</div>
 				</div>
-			</div>
+			</footer>
 		</div>
 	);
 }

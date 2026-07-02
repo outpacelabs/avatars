@@ -16,20 +16,39 @@ export const OutpaceLogo = () => (
 		<path
 			d="M16.5 6C16.5 2.68629 13.7298 0 10.3125 0H6.1875C2.77024 0 0 2.68629 0 6C0 9.31371 2.77024 12 6.1875 12H10.3125C13.7298 12 16.5 9.31371 16.5 6Z"
 			fill="white"
-			fillOpacity="0.88"
+			fillOpacity="0.96"
 		/>
 		<path
 			d="M16.5 0H29.9062C31.6149 0 33 1.34315 33 3C33 4.65685 31.6149 6 29.9062 6H22.6875C19.2702 6 16.5 3.31371 16.5 0Z"
 			fill="white"
-			fillOpacity="0.88"
+			fillOpacity="0.96"
 		/>
 		<path
 			d="M24.75 12C26.4586 12 27.8437 10.6569 27.8437 9C27.8437 7.34315 26.4586 6 24.75 6H22.6875C19.2702 6 16.5 8.68629 16.5 12H24.75Z"
 			fill="white"
-			fillOpacity="0.88"
+			fillOpacity="0.96"
 		/>
 	</svg>
 );
+
+const GithubMark = () => (
+	<svg
+		width="15"
+		height="15"
+		viewBox="0 0 24 24"
+		fill="currentColor"
+		aria-hidden="true"
+		className="block shrink-0"
+	>
+		<path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.91 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222 0 1.606-.014 2.898-.014 3.293 0 .322.216.694.825.576C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
+	</svg>
+);
+
+// Glass nav type: 14px / weight 550 / rgba(255,255,255,0.96), no letter-spacing.
+const navLink = (active: boolean) =>
+	`text-sm font-[550] leading-5 transition-colors ${
+		active ? "text-white/[0.96]" : "text-white/[0.48] hover:text-white/[0.96]"
+	}`;
 
 /**
  * Sticky page header shared by the index and docs pages.
@@ -48,50 +67,64 @@ export function SiteHeader() {
 				<Link
 					href="/"
 					aria-label="Avatars — home"
-					className="mr-1 flex items-center text-white/[0.88] transition-opacity hover:opacity-80"
+					className="mr-1 flex items-center transition-opacity hover:opacity-80"
 				>
 					<OutpaceLogo />
 				</Link>
 				<Link
 					href="/"
 					aria-current={onHome ? "page" : undefined}
-					className={`text-sm font-semibold leading-5 tracking-[0.14px] transition-colors ${
-						onHome
-							? "text-white/[0.88]"
-							: "text-white/[0.48] hover:text-white/[0.88]"
-					}`}
+					className={navLink(onHome)}
 				>
 					Avatars
 				</Link>
 				<Link
 					href="/docs"
 					aria-current={onDocs ? "page" : undefined}
-					className={`text-sm font-semibold leading-5 tracking-[0.14px] transition-colors ${
-						onDocs
-							? "text-white/[0.88]"
-							: "text-white/[0.48] hover:text-white/[0.88]"
-					}`}
+					className={navLink(onDocs)}
 				>
 					Docs
 				</Link>
 			</nav>
-			<p className="text-sm font-semibold text-white/[0.88] leading-5 tracking-[0.14px]">
-				by{" "}
+			<div className="flex items-center gap-4 md:gap-5">
+				<p className="text-sm font-[550] text-white/[0.96] leading-5">
+					by{" "}
+					<a
+						href="https://outpacestudios.com"
+						target="_blank"
+						onClick={() =>
+							posthog.capture("External Link Clicked", {
+								link_url: "https://outpacestudios.com",
+								link_location: "header",
+								link_text: "Outpace Studios",
+							})
+						}
+						rel="noopener"
+					>
+						Outpace Studios
+					</a>
+				</p>
+				{/* GitHub pill — glass's frosted-pill style. Glass ships a disabled
+				    "Soon" placeholder (their repo isn't public); ours links to the
+				    live public repo. */}
 				<a
-					href="https://outpacestudios.com"
+					href="https://github.com/outpacelabs/avatars"
 					target="_blank"
+					rel="noopener"
+					aria-label="GitHub repository"
 					onClick={() =>
 						posthog.capture("External Link Clicked", {
-							link_url: "https://outpacestudios.com",
+							link_url: "https://github.com/outpacelabs/avatars",
 							link_location: "header",
-							link_text: "Outpace Studios",
+							link_text: "GitHub",
 						})
 					}
-					rel="noopener"
+					className="inline-flex items-center gap-1.5 rounded-full bg-white/[0.08] py-2.5 pl-3 pr-3.5 text-sm font-[550] leading-none text-white/[0.96] transition hover:bg-white/[0.12] motion-safe:active:scale-[0.97]"
 				>
-					Outpace Studios
+					<GithubMark />
+					GitHub
 				</a>
-			</p>
+			</div>
 		</header>
 	);
 }

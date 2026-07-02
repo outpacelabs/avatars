@@ -459,7 +459,7 @@ export default function Home() {
 
 					<div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 w-full">
 						{/* HERO (2 cols × 2 rows) — the whole card focuses the seed input */}
-						<label className="col-span-2 row-span-2 relative flex flex-col items-center justify-center gap-4 rounded-[20px] bg-white/[0.04] p-4 sm:p-6 cursor-text">
+						<label className="col-span-2 row-span-2 aspect-square sm:aspect-auto relative flex flex-col items-center justify-center gap-4 rounded-[20px] bg-white/[0.04] p-4 sm:p-6 cursor-text">
 							<motion.div
 								className="will-change-transform"
 								style={{ rotateX, rotateY, transformPerspective: 800 }}

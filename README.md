@@ -31,8 +31,10 @@ fetch**.
 
 ## Quick start
 
+Install the package in your app with whichever package manager you use:
+
 ```bash
-npm i @outpacelabs/avatars
+npm i @outpacelabs/avatars   # or: pnpm add / yarn add / bun add
 ```
 
 ```tsx
@@ -55,6 +57,8 @@ Full API, props, and engine helpers are in the
 | [`src`](./src) | The Next.js site at [avatars.outpacestudios.com](https://avatars.outpacestudios.com), the live generator and docs. |
 
 ## Local development
+
+This repo is managed with **pnpm** (see `packageManager` in `package.json`): the lockfile and workspace config are pnpm's, and deploys build from them. Use pnpm here even if your own apps use something else.
 
 ```bash
 pnpm install     # install deps

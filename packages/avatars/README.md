@@ -31,7 +31,7 @@ fetch**. The gradient engine is bundled in, so this is the only thing you instal
 ## Install
 
 ```bash
-npm i @outpacelabs/avatars
+npm i @outpacelabs/avatars   # or: pnpm add / yarn add / bun add
 ```
 
 `react >= 18` is the only peer dependency. Works with React 18 and 19.

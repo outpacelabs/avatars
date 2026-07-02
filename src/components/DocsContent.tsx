@@ -647,6 +647,17 @@ export function DocsContent({
 				</section>
 			</div>
 
+			{/* Thin divider above the footer, same as glass (dark-mode: black → white). */}
+			<div
+				aria-hidden
+				style={{
+					width: 40,
+					height: 1,
+					background: "rgba(255,255,255,0.12)",
+					margin: "64px auto 0",
+				}}
+			/>
+
 			{/* Footer — the glass article's sign-off, dark-mode adapted. */}
 			<footer style={{ padding: "64px 24px 96px", textAlign: "center" }}>
 				<div

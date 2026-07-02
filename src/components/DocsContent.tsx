@@ -328,7 +328,7 @@ const PROPS: { name: string; type: string; def: string; desc: string }[] = [
 	{
 		name: "seed",
 		type: "string | number",
-		def: "—",
+		def: "None",
 		desc: "Any value; each unique seed is a unique gradient.",
 	},
 	{ name: "size", type: "number", def: "32", desc: "Rendered size in pixels." },
@@ -341,13 +341,13 @@ const PROPS: { name: string; type: string; def: string; desc: string }[] = [
 	{
 		name: "className",
 		type: "string",
-		def: "—",
+		def: "None",
 		desc: "Extra classes on the wrapper span.",
 	},
 	{
 		name: "style",
 		type: "CSSProperties",
-		def: "—",
+		def: "None",
 		desc: "Extra inline styles merged onto the wrapper.",
 	},
 ];
@@ -367,7 +367,7 @@ const HELPERS: { sig: string; desc: string }[] = [
 	},
 	{
 		sig: "gradientToBlob(seed, options?) → Promise<Blob | null>",
-		desc: "Render and resolve a Blob — e.g. to write to the clipboard.",
+		desc: "Render and resolve a Blob, e.g. to write to the clipboard.",
 	},
 	{
 		sig: "generatePalette(seed) → GradientPalette",
@@ -425,7 +425,7 @@ export function DocsContent({
 									<div style={{ paddingTop: 8 }}>
 										<P>
 											A deterministic mesh-gradient avatar for any seed,
-											rendered on a <C>&lt;canvas&gt;</C> — the same seed always
+											rendered on a <C>&lt;canvas&gt;</C>. The same seed always
 											yields the same gradient, with no stored images and no
 											network. Self-contained: the gradient engine is bundled
 											in.
@@ -452,7 +452,7 @@ export function DocsContent({
 									<H2>Usage</H2>
 									<P>
 										Import the component and give it a <C>seed</C>. That&apos;s
-										it — the same seed always renders the same gradient, so a
+										it: the same seed always renders the same gradient, so a
 										user id or email is a stable avatar with nothing to store.
 									</P>
 									<Code html={highlighted.usage} />
@@ -494,7 +494,7 @@ export function DocsContent({
 												</span>
 												<span style={{ color: BODY, lineHeight: 1.5 }}>
 													{p.desc}
-													{p.def !== "—" ? (
+													{p.def !== "None" ? (
 														<>
 															{" "}
 															Default <C>{p.def}</C>.
@@ -513,7 +513,7 @@ export function DocsContent({
 									<H2>Sizes &amp; shapes</H2>
 									<P>
 										<C>size</C> scales the avatar; <C>radius</C> reshapes it. It
-										defaults to a full circle — pass a number for a rounded
+										defaults to a full circle. Pass a number for a rounded
 										square or <C>0</C> for a hard square.
 									</P>
 									<Preview>
@@ -561,7 +561,7 @@ export function DocsContent({
 									<H2>Engine helpers</H2>
 									<P>
 										The bundled engine is re-exported so you can render
-										gradients outside React — to a data URL for an{" "}
+										gradients outside React: to a data URL for an{" "}
 										<C>&lt;img&gt;</C>, a Blob for the clipboard, or a
 										full-resolution download.
 									</P>
@@ -619,8 +619,8 @@ export function DocsContent({
 									<H2>License</H2>
 									<P>
 										Free to use under the{" "}
-										<A href="https://opensource.org/license/mit">MIT license</A>{" "}
-										— use it anywhere, commercial or not, no attribution
+										<A href="https://opensource.org/license/mit">MIT license</A>
+										. Use it anywhere, commercial or not, no attribution
 										required.
 									</P>
 									<div style={{ height: 56 }} />

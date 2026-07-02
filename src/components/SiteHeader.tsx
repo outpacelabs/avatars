@@ -71,7 +71,7 @@ export function SiteHeader() {
 			{/* Brand mark, left — doubles as the home link. */}
 			<Link
 				href="/"
-				aria-label="Avatars — home"
+				aria-label="Avatars, home"
 				className="flex items-center transition-opacity hover:opacity-80"
 			>
 				<OutpaceLogo />

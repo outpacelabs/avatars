@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import { GradientAvatar } from "@/components/GradientAvatar";
 import { IconButton } from "@/components/IconButton";
@@ -354,18 +354,6 @@ export default function Home() {
 	const sentinelRef = useRef<HTMLDivElement>(null);
 	const reducedMotion = usePrefersReducedMotion();
 
-	// Cursor parallax for the hero gradient (spring-smoothed tilt).
-	const tiltX = useMotionValue(0);
-	const tiltY = useMotionValue(0);
-	const rotateY = useSpring(useTransform(tiltX, [-0.5, 0.5], [-12, 12]), {
-		stiffness: 150,
-		damping: 18,
-	});
-	const rotateX = useSpring(useTransform(tiltY, [-0.5, 0.5], [12, -12]), {
-		stiffness: 150,
-		damping: 18,
-	});
-
 	useEffect(() => {
 		// eslint-disable-next-line react-hooks/set-state-in-effect
 		setCanCopy(clipboardSupported());
@@ -394,25 +382,6 @@ export default function Home() {
 		window.addEventListener("scroll", handleScroll, { passive: true });
 		return () => window.removeEventListener("scroll", handleScroll);
 	}, []);
-
-	// Cursor parallax: feed normalized pointer position into the tilt springs.
-	useEffect(() => {
-		if (reducedMotion) return;
-		const onMove = (e: MouseEvent) => {
-			tiltX.set(e.clientX / window.innerWidth - 0.5);
-			tiltY.set(e.clientY / window.innerHeight - 0.5);
-		};
-		const onLeave = () => {
-			tiltX.set(0);
-			tiltY.set(0);
-		};
-		window.addEventListener("mousemove", onMove);
-		window.addEventListener("mouseleave", onLeave);
-		return () => {
-			window.removeEventListener("mousemove", onMove);
-			window.removeEventListener("mouseleave", onLeave);
-		};
-	}, [reducedMotion, tiltX, tiltY]);
 
 	const copyHero = useCallback(() => {
 		void copyGradient(heroSeed).then((ok) => {
@@ -453,19 +422,14 @@ export default function Home() {
 						<label className="col-span-2 row-span-2 aspect-square sm:aspect-auto relative flex flex-col items-center justify-center gap-4 rounded-[20px] bg-white/[0.04] p-4 sm:p-6 cursor-text">
 							<motion.div
 								className="will-change-transform"
-								style={{ rotateX, rotateY, transformPerspective: 800 }}
+								animate={reducedMotion ? undefined : { scale: [1, 1.04, 1] }}
+								transition={
+									reducedMotion
+										? undefined
+										: { duration: 8, repeat: Infinity, ease: "easeInOut" }
+								}
 							>
-								<motion.div
-									className="will-change-transform"
-									animate={reducedMotion ? undefined : { scale: [1, 1.04, 1] }}
-									transition={
-										reducedMotion
-											? undefined
-											: { duration: 8, repeat: Infinity, ease: "easeInOut" }
-									}
-								>
-									<GradientAvatar seed={heroSeed} size={160} />
-								</motion.div>
+								<GradientAvatar seed={heroSeed} size={160} />
 							</motion.div>
 
 							<div className="flex flex-col items-center gap-4 w-full max-w-[260px]">

@@ -83,7 +83,7 @@ export function SiteHeader() {
 					aria-current={onHome ? "page" : undefined}
 					className={navLink(onHome)}
 				>
-					Avatars
+					Home
 				</Link>
 				<Link
 					href="/docs"

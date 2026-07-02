@@ -61,7 +61,7 @@ export function SiteHeader() {
 	const onHome = !onDocs;
 
 	return (
-		<header className="sticky top-4 z-10 relative flex items-center justify-between w-full rounded-[10px] px-4 md:px-5 py-3">
+		<header className="sticky top-4 z-10 relative flex items-center justify-between w-full rounded-[10px] px-6 py-4">
 			{/* Brand mark, left — doubles as the home link. */}
 			<Link
 				href="/"

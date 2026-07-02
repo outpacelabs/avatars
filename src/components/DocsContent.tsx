@@ -307,6 +307,7 @@ function TableOfContents() {
 						borderRadius: 99,
 						background: "rgba(255,255,255,0.92)",
 						pointerEvents: "none",
+						display: "none", // hidden for now (matches glass)
 					}}
 				/>
 				{TOC.map((it, i) => (

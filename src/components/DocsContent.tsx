@@ -50,24 +50,6 @@ function Col({ children }: { children: ReactNode }) {
 	);
 }
 
-function H1({ children }: { children: ReactNode }) {
-	return (
-		<h1
-			style={{
-				fontSize: 24,
-				fontWeight: 550,
-				color: INK,
-				letterSpacing: "-0.4px",
-				lineHeight: 1.2,
-				margin: 0,
-				textWrap: "balance",
-			}}
-		>
-			{children}
-		</h1>
-	);
-}
-
 function H2({ children }: { children: ReactNode }) {
 	return (
 		<h2
@@ -438,15 +420,17 @@ export function DocsContent({
 							{/* Overview */}
 							<section id="overview" style={SECTION}>
 								<Col>
+									{/* Headline hidden by design, kept for SEO/accessibility. */}
+									<h1 className="sr-only">Avatars</h1>
 									<div style={{ paddingTop: 8 }}>
-										<H1>Avatars</H1>
+										<P>
+											A deterministic mesh-gradient avatar for any seed,
+											rendered on a <C>&lt;canvas&gt;</C> — the same seed always
+											yields the same gradient, with no stored images and no
+											network. Self-contained: the gradient engine is bundled
+											in.
+										</P>
 									</div>
-									<P>
-										A deterministic mesh-gradient avatar for any seed, rendered
-										on a <C>&lt;canvas&gt;</C> — the same seed always yields the
-										same gradient, with no stored images and no network.
-										Self-contained: the gradient engine is bundled in.
-									</P>
 								</Col>
 							</section>
 

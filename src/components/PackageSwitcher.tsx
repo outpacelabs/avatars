@@ -137,8 +137,10 @@ function ScrambleCommand({ command }: { command: string }) {
 			return;
 		}
 		const next = toCells(command);
-		const PER = 11; // ms of stagger per character
-		const DUR = 170; // ms each character spends scrambling
+		// PER×chars + DUR ≈ 285ms for the longest command — the whole decode
+		// settles inside the 300ms ceiling (timing-under-300ms).
+		const PER = 6; // ms of stagger per character
+		const DUR = 130; // ms each character spends scrambling
 		const start = performance.now();
 		let raf = 0;
 		const tick = (now: number) => {

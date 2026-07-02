@@ -54,6 +54,12 @@ const navLink = (active: boolean) =>
  * Sticky page header shared by the index and docs pages.
  * `position: sticky` only works when no ancestor establishes a scroll
  * container — keep page roots free of `overflow-x: hidden` (use `clip`).
+ *
+ * Padding here isn't glass's raw 16px/24px: this header lives inside a
+ * `px-4` (16px) section and sticks at `top-4` (16px) — both already
+ * contribute to the on-screen inset before this element's own padding
+ * does. px-2/py-0 makes the *rendered* inset from the true viewport edge
+ * equal to glass's (24px horizontal, 16px vertical) 1:1.
  */
 export function SiteHeader() {
 	const pathname = usePathname();
@@ -61,7 +67,7 @@ export function SiteHeader() {
 	const onHome = !onDocs;
 
 	return (
-		<header className="sticky top-4 z-10 relative flex items-center justify-between w-full rounded-[10px] px-6 py-4">
+		<header className="sticky top-4 z-10 relative flex items-center justify-between w-full rounded-[10px] px-2 py-0">
 			{/* Brand mark, left — doubles as the home link. */}
 			<Link
 				href="/"

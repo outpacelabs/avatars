@@ -232,7 +232,7 @@ export function PackageSwitcher({
 				<style>{`
 					.pkg-tab{outline:none}
 					.pkg-tab:focus-visible{box-shadow:0 0 0 2px rgba(255,255,255,0.22)}
-					.pkg-mgr:not(.is-active):hover{color:rgba(255,255,255,0.74) !important}
+					.pkg-mgr:not(.is-active):hover{color:rgba(255,255,255,0.74) !important;background:rgba(255,255,255,0.05) !important}
 					.pkg-copy{color:rgba(255,255,255,0.42);transition:color 150ms ease}
 					.pkg-copy:hover{color:rgba(255,255,255,0.92)}
 				`}</style>
@@ -258,7 +258,7 @@ export function PackageSwitcher({
 								background: "transparent",
 								color: isActive ? INK : MUTED,
 								cursor: "pointer",
-								transition: "color 150ms ease",
+								transition: "color 150ms ease, background-color 150ms ease",
 							}}
 						>
 							{isActive && (

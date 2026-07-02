@@ -61,16 +61,17 @@ export function SiteHeader() {
 	const onHome = !onDocs;
 
 	return (
-		<header className="sticky top-4 z-10 flex items-center justify-between w-full rounded-[10px] px-4 md:px-5 py-3">
-			<nav className="flex items-center gap-4 md:gap-5">
-				{/* Brand mark on the left (glass-style), doubles as the home link. */}
-				<Link
-					href="/"
-					aria-label="Avatars — home"
-					className="mr-1 flex items-center transition-opacity hover:opacity-80"
-				>
-					<OutpaceLogo />
-				</Link>
+		<header className="sticky top-4 z-10 relative flex items-center justify-between w-full rounded-[10px] px-4 md:px-5 py-3">
+			{/* Brand mark, left — doubles as the home link. */}
+			<Link
+				href="/"
+				aria-label="Avatars — home"
+				className="flex items-center transition-opacity hover:opacity-80"
+			>
+				<OutpaceLogo />
+			</Link>
+			{/* Nav links, centered in the bar. */}
+			<nav className="absolute left-1/2 -translate-x-1/2 flex items-center gap-4 md:gap-5">
 				<Link
 					href="/"
 					aria-current={onHome ? "page" : undefined}
@@ -86,45 +87,26 @@ export function SiteHeader() {
 					Docs
 				</Link>
 			</nav>
-			<div className="flex items-center gap-4 md:gap-5">
-				<p className="text-sm font-[550] text-white/[0.96] leading-5">
-					by{" "}
-					<a
-						href="https://outpacestudios.com"
-						target="_blank"
-						onClick={() =>
-							posthog.capture("External Link Clicked", {
-								link_url: "https://outpacestudios.com",
-								link_location: "header",
-								link_text: "Outpace Studios",
-							})
-						}
-						rel="noopener"
-					>
-						Outpace Studios
-					</a>
-				</p>
-				{/* GitHub pill — glass's frosted-pill style. Glass ships a disabled
-				    "Soon" placeholder (their repo isn't public); ours links to the
-				    live public repo. */}
-				<a
-					href="https://github.com/outpacelabs/avatars"
-					target="_blank"
-					rel="noopener"
-					aria-label="GitHub repository"
-					onClick={() =>
-						posthog.capture("External Link Clicked", {
-							link_url: "https://github.com/outpacelabs/avatars",
-							link_location: "header",
-							link_text: "GitHub",
-						})
-					}
-					className="inline-flex items-center gap-1.5 rounded-full bg-white/[0.08] py-2.5 pl-3 pr-3.5 text-sm font-[550] leading-none text-white/[0.96] transition hover:bg-white/[0.12] motion-safe:active:scale-[0.97]"
-				>
-					<GithubMark />
-					GitHub
-				</a>
-			</div>
+			{/* GitHub pill, right — glass's frosted-pill style. Glass ships a
+			    disabled "Soon" placeholder (their repo isn't public); ours links
+			    to the live public repo. */}
+			<a
+				href="https://github.com/outpacelabs/avatars"
+				target="_blank"
+				rel="noopener"
+				aria-label="GitHub repository"
+				onClick={() =>
+					posthog.capture("External Link Clicked", {
+						link_url: "https://github.com/outpacelabs/avatars",
+						link_location: "header",
+						link_text: "GitHub",
+					})
+				}
+				className="inline-flex items-center gap-1.5 rounded-full bg-white/[0.08] py-2.5 pl-3 pr-3.5 text-sm font-[550] leading-none text-white/[0.96] transition hover:bg-white/[0.12] motion-safe:active:scale-[0.97]"
+			>
+				<GithubMark />
+				GitHub
+			</a>
 		</header>
 	);
 }

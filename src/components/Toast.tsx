@@ -50,7 +50,7 @@ function SingleToast({
 					? { duration: 0 }
 					: { type: "spring", stiffness: 500, damping: 30 }
 			}
-			className="absolute left-1/2 -translate-x-1/2 flex items-center gap-2 px-[14px] py-2 rounded-full bg-white/[0.12] backdrop-blur-[12px] border border-white/[0.12] whitespace-nowrap"
+			className="absolute left-1/2 -translate-x-1/2 flex items-center gap-2 px-[14px] py-2 rounded-full bg-white/[0.12] backdrop-blur-[12px] whitespace-nowrap"
 		>
 			<svg
 				aria-hidden="true"

@@ -7,7 +7,7 @@ export const SITE = "https://avatars.outpacestudios.com";
  * H1 (page.tsx) and the title/JSON-LD copy in layout.tsx, so the visible
  * headline and the metadata layer can't drift out of sync.
  */
-export const TAGLINE = "Generative gradient avatars";
+export const TAGLINE = "Beautiful generative gradient avatars";
 
 /**
  * Canonical FAQ. The SAME text feeds the `FAQPage` JSON-LD (layout.tsx) and the

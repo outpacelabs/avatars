@@ -13,12 +13,14 @@ import { usePrefersReducedMotion } from "@/lib/utils/useReducedMotion";
 /**
  * Visually hidden, but present in the initial HTML for crawlers, LLMs, and
  * screen readers — the home page is otherwise a keyword-free <canvas> grid.
- * The FAQ text mirrors the FAQPage JSON-LD in layout.tsx (must stay in sync).
+ * The page's H1 is the visible hero headline; this section carries the
+ * supporting copy (h2s only). Rendered after the hero so heading order stays
+ * sequential. The FAQ text mirrors the FAQPage JSON-LD in layout.tsx (must
+ * stay in sync).
  */
 function SeoContent() {
 	return (
 		<section className="sr-only">
-			<h1>Deterministic gradient avatars for React</h1>
 			<p>
 				<strong>@outpacelabs/avatars</strong> is a free, open-source React
 				component that renders deterministic mesh-gradient avatars on an HTML
@@ -395,7 +397,6 @@ export default function Home() {
 
 	return (
 		<div className="relative flex flex-col items-center min-h-screen pb-24 overflow-x-clip">
-			<SeoContent />
 			{/* Top scroll fade */}
 			<div
 				className={`fixed top-0 left-0 right-0 h-[80px] z-[5] pointer-events-none transition-opacity duration-300 ${
@@ -413,9 +414,13 @@ export default function Home() {
 
 					{/* HERO */}
 					<div className="flex flex-col items-center text-center gap-6 px-4 pt-14 pb-12 sm:pt-20 sm:pb-16">
-						{/* Headline hidden by design — the page H1 lives in <SeoContent>. */}
+						{/* Docs-H1 type at hero scale: weight 550, tight tracking, ink. */}
+						<h1 className="text-2xl font-[550] leading-[1.2] tracking-[-0.4px] text-white/[0.92] text-balance">
+							A unique gradient avatar for every seed
+						</h1>
 						<NpmInstall />
 					</div>
+					<SeoContent />
 
 					<div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 w-full">
 						{/* HERO (2 cols × 2 rows) — the whole card focuses the seed input */}

@@ -4,18 +4,43 @@ import { codeToHtml } from "shiki";
 import { DocsContent } from "@/components/DocsContent";
 import { INSTALL, SNIPPETS } from "@/lib/docs-snippets";
 
+const DOCS_DESCRIPTION =
+	"Documentation for @outpacelabs/avatars, a React component for generative gradient avatars. Installation, props, examples, and engine helpers.";
+const DOCS_OG_DESCRIPTION =
+	"A React component for generative gradient avatars. Every seed renders a unique mesh gradient, with no stored images.";
+
+// Next.js replaces `openGraph`/`twitter` per segment wholesale (no deep merge
+// with layout.tsx), so both must be defined in full here or the docs page
+// silently loses og:image / gets the home page's Twitter copy.
 export const metadata: Metadata = {
 	title: "Docs",
-	description:
-		"Documentation for @outpacelabs/avatars, a React component for generative gradient avatars. Installation, props, examples, and engine helpers.",
+	description: DOCS_DESCRIPTION,
 	alternates: {
 		canonical: "https://avatars.outpacestudios.com/docs",
 	},
 	openGraph: {
+		type: "website",
+		locale: "en_US",
+		siteName: "@outpacelabs/avatars",
 		title: "@outpacelabs/avatars | Docs",
-		description:
-			"A React component for generative gradient avatars. Every seed renders a unique mesh gradient, with no stored images.",
+		description: DOCS_OG_DESCRIPTION,
 		url: "https://avatars.outpacestudios.com/docs",
+		images: [
+			{
+				url: "/meta.jpg",
+				width: 1200,
+				height: 630,
+				alt: "Generative gradient avatars by Outpace Studios",
+			},
+		],
+	},
+	twitter: {
+		card: "summary_large_image",
+		title: "@outpacelabs/avatars | Docs",
+		description: DOCS_OG_DESCRIPTION,
+		images: ["/meta.jpg"],
+		site: "@outpacestudios",
+		creator: "@outpacestudios",
 	},
 };
 

@@ -1,11 +1,11 @@
 <a href="https://avatars.outpacestudios.com">
-  <img src="https://avatars.outpacestudios.com/meta.jpg" alt="@outpacelabs/avatars — a row of unique mesh-gradient avatars" width="100%" />
+  <img src="https://avatars.outpacestudios.com/meta.jpg" alt="@outpacelabs/avatars: a row of generative gradient avatars" width="100%" />
 </a>
 
 <h1 align="center">@outpacelabs/avatars</h1>
 
 <p align="center">
-  A unique mesh-gradient avatar for every seed — deterministic, no stored images, no network.
+  Generative gradient avatars for React. A unique gradient for every seed, with no stored images and no network.
 </p>
 
 <p align="center">
@@ -24,7 +24,7 @@
 
 ---
 
-Give it any string or number — a user id, an email, a username — and it paints a
+Give it any string or number (a user id, an email, a username) and it paints a
 unique, good-looking gradient on a `<canvas>`. The same seed always yields the
 same gradient, so you get stable avatars with **nothing to store and nothing to
 fetch**.
@@ -51,8 +51,8 @@ Full API, props, and engine helpers are in the
 
 | Path | What |
 |------|------|
-| [`packages/avatars`](./packages/avatars) | **`@outpacelabs/avatars`** — the published React component + bundled gradient engine. |
-| [`src`](./src) | The Next.js site at [avatars.outpacestudios.com](https://avatars.outpacestudios.com) — the live generator and docs. |
+| [`packages/avatars`](./packages/avatars) | **`@outpacelabs/avatars`**, the published React component + bundled gradient engine. |
+| [`src`](./src) | The Next.js site at [avatars.outpacestudios.com](https://avatars.outpacestudios.com), the live generator and docs. |
 
 ## Local development
 
@@ -67,4 +67,4 @@ The package lives in [`packages/avatars`](./packages/avatars); `pnpm packages:bu
 
 ## License
 
-[MIT](./LICENSE) — free to use. By [Outpace Studios](https://outpacestudios.com).
+[MIT](./LICENSE), free to use. By [Outpace Studios](https://outpacestudios.com).

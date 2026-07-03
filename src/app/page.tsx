@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import { GradientAvatar } from "@/components/GradientAvatar";
 import { IconButton } from "@/components/IconButton";
+import { CopyMorphIcon } from "@/components/PackageSwitcher";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Toast } from "@/components/Toast";
 import { drawMeshGradient } from "@/lib/avatars/mesh-gradient";
@@ -125,6 +126,8 @@ const ClipboardIcon = () => (
 
 /** Copyable `npm i @outpacelabs/avatars` command — the hero's primary CTA. */
 function NpmInstall() {
+	const [copied, setCopied] = useState(false);
+
 	return (
 		<button
 			type="button"
@@ -133,6 +136,8 @@ function NpmInstall() {
 				void navigator.clipboard
 					?.writeText("npm i @outpacelabs/avatars")
 					.then(() => {
+						setCopied(true);
+						window.setTimeout(() => setCopied(false), 1400);
 						window.dispatchEvent(new CustomEvent("show-toast"));
 					});
 			}}
@@ -145,21 +150,7 @@ function NpmInstall() {
 				npm i @outpacelabs/avatars
 			</span>
 			<span className="grid size-8 shrink-0 place-items-center rounded-full text-white/[0.4] transition-colors group-hover/npm:text-white/[0.88]">
-				<svg
-					aria-hidden="true"
-					width="14"
-					height="14"
-					viewBox="0 0 16 16"
-					fill="none"
-					xmlns="http://www.w3.org/2000/svg"
-				>
-					<path
-						d="M10.1667 3.16634H12.8334V14.1663H3.16675V3.16634H5.83341M5.83341 1.83301H10.1667V4.83301H5.83341V1.83301Z"
-						stroke="currentColor"
-						strokeWidth="1.25"
-						strokeLinecap="square"
-					/>
-				</svg>
+				<CopyMorphIcon copied={copied} />
 			</span>
 		</button>
 	);

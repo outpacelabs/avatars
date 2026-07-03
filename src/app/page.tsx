@@ -124,7 +124,13 @@ const ClipboardIcon = () => (
 	</svg>
 );
 
-/** Copyable `npm i @outpacelabs/avatars` command — the hero's primary CTA. */
+/**
+ * Copyable `npm i @outpacelabs/avatars` command — the hero's primary CTA.
+ * Feedback is the morph alone, no toast: this is a single, prominent button
+ * whose icon is exactly what you're looking at when you click, unlike the
+ * anonymous small copy buttons scattered across the grid below (those use a
+ * toast instead, since there's no single icon worth watching there).
+ */
 function NpmInstall() {
 	const [copied, setCopied] = useState(false);
 
@@ -138,7 +144,6 @@ function NpmInstall() {
 					.then(() => {
 						setCopied(true);
 						window.setTimeout(() => setCopied(false), 1400);
-						window.dispatchEvent(new CustomEvent("show-toast"));
 					});
 			}}
 			className="group/npm flex h-12 items-center gap-3 rounded-full bg-white/[0.08] pl-5 pr-2 transition hover:bg-white/[0.12] motion-safe:active:scale-[0.98] cursor-pointer"

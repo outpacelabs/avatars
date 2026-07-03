@@ -17,13 +17,16 @@ const inter = Inter({
 // surfaced in the SoftwareApplication JSON-LD as a freshness signal.
 const PACKAGE_VERSION = "0.2.1";
 
-const TITLE = "Generative Gradient Avatars for React | Free & Open Source";
+// Aligned with TAGLINE (the visible H1). "Free & open source" lives in the
+// description: with "Beautiful" in the title, a suffix would push it past
+// Google's ~60-char truncation point.
+const TITLE = "Beautiful Generative Gradient Avatars for React";
 const DESCRIPTION =
-	"Free, zero-dependency React component for generative gradient avatars. Any seed becomes a unique mesh gradient, with no stored images or network calls.";
+	"Free, zero-dependency React component for beautiful generative gradient avatars. Any seed becomes a unique mesh gradient, no stored images or network calls.";
 const OG_DESCRIPTION =
-	"Free, zero-dependency React component for generative gradient avatars. Any seed becomes a unique mesh gradient, with no stored images or network. MIT licensed.";
+	"Free, zero-dependency React component for beautiful generative gradient avatars. Any seed becomes a unique mesh gradient, no stored images. MIT licensed.";
 const TWITTER_DESCRIPTION =
-	"Free, zero-dependency React component for generative gradient avatars. MIT licensed.";
+	"Free, zero-dependency React component for beautiful generative gradient avatars. MIT licensed.";
 
 const jsonLd = {
 	"@context": "https://schema.org",
@@ -34,7 +37,7 @@ const jsonLd = {
 			url: SITE,
 			name: "@outpacelabs/avatars",
 			description:
-				"Free, generative gradient avatars. A unique gradient for every seed.",
+				"Free, beautiful generative gradient avatars. A unique gradient for every seed.",
 			publisher: { "@id": `${SITE}/#organization` },
 			inLanguage: "en",
 		},
@@ -42,9 +45,9 @@ const jsonLd = {
 			"@type": ["SoftwareApplication", "SoftwareSourceCode"],
 			"@id": `${SITE}/#software`,
 			name: "@outpacelabs/avatars",
-			alternateName: "Generative Gradient Avatars",
+			alternateName: "Beautiful Generative Gradient Avatars",
 			description:
-				"A free, open-source React component that renders generative, deterministic mesh-gradient avatars on a canvas. The same seed always produces the same gradient, with no stored images and no network calls. MIT licensed.",
+				"A free, open-source React component that renders beautiful generative, deterministic mesh-gradient avatars on a canvas. The same seed always produces the same gradient, with no stored images and no network calls. MIT licensed.",
 			url: SITE,
 			applicationCategory: "DeveloperApplication",
 			operatingSystem: "Web, Cross-platform",
@@ -70,7 +73,7 @@ const jsonLd = {
 			url: SITE,
 			name: `${TAGLINE}, for every seed`,
 			description:
-				"Generative gradient avatars, free to use under the MIT license. Every seed renders a unique mesh gradient.",
+				"Beautiful generative gradient avatars, free to use under the MIT license. Every seed renders a unique mesh gradient.",
 			isPartOf: { "@id": `${SITE}/#website` },
 			about: { "@id": `${SITE}/#software` },
 			publisher: { "@id": `${SITE}/#organization` },

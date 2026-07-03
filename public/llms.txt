@@ -1,6 +1,6 @@
 # @outpacelabs/avatars
 
-> Generative gradient avatars for React. Free, zero-dependency, and
+> Beautiful generative gradient avatars for React. Free, zero-dependency, and
 > deterministic: the same seed (user id, email, username) always renders the
 > same gradient on an HTML canvas. No network requests, no stored images.
 > MIT-licensed.

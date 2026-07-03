@@ -22,7 +22,7 @@ const MORPH_EASE = { duration: 0.16, ease: "easeOut" } as const;
  * viewBox, round caps, aria-hidden, reduced-motion fallback, exit mirrors
  * initial — restrained, no rotation or bounce.
  */
-function CopyMorphIcon({ copied }: { copied: boolean }) {
+export function CopyMorphIcon({ copied }: { copied: boolean }) {
 	const reduced = useReducedMotion() ?? false;
 	const t = reduced ? { duration: 0 } : MORPH_EASE;
 

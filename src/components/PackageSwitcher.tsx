@@ -53,9 +53,9 @@ export function CopyMorphIcon({ copied }: { copied: boolean }) {
 						transition={t}
 					>
 						<motion.path
-							d="M3.5 8.4 6.6 11.5 12.5 4.5"
+							d="M1.83398 10.0625L6.00065 13.5L14.1673 2.5"
 							stroke="currentColor"
-							strokeWidth="1.5"
+							strokeWidth="1.25"
 							strokeLinecap="round"
 							strokeLinejoin="round"
 							initial={{ pathLength: reduced ? 1 : 0 }}

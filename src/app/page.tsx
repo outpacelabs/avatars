@@ -164,6 +164,29 @@ function NpmInstall() {
 const POOL_SIZE = 30;
 const EXPORT_SIZE = 2000;
 
+/* ── onload orchestration ──
+ * One set of entrance tokens (timing-consistent): every reveal shares the
+ * same duration and ease-out curve; sequence comes from delays only.
+ * Timeline: hero H1 at 0, install pill at +60ms, then the grid wave from
+ * +120ms (staging-one-focal-point — the headline reads first, the wall
+ * follows). Individual animations stay under 300ms; card stagger is 25ms
+ * per item, capped (physics-no-excessive-stagger). */
+const EASE_OUT = [0.22, 1, 0.36, 1] as const;
+const REVEAL_DURATION = 0.28;
+/** Delay before the grid wave starts on first load (hero settles first). */
+const GRID_DELAY = 0.12;
+/** Hero children reveal 60ms apart (H1, then the install pill). */
+const HERO_STAGGER = 0.06;
+
+const heroChild = {
+	hidden: { opacity: 0, y: 12 },
+	show: {
+		opacity: 1,
+		y: 0,
+		transition: { duration: REVEAL_DURATION, ease: EASE_OUT },
+	},
+};
+
 const DEFAULT_HERO_SEED = "";
 
 function randomSeed(): string {
@@ -295,11 +318,15 @@ function GradientCard({
 			initial={reducedMotion ? false : { opacity: 0, y: 12, scale: 0.97 }}
 			animate={{ opacity: 1, y: 0, scale: 1 }}
 			transition={{
-				duration: 0.28,
+				duration: REVEAL_DURATION,
+				// First batch waits for the hero copy to settle (staging: one
+				// focal point at a time); scroll-loaded batches reveal instantly.
 				// Cap the stagger window so a 30-card batch reveals as one wave,
 				// not a ~0.7s cascade (physics-no-excessive-stagger).
-				delay: Math.min(index % POOL_SIZE, 8) * 0.025,
-				ease: [0.22, 1, 0.36, 1],
+				delay:
+					(index < POOL_SIZE ? GRID_DELAY : 0) +
+					Math.min(index % POOL_SIZE, 8) * 0.025,
+				ease: EASE_OUT,
 			}}
 			className="group relative aspect-square rounded-[20px] bg-white/[0.04] hover:bg-white/[0.06] transition-colors"
 		>
@@ -417,25 +444,41 @@ export default function Home() {
 					    sticky header is a preceding sibling, not an ancestor. */}
 					<motion.div
 						className="flex flex-col items-center text-center gap-6 px-4 pt-14 pb-12 sm:pt-20 sm:pb-16"
-						initial={reducedMotion ? false : { opacity: 0, y: 12 }}
-						animate={{ opacity: 1, y: 0 }}
-						transition={
-							reducedMotion
-								? { duration: 0 }
-								: { duration: 0.28, ease: [0.22, 1, 0.36, 1] }
-						}
+						initial={reducedMotion ? false : "hidden"}
+						animate="show"
+						variants={{
+							show: { transition: { staggerChildren: HERO_STAGGER } },
+						}}
 					>
 						{/* Docs-H1 type at hero scale: weight 550, tight tracking, ink. */}
-						<h1 className="text-2xl font-[550] leading-[1.2] tracking-[-0.4px] text-white/[0.92] text-balance">
+						<motion.h1
+							variants={heroChild}
+							className="text-2xl font-[550] leading-[1.2] tracking-[-0.4px] text-white/[0.92] text-balance"
+						>
 							{TAGLINE}
-						</h1>
-						<NpmInstall />
+						</motion.h1>
+						<motion.div variants={heroChild}>
+							<NpmInstall />
+						</motion.div>
 					</motion.div>
 					<SeoContent />
 
 					<div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 w-full">
-						{/* HERO (2 cols × 2 rows) — the whole card focuses the seed input */}
-						<label className="col-span-2 row-span-2 aspect-square sm:aspect-auto relative flex flex-col items-center justify-center gap-4 rounded-[20px] bg-white/[0.04] p-4 sm:p-6 cursor-text">
+						{/* HERO (2 cols × 2 rows) — the whole card focuses the seed input.
+						    It leads the grid wave (same entrance as the cards, first slot)
+						    instead of popping in statically around the animating cards. */}
+						<motion.label
+							initial={
+								reducedMotion ? false : { opacity: 0, y: 12, scale: 0.97 }
+							}
+							animate={{ opacity: 1, y: 0, scale: 1 }}
+							transition={{
+								duration: REVEAL_DURATION,
+								delay: GRID_DELAY,
+								ease: EASE_OUT,
+							}}
+							className="col-span-2 row-span-2 aspect-square sm:aspect-auto relative flex flex-col items-center justify-center gap-4 rounded-[20px] bg-white/[0.04] p-4 sm:p-6 cursor-text"
+						>
 							<motion.div
 								className="will-change-transform"
 								animate={reducedMotion ? undefined : { scale: [1, 1.04, 1] }}
@@ -469,7 +512,7 @@ export default function Home() {
 									</IconButton>
 								</div>
 							</div>
-						</label>
+						</motion.label>
 
 						{pool.map((seed, index) => (
 							<GradientCard

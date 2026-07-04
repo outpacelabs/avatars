@@ -1,0 +1,9 @@
+interface:
+  display_name: "Corner Smoothing"
+  short_description: "Create iOS-style 60% smoothed corners"
+  brand_color: "#0081F2"
+  default_prompt: "Use $gabrielobholz-corner-smoothing to implement a 60% Apple/iOS-style smoothed rectangle."
+
+policy:
+  allow_implicit_invocation: true
+

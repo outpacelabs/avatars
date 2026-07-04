@@ -12,6 +12,7 @@ import { PackageSwitcher } from "@/components/PackageSwitcher";
 import { SiteHeader } from "@/components/SiteHeader";
 import { drawMeshGradient } from "@/lib/avatars/mesh-gradient";
 import { useScrollSpy } from "@/lib/use-scroll-spy";
+import { useSmoothCorners } from "@/lib/utils/useSmoothCorners";
 
 /*
  * Docs styled after the Outpace "Liquid Glass" article (outpacelabs/glass):
@@ -124,8 +125,10 @@ function C({ children }: { children: ReactNode }) {
    The container owns the surface; the theme only colors the tokens (its own
    background is overridden to transparent in the global style below). */
 function Code({ html }: { html: string }) {
+	const smoothRef = useSmoothCorners<HTMLDivElement>(16);
 	return (
 		<div
+			ref={smoothRef}
 			className="docs-code"
 			style={{
 				margin: "22px 0 0",
@@ -189,8 +192,10 @@ function Avatar({
 }
 
 function Preview({ children }: { children: ReactNode }) {
+	const smoothRef = useSmoothCorners<HTMLDivElement>(16);
 	return (
 		<div
+			ref={smoothRef}
 			style={{
 				display: "flex",
 				flexWrap: "wrap",
@@ -389,6 +394,8 @@ export function DocsContent({
 	highlighted: Record<string, string>;
 	install: { id: string; command: string }[];
 }) {
+	const propsTableRef = useSmoothCorners<HTMLDivElement>(16);
+	const helpersRef = useSmoothCorners<HTMLDivElement>(16);
 	return (
 		<div
 			style={{
@@ -466,6 +473,7 @@ export function DocsContent({
 								<Col>
 									<H2>Props</H2>
 									<div
+										ref={propsTableRef}
 										style={{
 											margin: "22px 0 0",
 											borderRadius: 16,
@@ -568,6 +576,7 @@ export function DocsContent({
 										full-resolution download.
 									</P>
 									<div
+										ref={helpersRef}
 										style={{
 											margin: "22px 0 0",
 											borderRadius: 16,

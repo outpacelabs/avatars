@@ -1,6 +1,6 @@
 "use client";
 
-import { confirm as confirmSound, tap as tapSound } from "@outpacelabs/audio";
+import { copy as copySound, tap as tapSound } from "@outpacelabs/audio";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { useSmoothCorners } from "@/lib/utils/useSmoothCorners";
@@ -207,7 +207,7 @@ export function PackageSwitcher({
 
 	const copy = () => {
 		void navigator.clipboard?.writeText(cur.command).then(() => {
-			confirmSound();
+			copySound();
 			setCopied(true);
 			window.setTimeout(() => setCopied(false), 1400);
 		});

@@ -349,7 +349,9 @@ function GradientCard({
 				className="absolute inset-0 flex items-center justify-center rounded-[20px] enabled:cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-white/40"
 			>
 				<div className="size-[80px] md:size-[96px] transition-transform duration-150 motion-safe:group-hover:scale-105">
-					<GradientAvatar seed={seed} size={96} />
+					{/* fill: the responsive wrapper owns the dimensions; a fixed
+					    96px avatar overflowed the 80px mobile box 8px off-center. */}
+					<GradientAvatar seed={seed} size={96} fill />
 				</div>
 			</button>
 

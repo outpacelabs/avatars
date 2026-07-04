@@ -8,6 +8,14 @@ interface GradientAvatarProps {
 	seed: number | string;
 	/** Rendered size in pixels (default: 32). */
 	size?: number;
+	/**
+	 * Fill the parent instead of sizing to `size`. Use when a responsive
+	 * wrapper owns the dimensions: a fixed inline width/height would
+	 * overflow the wrapper at breakpoints where the two disagree (the
+	 * mobile grid bug — a 96px avatar in an 80px box sits 8px off-center).
+	 * `size` still sets the blur radius basis.
+	 */
+	fill?: boolean;
 	/** Additional CSS classes. */
 	className?: string;
 }
@@ -24,6 +32,7 @@ const BLUR_FRACTION = 0.06;
 export function GradientAvatar({
 	seed,
 	size = 32,
+	fill = false,
 	className = "",
 }: GradientAvatarProps) {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -42,7 +51,9 @@ export function GradientAvatar({
 	return (
 		<span
 			className={`inline-block overflow-hidden rounded-full ${className}`}
-			style={{ width: size, height: size }}
+			style={
+				fill ? { width: "100%", height: "100%" } : { width: size, height: size }
+			}
 		>
 			<canvas
 				ref={canvasRef}

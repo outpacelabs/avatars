@@ -1,6 +1,6 @@
 "use client";
 
-import { slide as slideSound, tap as tapSound } from "@outpacelabs/audio";
+import { tap as tapSound, turn as turnSound } from "@outpacelabs/audio";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import posthog from "posthog-js";
@@ -81,7 +81,7 @@ export function SiteHeader() {
 					href="/"
 					aria-current={onHome ? "page" : undefined}
 					onClick={() => {
-						if (!onHome) slideSound("in");
+						if (!onHome) turnSound("back");
 					}}
 					className={navLink(onHome)}
 				>
@@ -91,7 +91,7 @@ export function SiteHeader() {
 					href="/docs"
 					aria-current={onDocs ? "page" : undefined}
 					onClick={() => {
-						if (!onDocs) slideSound("in");
+						if (!onDocs) turnSound("forward");
 					}}
 					className={navLink(onDocs)}
 				>

@@ -2,6 +2,7 @@
 
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
+import { useSmoothCorners } from "@/lib/utils/useSmoothCorners";
 
 const MONO =
 	"var(--font-geist-mono), ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, monospace";
@@ -200,6 +201,7 @@ export function PackageSwitcher({
 	const [active, setActive] = useState(0);
 	const [copied, setCopied] = useState(false);
 	const reduced = useReducedMotion() ?? false;
+	const smoothRef = useSmoothCorners<HTMLDivElement>(16);
 	const cur = items[active];
 
 	const copy = () => {
@@ -211,6 +213,7 @@ export function PackageSwitcher({
 
 	return (
 		<div
+			ref={smoothRef}
 			style={{
 				margin: "22px 0 0",
 				borderRadius: 16,

@@ -10,6 +10,7 @@ import { Toast } from "@/components/Toast";
 import { drawMeshGradient } from "@/lib/avatars/mesh-gradient";
 import { FAQ, TAGLINE } from "@/lib/seo";
 import { usePrefersReducedMotion } from "@/lib/utils/useReducedMotion";
+import { useSmoothCorners } from "@/lib/utils/useSmoothCorners";
 
 /**
  * Visually hidden, but present in the initial HTML for crawlers, LLMs, and
@@ -306,6 +307,7 @@ function GradientCard({
 	canCopy: boolean;
 }) {
 	const reducedMotion = usePrefersReducedMotion();
+	const smoothRef = useSmoothCorners<HTMLDivElement>(20);
 
 	const copy = () => {
 		void copyGradient(seed).then((ok) => {
@@ -315,6 +317,7 @@ function GradientCard({
 
 	return (
 		<motion.div
+			ref={smoothRef}
 			initial={reducedMotion ? false : { opacity: 0, y: 12, scale: 0.97 }}
 			animate={{ opacity: 1, y: 0, scale: 1 }}
 			transition={{
@@ -381,6 +384,7 @@ export default function Home() {
 	const [canCopy, setCanCopy] = useState(false);
 	const sentinelRef = useRef<HTMLDivElement>(null);
 	const reducedMotion = usePrefersReducedMotion();
+	const heroCardRef = useSmoothCorners<HTMLLabelElement>(20);
 
 	useEffect(() => {
 		// eslint-disable-next-line react-hooks/set-state-in-effect
@@ -468,6 +472,7 @@ export default function Home() {
 						    It leads the grid wave (same entrance as the cards, first slot)
 						    instead of popping in statically around the animating cards. */}
 						<motion.label
+							ref={heroCardRef}
 							initial={
 								reducedMotion ? false : { opacity: 0, y: 12, scale: 0.97 }
 							}

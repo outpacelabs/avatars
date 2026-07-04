@@ -1,5 +1,6 @@
 "use client";
 
+import { slide as slideSound, tap as tapSound } from "@outpacelabs/audio";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import posthog from "posthog-js";
@@ -81,6 +82,9 @@ export function SiteHeader() {
 				<Link
 					href="/"
 					aria-current={onHome ? "page" : undefined}
+					onClick={() => {
+						if (!onHome) slideSound("in");
+					}}
 					className={navLink(onHome)}
 				>
 					Home
@@ -88,6 +92,9 @@ export function SiteHeader() {
 				<Link
 					href="/docs"
 					aria-current={onDocs ? "page" : undefined}
+					onClick={() => {
+						if (!onDocs) slideSound("in");
+					}}
 					className={navLink(onDocs)}
 				>
 					Docs
@@ -101,13 +108,14 @@ export function SiteHeader() {
 				target="_blank"
 				rel="noopener"
 				aria-label="GitHub repository"
-				onClick={() =>
+				onClick={() => {
+					tapSound();
 					posthog.capture("External Link Clicked", {
 						link_url: "https://github.com/outpacelabs/avatars",
 						link_location: "header",
 						link_text: "GitHub",
-					})
-				}
+					});
+				}}
 				className="inline-flex items-center gap-1.5 rounded-full bg-white/[0.08] py-2.5 pl-3 pr-3.5 text-sm font-[550] leading-none text-white/[0.96] transition hover:bg-white/[0.12] motion-safe:active:scale-[0.97]"
 			>
 				<GithubMark />

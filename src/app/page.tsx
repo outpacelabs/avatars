@@ -374,7 +374,10 @@ function GradientCard({
 					</IconButton>
 				)}
 				<IconButton
-					onClick={() => void downloadGradient(seed)}
+					onClick={() => {
+						confirmSound();
+						void downloadGradient(seed);
+					}}
 					title="Download 2000×2000"
 				>
 					<DownloadIcon />
@@ -434,6 +437,7 @@ export default function Home() {
 	}, [heroSeed]);
 
 	const exportHero = useCallback(() => {
+		confirmSound();
 		void downloadGradient(heroSeed);
 	}, [heroSeed]);
 

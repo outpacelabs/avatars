@@ -1,6 +1,6 @@
 "use client";
 
-import { confirm as confirmSound } from "@outpacelabs/audio";
+import { confirm as confirmSound, tap as tapSound } from "@outpacelabs/audio";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { useSmoothCorners } from "@/lib/utils/useSmoothCorners";
@@ -248,7 +248,10 @@ export function PackageSwitcher({
 							key={it.id}
 							type="button"
 							className={`pkg-tab pkg-mgr${isActive ? " is-active" : ""}`}
-							onClick={() => setActive(i)}
+							onClick={() => {
+								if (i !== active) tapSound();
+								setActive(i);
+							}}
 							style={{
 								position: "relative",
 								fontFamily: MONO,

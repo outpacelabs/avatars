@@ -14,7 +14,6 @@
 	},
 	"dependencies": {
 		"@outpacelabs/audio": "github:outpacelabs/audio#path:packages/audio",
-		"@outpacelabs/smooth": "github:outpacelabs/smooth#path:packages/smooth",
 		"@radix-ui/react-icons": "^1.3.2",
 		"framer-motion": "^12.40.0",
 		"geist": "^1.7.2",

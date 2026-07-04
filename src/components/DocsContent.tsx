@@ -1,6 +1,5 @@
 "use client";
 
-import { useSmoothCorners } from "@outpacelabs/smooth/react";
 import { motion, useReducedMotion } from "framer-motion";
 import {
 	type CSSProperties,
@@ -13,6 +12,7 @@ import { PackageSwitcher } from "@/components/PackageSwitcher";
 import { SiteHeader } from "@/components/SiteHeader";
 import { drawMeshGradient } from "@/lib/avatars/mesh-gradient";
 import { useScrollSpy } from "@/lib/use-scroll-spy";
+import { useSmoothCorners } from "@/lib/utils/useSmoothCorners";
 
 /*
  * Docs styled after the Outpace "Liquid Glass" article (outpacelabs/glass):

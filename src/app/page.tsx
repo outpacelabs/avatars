@@ -5,6 +5,7 @@ import {
 	copy as copySound,
 	deny as denySound,
 } from "@outpacelabs/audio";
+import { useSmoothCorners } from "@outpacelabs/smooth/react";
 import { motion } from "framer-motion";
 import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import { GradientAvatar } from "@/components/GradientAvatar";
@@ -15,7 +16,6 @@ import { Toast } from "@/components/Toast";
 import { drawMeshGradient } from "@/lib/avatars/mesh-gradient";
 import { FAQ, TAGLINE } from "@/lib/seo";
 import { usePrefersReducedMotion } from "@/lib/utils/useReducedMotion";
-import { useSmoothCorners } from "@/lib/utils/useSmoothCorners";
 
 /**
  * Visually hidden, but present in the initial HTML for crawlers, LLMs, and

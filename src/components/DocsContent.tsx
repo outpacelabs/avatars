@@ -38,7 +38,7 @@ function Col({ children }: { children: ReactNode }) {
 	const reduced = useReducedMotion() ?? false;
 	return (
 		<motion.div
-			style={{ maxWidth: 640, margin: "0 auto", padding: "0 24px" }}
+			style={{ maxWidth: 640, margin: "0 auto" }}
 			initial={reduced ? false : { opacity: 0, y: 12 }}
 			whileInView={{ opacity: 1, y: 0 }}
 			viewport={{ once: true, margin: "0px 0px -64px 0px" }}
@@ -410,7 +410,7 @@ export function DocsContent({
 			<style>{`.docs-code .shiki{margin:0;padding:16px 18px;overflow-x:auto;line-height:1.65;background:transparent !important;font-family:${MONO};font-size:13px}
 .docs-code .shiki code{font-family:inherit;background:transparent;padding:0}`}</style>
 			<div className="flex flex-col items-center w-full pt-3 gap-6">
-				<section className="w-full px-4 flex flex-col gap-3">
+				<section className="w-full px-6 flex flex-col gap-3">
 					<SiteHeader />
 
 					{/* article body: 1080 container (like the glass article) holding the

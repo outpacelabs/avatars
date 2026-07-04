@@ -457,7 +457,7 @@ export default function Home() {
 
 			<div className="flex flex-col items-center w-full pt-3 gap-6">
 				{/* WALL — the hero lives as a 2×2 feature in the top-left */}
-				<section className="w-full px-4 flex flex-col gap-3">
+				<section className="w-full px-6 flex flex-col gap-3">
 					<SiteHeader />
 
 					{/* HERO — slides up + fades on mount, the same reveal the docs' first
@@ -465,7 +465,7 @@ export default function Home() {
 					    animates its top content identically. Safe to transform: the
 					    sticky header is a preceding sibling, not an ancestor. */}
 					<motion.div
-						className="flex flex-col items-center text-center gap-6 px-4 pt-14 pb-12 sm:pt-20 sm:pb-16"
+						className="flex flex-col items-center text-center gap-6 pt-14 pb-12 sm:pt-20 sm:pb-16"
 						initial={reducedMotion ? false : "hidden"}
 						animate="show"
 						variants={{

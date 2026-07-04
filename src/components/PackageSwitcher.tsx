@@ -1,5 +1,6 @@
 "use client";
 
+import { confirm as confirmSound } from "@outpacelabs/audio";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { useSmoothCorners } from "@/lib/utils/useSmoothCorners";
@@ -206,6 +207,7 @@ export function PackageSwitcher({
 
 	const copy = () => {
 		void navigator.clipboard?.writeText(cur.command).then(() => {
+			confirmSound();
 			setCopied(true);
 			window.setTimeout(() => setCopied(false), 1400);
 		});

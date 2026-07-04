@@ -13,6 +13,7 @@
 		"packages:build": "pnpm -r --filter \"./packages/**\" build"
 	},
 	"dependencies": {
+		"@outpacelabs/audio": "github:outpacelabs/audio#path:packages/audio",
 		"framer-motion": "^12.40.0",
 		"geist": "^1.7.2",
 		"next": "16.1.6",

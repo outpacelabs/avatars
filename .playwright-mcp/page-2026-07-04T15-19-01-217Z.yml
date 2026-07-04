@@ -1,0 +1,199 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - link "Outpace Studios" [ref=e4] [cursor=pointer]:
+        - /url: https://outpacestudios.com
+        - img [ref=e5]
+      - generic [ref=e9]:
+        - link "GitHub" [ref=e10] [cursor=pointer]:
+          - /url: https://github.com/outpacelabs/audio
+          - img [ref=e11]
+          - text: GitHub
+        - generic [ref=e13]:
+          - button "Outpace Labs projects" [expanded] [active] [ref=e14]:
+            - text: Labs
+            - img [ref=e15]
+          - menu [ref=e224]:
+            - menuitem "avatars" [ref=e225] [cursor=pointer]
+            - menuitem "smooth" [ref=e226] [cursor=pointer]
+            - menuitem "audio current" [ref=e227] [cursor=pointer]:
+              - text: audio
+              - generic [ref=e228]: current
+    - generic [ref=e17]:
+      - heading "Interface sounds with a sense of direction" [level=1] [ref=e18]
+      - paragraph [ref=e19]: "Interfaces move in directions; these sounds do too. Six moves under 180 milliseconds, synthesized at runtime from pure data, in mirrored pairs: up and down, on and off, in and out, yes and no."
+      - button "$ pnpm add @outpacelabs/audio" [ref=e20]:
+        - generic [ref=e21]: $
+        - generic [ref=e22]: pnpm add @outpacelabs/audio
+    - generic [ref=e24]:
+      - button "tap 8ms" [ref=e25]:
+        - generic [ref=e26]:
+          - generic [ref=e27]: tap
+          - img [ref=e28]
+        - img [ref=e30]
+        - generic [ref=e31]: 8ms
+      - button "nudge up 45ms" [ref=e32]:
+        - generic [ref=e33]:
+          - generic [ref=e34]: nudge up
+          - img [ref=e35]
+        - img [ref=e37]
+        - generic [ref=e39]: 45ms
+      - button "nudge down 45ms" [ref=e40]:
+        - generic [ref=e41]:
+          - generic [ref=e42]: nudge down
+          - img [ref=e43]
+        - img [ref=e45]
+        - generic [ref=e47]: 45ms
+      - button "toggle on 95ms" [ref=e48]:
+        - generic [ref=e49]:
+          - generic [ref=e50]: toggle on
+          - img [ref=e51]
+        - img [ref=e53]
+        - generic [ref=e54]: 95ms
+      - button "toggle off 95ms" [ref=e55]:
+        - generic [ref=e56]:
+          - generic [ref=e57]: toggle off
+          - img [ref=e58]
+        - img [ref=e60]
+        - generic [ref=e61]: 95ms
+      - button "slide in 70ms" [ref=e62]:
+        - generic [ref=e63]:
+          - generic [ref=e64]: slide in
+          - img [ref=e65]
+        - img [ref=e67]
+        - generic [ref=e69]: 70ms
+      - button "slide out 70ms" [ref=e70]:
+        - generic [ref=e71]:
+          - generic [ref=e72]: slide out
+          - img [ref=e73]
+        - img [ref=e75]
+        - generic [ref=e77]: 70ms
+      - button "turn forward 110ms" [ref=e78]:
+        - generic [ref=e79]:
+          - generic [ref=e80]: turn forward
+          - img [ref=e81]
+        - img [ref=e83]
+        - generic [ref=e85]: 110ms
+      - button "turn back 110ms" [ref=e86]:
+        - generic [ref=e87]:
+          - generic [ref=e88]: turn back
+          - img [ref=e89]
+        - img [ref=e91]
+        - generic [ref=e93]: 110ms
+      - button "open 80ms" [ref=e94]:
+        - generic [ref=e95]:
+          - generic [ref=e96]: open
+          - img [ref=e97]
+        - img [ref=e99]
+        - generic [ref=e102]: 80ms
+      - button "close 80ms" [ref=e103]:
+        - generic [ref=e104]:
+          - generic [ref=e105]: close
+          - img [ref=e106]
+        - img [ref=e108]
+        - generic [ref=e111]: 80ms
+      - button "copy 120ms" [ref=e112]:
+        - generic [ref=e113]:
+          - generic [ref=e114]: copy
+          - img [ref=e115]
+        - img [ref=e117]
+        - generic [ref=e118]: 120ms
+      - button "paste 124ms" [ref=e119]:
+        - generic [ref=e120]:
+          - generic [ref=e121]: paste
+          - img [ref=e122]
+        - img [ref=e124]
+        - generic [ref=e125]: 124ms
+      - button "confirm 89ms" [ref=e126]:
+        - generic [ref=e127]:
+          - generic [ref=e128]: confirm
+          - img [ref=e129]
+        - img [ref=e131]
+        - generic [ref=e133]: 89ms
+      - button "deny 100ms" [ref=e134]:
+        - generic [ref=e135]:
+          - generic [ref=e136]: deny
+          - img [ref=e137]
+        - img [ref=e139]
+        - generic [ref=e141]: 100ms
+      - button "remove 60ms" [ref=e142]:
+        - generic [ref=e143]:
+          - generic [ref=e144]: remove
+          - img [ref=e145]
+        - img [ref=e147]
+        - generic [ref=e149]: 60ms
+    - generic [ref=e150]:
+      - complementary "Contents" [ref=e151]:
+        - navigation [ref=e152]:
+          - link "Playground" [ref=e153] [cursor=pointer]:
+            - /url: "#playground"
+          - link "One gesture, reversed" [ref=e154] [cursor=pointer]:
+            - /url: "#direction"
+          - link "Design as data" [ref=e155] [cursor=pointer]:
+            - /url: "#data"
+          - link "A voice from a seed" [ref=e156] [cursor=pointer]:
+            - /url: "#voice"
+          - link "The instrument" [ref=e157] [cursor=pointer]:
+            - /url: "#synthesis"
+          - link "Quiet by default" [ref=e158] [cursor=pointer]:
+            - /url: "#restraint"
+      - main [ref=e159]:
+        - generic [ref=e161]:
+          - heading "One gesture, played forward or reversed" [level=2] [ref=e162]
+          - paragraph [ref=e163]: "Interfaces already speak in directions. Panels slide in and out, values step up and down, switches flip on and off, flows end in yes or no. The sounds mirror that grammar: every pair is a single gesture, played forward or reversed. Rising pitch opens, affirms, increases. Falling pitch closes, dismisses, declines. Learn one sound and you have learned its opposite."
+          - paragraph [ref=e164]: "Some states ask for more than a direction, and there the gesture itself carries the meaning. A copy is a strike followed by its own echo, quieter and duller: the duplicate. Paste is the same pair reversed, the ghost arriving first and landing as the real thing. A page turn is air in the direction of travel, then a soft low landing on the new page. Open and close trade the same glide up and down a fourth. And remove is a single dead strike, shorter and drier than deny, because deletion is a completion, not a refusal."
+          - paragraph [ref=e165]: Just as designed is the silence. Sound earns its place at confirmations and at errors, the moments a user must not miss, and nowhere else. Nothing on hover. Nothing on keystrokes. Anything that fires ten times a second belongs to the pointer, not the ear.
+        - generic [ref=e167]:
+          - heading "The sound design is data" [level=2] [ref=e168]
+          - paragraph [ref=e169]: "There isn't an audio file in this library. A sound is a spec: a handful of numbers naming tones and noise bursts, where they start, how they glide, how loud they peak. Pure functions produce the specs; a small interpreter schedules them onto Web Audio nodes. The drawings in the playground aren't illustrations of the sounds. They are renderings of the same data the engine plays."
+          - code [ref=e172]:
+            - generic [ref=e173]: "import { specs, duration } from \"@outpacelabs/audio\";"
+            - generic [ref=e174]: specs.nudge("up");
+            - generic [ref=e175]: "// {"
+            - generic [ref=e176]: "// name: \"nudge-up\","
+            - generic [ref=e177]: "// layers: [{ kind: \"fm\", from: 500, to: 570, ratio: 2.76,"
+            - generic [ref=e178]: "// index: 2.5, at: 0, duration: 0.045, peak: 0.5 }],"
+            - generic [ref=e179]: "// }"
+            - generic [ref=e180]: duration(specs.confirm()); // 0.089, nothing exceeds 0.18s
+          - paragraph [ref=e181]: "Data has properties, and properties can be held to. The test suite runs the whole sound design in Node, no AudioContext anywhere: every sound ends inside 180 milliseconds, every mirrored pair actually reverses, the tap stays true percussion, deny stays low and soft. The design cannot drift without a test going red."
+          - code [ref=e184]:
+            - generic [ref=e185]: "import { confirm, copy, deny, nudge, turn } from \"@outpacelabs/audio\";"
+            - generic [ref=e186]: "<Switch onChange={(on) => toggle(on ? \"on\" : \"off\")} />"
+            - generic [ref=e187]: "<Stepper onStep={(direction) => nudge(direction)} />"
+            - generic [ref=e188]: navigator.clipboard.writeText(text).then(copy);
+            - generic [ref=e189]: router.push(next).then(() => turn("forward"));
+            - generic [ref=e190]: form.submit().then(confirm).catch(deny);
+        - generic [ref=e192]:
+          - heading "A voice from a seed" [level=2] [ref=e193]
+          - paragraph [ref=e194]:
+            - text: Our avatars engine turns any seed into a gradient no other seed produces. The same move works on sound.
+            - code [ref=e195]: setVoice(seed)
+            - text: "hashes any string or number into a voice: a register a few semitones up or down, a timbre, a brightness for the percussion, a pace. The whole set re-renders in it. A product can own its sound the way it owns a color, and two products built on this library will not sound like each other."
+          - paragraph [ref=e196]: "A voice changes how the sounds speak, never what they say. The property tests sample a hundred seeded voices and hold every invariant against each one: pairs still mirror, the tap is still percussion, deny still sits low, nothing runs long."
+        - generic [ref=e198]:
+          - heading "One instrument, struck fifteen ways" [level=2] [ref=e199]
+          - paragraph [ref=e200]: "Every sound here is the same physical event: a strike. A strike has two parts. The contact is a few milliseconds of filtered noise, the touch itself. The body is a two-operator FM tone at a slightly inharmonic ratio, 2.76, the wood and marimba family; integer ratios ring like organs, this rings like an object. The modulation index decays across each strike, so the brightness dies the way a struck object's does. Direction lives in where and how the material is hit, never in a melody. A UI sound that sings reads as a jingle."
+          - code [ref=e203]:
+            - generic [ref=e204]: gain.gain.setValueAtTime(0.001, start);
+            - generic [ref=e205]: gain.gain.linearRampToValueAtTime(peak, start + 0.004);
+            - generic [ref=e206]: gain.gain.exponentialRampToValueAtTime(0.001, end); // never to zero
+          - paragraph [ref=e207]: Envelopes ramp exponentially down to 0.001 and never to zero; an exponential cannot reach zero, and a ramp that tries clicks audibly at the end. One AudioContext serves the whole app, created lazily inside the first user gesture so autoplay policy stays satisfied, resumed when the browser suspends it. Every node disconnects itself when its sound ends.
+        - generic [ref=e209]:
+          - heading "Quiet by default" [level=2] [ref=e210]
+          - paragraph [ref=e211]:
+            - text: The master volume defaults to 0.3. One call disables everything, the preference persists in
+            - code [ref=e212]: localStorage
+            - text: ", and anyone who asks the OS for reduced motion gets silence without asking twice. Failure informs rather than punishes: deny is a dead strike, low and dull, not a buzzer. The user already knows something went wrong. The sound only has to say it, quietly."
+    - contentinfo [ref=e215]:
+      - generic [ref=e216]:
+        - generic [ref=e217]:
+          - paragraph [ref=e218]: By Outpace Studios
+          - paragraph [ref=e219]:
+            - text: Brands, interfaces, and motion for
+            - text: venture-backed companies
+        - generic [ref=e220]:
+          - link "Website" [ref=e221] [cursor=pointer]:
+            - /url: https://outpacestudios.com
+          - link "X / Twitter" [ref=e222] [cursor=pointer]:
+            - /url: https://x.com/outpacestudios
+  - alert [ref=e223]

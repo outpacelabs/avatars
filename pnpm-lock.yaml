@@ -10,7 +10,7 @@ importers:
     dependencies:
       '@outpacelabs/audio':
         specifier: github:outpacelabs/audio#path:packages/audio
-        version: https://codeload.github.com/outpacelabs/audio/tar.gz/d82c5b244b975c3232da853c9d7b6fb3f4bed46d#path:packages/audio(react@19.2.4)
+        version: https://codeload.github.com/outpacelabs/audio/tar.gz/838d3c88a2080a12b6070b06d4f28c23405f61f7#path:packages/audio(react@19.2.4)
       framer-motion:
         specifier: ^12.40.0
         version: 12.40.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -878,9 +878,9 @@ packages:
     resolution: {integrity: sha512-R5R9tb2AXs2IRLNKLBJDynhkfmx7mX0vi8NkhZb3gUkPWHn6HXk5J8iQ/dql0U3ApfWym4kXXmBDRGO+oeOfjg==}
     engines: {node: '>=14'}
 
-  '@outpacelabs/audio@https://codeload.github.com/outpacelabs/audio/tar.gz/d82c5b244b975c3232da853c9d7b6fb3f4bed46d#path:packages/audio':
-    resolution: {path: packages/audio, tarball: https://codeload.github.com/outpacelabs/audio/tar.gz/d82c5b244b975c3232da853c9d7b6fb3f4bed46d}
-    version: 0.3.0
+  '@outpacelabs/audio@https://codeload.github.com/outpacelabs/audio/tar.gz/838d3c88a2080a12b6070b06d4f28c23405f61f7#path:packages/audio':
+    resolution: {path: packages/audio, tarball: https://codeload.github.com/outpacelabs/audio/tar.gz/838d3c88a2080a12b6070b06d4f28c23405f61f7}
+    version: 0.4.0
     peerDependencies:
       react: '>=18'
     peerDependenciesMeta:
@@ -3540,7 +3540,7 @@ snapshots:
 
   '@opentelemetry/semantic-conventions@1.39.0': {}
 
-  '@outpacelabs/audio@https://codeload.github.com/outpacelabs/audio/tar.gz/d82c5b244b975c3232da853c9d7b6fb3f4bed46d#path:packages/audio(react@19.2.4)':
+  '@outpacelabs/audio@https://codeload.github.com/outpacelabs/audio/tar.gz/838d3c88a2080a12b6070b06d4f28c23405f61f7#path:packages/audio(react@19.2.4)':
     optionalDependencies:
       react: 19.2.4
 

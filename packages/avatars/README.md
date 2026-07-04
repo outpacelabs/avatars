@@ -1,5 +1,5 @@
 <a href="https://avatars.outpacestudios.com">
-  <img src="https://avatars.outpacestudios.com/meta.jpg" alt="@outpacelabs/avatars: beautiful generative gradient avatars" width="100%" />
+  <img src="https://avatars.outpacestudios.com/meta.jpg" alt="@outpacelabs/avatars, by Outpace Studios" width="100%" />
 </a>
 
 <h1 align="center">@outpacelabs/avatars</h1>

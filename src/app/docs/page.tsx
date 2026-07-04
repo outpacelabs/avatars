@@ -30,7 +30,7 @@ export const metadata: Metadata = {
 				url: "/meta.jpg",
 				width: 1200,
 				height: 630,
-				alt: "Beautiful generative gradient avatars by Outpace Studios",
+				alt: "@outpacelabs/avatars, by Outpace Studios",
 			},
 		],
 	},

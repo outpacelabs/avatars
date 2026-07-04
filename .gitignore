@@ -40,3 +40,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 .gstack/
+
+# Playwright MCP scratch output (QA screenshots, snapshots, console logs)
+.playwright-mcp/

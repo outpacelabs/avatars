@@ -1,9 +1,9 @@
 "use client";
 
 import { copy as copySound, tap as tapSound } from "@outpacelabs/audio";
+import { useSmoothCorners } from "@outpacelabs/smooth/react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import { useSmoothCorners } from "@/lib/utils/useSmoothCorners";
 
 const MONO =
 	"var(--font-geist-mono), ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, monospace";

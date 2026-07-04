@@ -1,0 +1,356 @@
+- generic [active] [ref=f5e1]:
+  - generic [ref=f5e3]:
+    - generic [ref=f5e5]:
+      - generic [ref=f5e6]:
+        - link "Avatars, home" [ref=f5e7] [cursor=pointer]:
+          - /url: /
+          - img [ref=f5e8]
+        - navigation [ref=f5e12]:
+          - link "Home" [ref=f5e13] [cursor=pointer]:
+            - /url: /
+          - link "Docs" [ref=f5e14] [cursor=pointer]:
+            - /url: /docs
+        - generic [ref=f5e15]:
+          - link "GitHub repository" [ref=f5e16] [cursor=pointer]:
+            - /url: https://github.com/outpacelabs/avatars
+            - img [ref=f5e17]
+            - text: GitHub
+          - button "More Outpace Labs projects" [ref=f5e20]:
+            - text: More
+            - img [ref=f5e21]
+      - generic [ref=f5e23]:
+        - heading "Beautiful generative gradient avatars" [level=1] [ref=f5e24]
+        - button "$ npm i @outpacelabs/avatars" [ref=f5e26] [cursor=pointer]:
+          - generic [ref=f5e27]: $
+          - generic [ref=f5e28]: npm i @outpacelabs/avatars
+          - img [ref=f5e31]
+      - generic [ref=f5e33]:
+        - paragraph [ref=f5e34]:
+          - strong [ref=f5e35]: "@outpacelabs/avatars"
+          - text: is a free, open-source React component that renders generative, deterministic mesh-gradient avatars on an HTML canvas. The same seed, whether a user id, email, or username, always produces the same gradient, so you get a stable profile picture with no stored images and no network requests. Zero dependencies, MIT licensed.
+        - paragraph [ref=f5e36]:
+          - text: Install with
+          - code [ref=f5e37]: npm i @outpacelabs/avatars
+          - text: ", then render a"
+          - code [ref=f5e38]: GradientAvatar
+          - text: with any
+          - code [ref=f5e39]: seed
+          - text: .
+        - navigation "Primary" [ref=f5e40]:
+          - link "Read the documentation" [ref=f5e41] [cursor=pointer]:
+            - /url: /docs
+          - link "View source on GitHub" [ref=f5e42] [cursor=pointer]:
+            - /url: https://github.com/outpacelabs/avatars
+          - link "View the package on npm" [ref=f5e43] [cursor=pointer]:
+            - /url: https://www.npmjs.com/package/@outpacelabs/avatars
+        - heading "What is @outpacelabs/avatars?" [level=2] [ref=f5e44]
+        - paragraph [ref=f5e45]: A zero-dependency React avatar component for generative, colorful gradient profile pictures. Drop in any seed string or number and get a unique, reproducible mesh gradient, ideal for user avatars, placeholder and fallback images, team logos, and brand artwork. Render to a canvas, a PNG data URL, a Blob, or export at 2000×2000.
+        - heading "Same seed, same avatar, every time" [level=2] [ref=f5e46]
+        - paragraph [ref=f5e47]: Gradients are derived deterministically from the seed, so the same input renders identically across devices and reloads. A user id or email becomes a stable avatar you never have to store or migrate.
+        - heading "Zero dependencies, no network" [level=2] [ref=f5e48]
+        - paragraph [ref=f5e49]: Everything renders client-side on an HTML canvas. There are no API calls, no stored images, and nothing leaves the user's device, which is great for privacy, offline use, and avoiding third-party requests.
+        - heading "A canvas alternative to Boring Avatars and DiceBear" [level=2] [ref=f5e50]
+        - paragraph [ref=f5e51]: Most avatar libraries render SVG and many depend on an API. @outpacelabs/avatars renders gradient/mesh fills on canvas with zero dependencies and no network calls, a maintained, privacy-first alternative when you want gradient avatars instead of shapes or illustrations.
+        - heading "Frequently asked questions" [level=2] [ref=f5e52]
+        - heading "Is @outpacelabs/avatars free?" [level=3] [ref=f5e53]
+        - paragraph [ref=f5e54]: Yes. It is free and open source under the MIT license, for commercial or personal projects, with no attribution required.
+        - heading "How are the gradients generated?" [level=3] [ref=f5e55]
+        - paragraph [ref=f5e56]: Each gradient is derived deterministically from its seed via a hashing function, so the same seed always yields the same gradient. Nothing is stored and no network request is made.
+        - heading "Does it make network requests?" [level=3] [ref=f5e57]
+        - paragraph [ref=f5e58]: No. Avatars render entirely client-side on an HTML canvas. Nothing is uploaded, hashed to a remote service, or stored, which is good for privacy and offline use.
+        - heading "Does it work without React?" [level=3] [ref=f5e59]
+        - paragraph [ref=f5e60]: Yes. The bundled engine is re-exported, so you can render gradients to a canvas, data URL, or Blob outside React using helpers like gradientToDataURL and generatePalette.
+        - heading "What frameworks does it support?" [level=3] [ref=f5e61]
+        - paragraph [ref=f5e62]: Any React 18+ application, including Next.js. React is the only peer dependency.
+        - heading "How is it different from Boring Avatars?" [level=3] [ref=f5e63]
+        - paragraph [ref=f5e64]: Boring Avatars renders SVG shapes; @outpacelabs/avatars renders gradient/mesh fills on an HTML canvas with zero dependencies and no network requests.
+      - generic [ref=f5e65]:
+        - generic [ref=f5e70]:
+          - textbox [ref=f5e71]:
+            - /placeholder: Type any seed...
+          - generic [ref=f5e72]:
+            - button "Copy to clipboard" [ref=f5e73] [cursor=pointer]:
+              - img [ref=f5e75]
+            - button "Download 2000×2000" [ref=f5e77] [cursor=pointer]:
+              - img [ref=f5e79]
+        - generic [ref=f5e81]:
+          - button "Copy gradient for seed 1co8rxb" [ref=f5e82] [cursor=pointer]
+          - generic: "001"
+          - generic: 1co8rxb
+          - generic [ref=f5e86]:
+            - button "Copy to clipboard" [ref=f5e87] [cursor=pointer]:
+              - img [ref=f5e89]
+            - button "Download 2000×2000" [ref=f5e91] [cursor=pointer]:
+              - img [ref=f5e93]
+        - generic [ref=f5e95]:
+          - button "Copy gradient for seed 0fui68p" [ref=f5e96] [cursor=pointer]
+          - generic: "002"
+          - generic: 0fui68p
+          - generic [ref=f5e100]:
+            - button "Copy to clipboard" [ref=f5e101] [cursor=pointer]:
+              - img [ref=f5e103]
+            - button "Download 2000×2000" [ref=f5e105] [cursor=pointer]:
+              - img [ref=f5e107]
+        - generic [ref=f5e109]:
+          - button "Copy gradient for seed 0arkbcb" [ref=f5e110] [cursor=pointer]
+          - generic: "003"
+          - generic: 0arkbcb
+          - generic [ref=f5e114]:
+            - button "Copy to clipboard" [ref=f5e115] [cursor=pointer]:
+              - img [ref=f5e117]
+            - button "Download 2000×2000" [ref=f5e119] [cursor=pointer]:
+              - img [ref=f5e121]
+        - generic [ref=f5e123]:
+          - button "Copy gradient for seed 0hdd3c6" [ref=f5e124] [cursor=pointer]
+          - generic: "004"
+          - generic: 0hdd3c6
+          - generic [ref=f5e128]:
+            - button "Copy to clipboard" [ref=f5e129] [cursor=pointer]:
+              - img [ref=f5e131]
+            - button "Download 2000×2000" [ref=f5e133] [cursor=pointer]:
+              - img [ref=f5e135]
+        - generic [ref=f5e137]:
+          - button "Copy gradient for seed 16pph80" [ref=f5e138] [cursor=pointer]
+          - generic: "005"
+          - generic: 16pph80
+          - generic [ref=f5e142]:
+            - button "Copy to clipboard" [ref=f5e143] [cursor=pointer]:
+              - img [ref=f5e145]
+            - button "Download 2000×2000" [ref=f5e147] [cursor=pointer]:
+              - img [ref=f5e149]
+        - generic [ref=f5e151]:
+          - button "Copy gradient for seed 0pvy5lv" [ref=f5e152] [cursor=pointer]
+          - generic: "006"
+          - generic: 0pvy5lv
+          - generic [ref=f5e156]:
+            - button "Copy to clipboard" [ref=f5e157] [cursor=pointer]:
+              - img [ref=f5e159]
+            - button "Download 2000×2000" [ref=f5e161] [cursor=pointer]:
+              - img [ref=f5e163]
+        - generic [ref=f5e165]:
+          - button "Copy gradient for seed 0oe42su" [ref=f5e166] [cursor=pointer]
+          - generic: "007"
+          - generic: 0oe42su
+          - generic [ref=f5e170]:
+            - button "Copy to clipboard" [ref=f5e171] [cursor=pointer]:
+              - img [ref=f5e173]
+            - button "Download 2000×2000" [ref=f5e175] [cursor=pointer]:
+              - img [ref=f5e177]
+        - generic [ref=f5e179]:
+          - button "Copy gradient for seed 09vox1g" [ref=f5e180] [cursor=pointer]
+          - generic: "008"
+          - generic: 09vox1g
+          - generic [ref=f5e184]:
+            - button "Copy to clipboard" [ref=f5e185] [cursor=pointer]:
+              - img [ref=f5e187]
+            - button "Download 2000×2000" [ref=f5e189] [cursor=pointer]:
+              - img [ref=f5e191]
+        - generic [ref=f5e193]:
+          - button "Copy gradient for seed 07yitm4" [ref=f5e194] [cursor=pointer]
+          - generic: "009"
+          - generic: 07yitm4
+          - generic [ref=f5e198]:
+            - button "Copy to clipboard" [ref=f5e199] [cursor=pointer]:
+              - img [ref=f5e201]
+            - button "Download 2000×2000" [ref=f5e203] [cursor=pointer]:
+              - img [ref=f5e205]
+        - generic [ref=f5e207]:
+          - button "Copy gradient for seed 1qh08y2" [ref=f5e208] [cursor=pointer]
+          - generic: "010"
+          - generic: 1qh08y2
+          - generic [ref=f5e212]:
+            - button "Copy to clipboard" [ref=f5e213] [cursor=pointer]:
+              - img [ref=f5e215]
+            - button "Download 2000×2000" [ref=f5e217] [cursor=pointer]:
+              - img [ref=f5e219]
+        - generic [ref=f5e221]:
+          - button "Copy gradient for seed 17mfofr" [ref=f5e222] [cursor=pointer]
+          - generic: "011"
+          - generic: 17mfofr
+          - generic [ref=f5e226]:
+            - button "Copy to clipboard" [ref=f5e227] [cursor=pointer]:
+              - img [ref=f5e229]
+            - button "Download 2000×2000" [ref=f5e231] [cursor=pointer]:
+              - img [ref=f5e233]
+        - generic [ref=f5e235]:
+          - button "Copy gradient for seed 1ls4szu" [ref=f5e236] [cursor=pointer]
+          - generic: "012"
+          - generic: 1ls4szu
+          - generic [ref=f5e240]:
+            - button "Copy to clipboard" [ref=f5e241] [cursor=pointer]:
+              - img [ref=f5e243]
+            - button "Download 2000×2000" [ref=f5e245] [cursor=pointer]:
+              - img [ref=f5e247]
+        - generic [ref=f5e249]:
+          - button "Copy gradient for seed 1e3pb47" [ref=f5e250] [cursor=pointer]
+          - generic: "013"
+          - generic: 1e3pb47
+          - generic [ref=f5e254]:
+            - button "Copy to clipboard" [ref=f5e255] [cursor=pointer]:
+              - img [ref=f5e257]
+            - button "Download 2000×2000" [ref=f5e259] [cursor=pointer]:
+              - img [ref=f5e261]
+        - generic [ref=f5e263]:
+          - button "Copy gradient for seed 19qxsoe" [ref=f5e264] [cursor=pointer]
+          - generic: "014"
+          - generic: 19qxsoe
+          - generic [ref=f5e268]:
+            - button "Copy to clipboard" [ref=f5e269] [cursor=pointer]:
+              - img [ref=f5e271]
+            - button "Download 2000×2000" [ref=f5e273] [cursor=pointer]:
+              - img [ref=f5e275]
+        - generic [ref=f5e277]:
+          - button "Copy gradient for seed 1e0x2fo" [ref=f5e278] [cursor=pointer]
+          - generic: "015"
+          - generic: 1e0x2fo
+          - generic [ref=f5e282]:
+            - button "Copy to clipboard" [ref=f5e283] [cursor=pointer]:
+              - img [ref=f5e285]
+            - button "Download 2000×2000" [ref=f5e287] [cursor=pointer]:
+              - img [ref=f5e289]
+        - generic [ref=f5e291]:
+          - button "Copy gradient for seed 03mvk5b" [ref=f5e292] [cursor=pointer]
+          - generic: "016"
+          - generic: 03mvk5b
+          - generic [ref=f5e296]:
+            - button "Copy to clipboard" [ref=f5e297] [cursor=pointer]:
+              - img [ref=f5e299]
+            - button "Download 2000×2000" [ref=f5e301] [cursor=pointer]:
+              - img [ref=f5e303]
+        - generic [ref=f5e305]:
+          - button "Copy gradient for seed 0iqkhit" [ref=f5e306] [cursor=pointer]
+          - generic: "017"
+          - generic: 0iqkhit
+          - generic [ref=f5e310]:
+            - button "Copy to clipboard" [ref=f5e311] [cursor=pointer]:
+              - img [ref=f5e313]
+            - button "Download 2000×2000" [ref=f5e315] [cursor=pointer]:
+              - img [ref=f5e317]
+        - generic [ref=f5e319]:
+          - button "Copy gradient for seed 0um5bjd" [ref=f5e320] [cursor=pointer]
+          - generic: "018"
+          - generic: 0um5bjd
+          - generic [ref=f5e324]:
+            - button "Copy to clipboard" [ref=f5e325] [cursor=pointer]:
+              - img [ref=f5e327]
+            - button "Download 2000×2000" [ref=f5e329] [cursor=pointer]:
+              - img [ref=f5e331]
+        - generic [ref=f5e333]:
+          - button "Copy gradient for seed 110gr6s" [ref=f5e334] [cursor=pointer]
+          - generic: "019"
+          - generic: 110gr6s
+          - generic [ref=f5e338]:
+            - button "Copy to clipboard" [ref=f5e339] [cursor=pointer]:
+              - img [ref=f5e341]
+            - button "Download 2000×2000" [ref=f5e343] [cursor=pointer]:
+              - img [ref=f5e345]
+        - generic [ref=f5e347]:
+          - button "Copy gradient for seed 16183nv" [ref=f5e348] [cursor=pointer]
+          - generic: "020"
+          - generic: 16183nv
+          - generic [ref=f5e352]:
+            - button "Copy to clipboard" [ref=f5e353] [cursor=pointer]:
+              - img [ref=f5e355]
+            - button "Download 2000×2000" [ref=f5e357] [cursor=pointer]:
+              - img [ref=f5e359]
+        - generic [ref=f5e361]:
+          - button "Copy gradient for seed 1f8gzod" [ref=f5e362] [cursor=pointer]
+          - generic: "021"
+          - generic: 1f8gzod
+          - generic [ref=f5e366]:
+            - button "Copy to clipboard" [ref=f5e367] [cursor=pointer]:
+              - img [ref=f5e369]
+            - button "Download 2000×2000" [ref=f5e371] [cursor=pointer]:
+              - img [ref=f5e373]
+        - generic [ref=f5e375]:
+          - button "Copy gradient for seed 1qklpsa" [ref=f5e376] [cursor=pointer]
+          - generic: "022"
+          - generic: 1qklpsa
+          - generic [ref=f5e380]:
+            - button "Copy to clipboard" [ref=f5e381] [cursor=pointer]:
+              - img [ref=f5e383]
+            - button "Download 2000×2000" [ref=f5e385] [cursor=pointer]:
+              - img [ref=f5e387]
+        - generic [ref=f5e389]:
+          - button "Copy gradient for seed 0vnspzj" [ref=f5e390] [cursor=pointer]
+          - generic: "023"
+          - generic: 0vnspzj
+          - generic [ref=f5e394]:
+            - button "Copy to clipboard" [ref=f5e395] [cursor=pointer]:
+              - img [ref=f5e397]
+            - button "Download 2000×2000" [ref=f5e399] [cursor=pointer]:
+              - img [ref=f5e401]
+        - generic [ref=f5e403]:
+          - button "Copy gradient for seed 07wru88" [ref=f5e404] [cursor=pointer]
+          - generic: "024"
+          - generic: 07wru88
+          - generic [ref=f5e408]:
+            - button "Copy to clipboard" [ref=f5e409] [cursor=pointer]:
+              - img [ref=f5e411]
+            - button "Download 2000×2000" [ref=f5e413] [cursor=pointer]:
+              - img [ref=f5e415]
+        - generic [ref=f5e417]:
+          - button "Copy gradient for seed 0hrkgmk" [ref=f5e418] [cursor=pointer]
+          - generic: "025"
+          - generic: 0hrkgmk
+          - generic [ref=f5e422]:
+            - button "Copy to clipboard" [ref=f5e423] [cursor=pointer]:
+              - img [ref=f5e425]
+            - button "Download 2000×2000" [ref=f5e427] [cursor=pointer]:
+              - img [ref=f5e429]
+        - generic [ref=f5e431]:
+          - button "Copy gradient for seed 1kfjcoq" [ref=f5e432] [cursor=pointer]
+          - generic: "026"
+          - generic: 1kfjcoq
+          - generic [ref=f5e436]:
+            - button "Copy to clipboard" [ref=f5e437] [cursor=pointer]:
+              - img [ref=f5e439]
+            - button "Download 2000×2000" [ref=f5e441] [cursor=pointer]:
+              - img [ref=f5e443]
+        - generic [ref=f5e445]:
+          - button "Copy gradient for seed 1xxumru" [ref=f5e446] [cursor=pointer]
+          - generic: "027"
+          - generic: 1xxumru
+          - generic [ref=f5e450]:
+            - button "Copy to clipboard" [ref=f5e451] [cursor=pointer]:
+              - img [ref=f5e453]
+            - button "Download 2000×2000" [ref=f5e455] [cursor=pointer]:
+              - img [ref=f5e457]
+        - generic [ref=f5e459]:
+          - button "Copy gradient for seed 15c4gjn" [ref=f5e460] [cursor=pointer]
+          - generic: "028"
+          - generic: 15c4gjn
+          - generic [ref=f5e464]:
+            - button "Copy to clipboard" [ref=f5e465] [cursor=pointer]:
+              - img [ref=f5e467]
+            - button "Download 2000×2000" [ref=f5e469] [cursor=pointer]:
+              - img [ref=f5e471]
+        - generic [ref=f5e473]:
+          - button "Copy gradient for seed 1lu1noi" [ref=f5e474] [cursor=pointer]
+          - generic: "029"
+          - generic: 1lu1noi
+          - generic [ref=f5e478]:
+            - button "Copy to clipboard" [ref=f5e479] [cursor=pointer]:
+              - img [ref=f5e481]
+            - button "Download 2000×2000" [ref=f5e483] [cursor=pointer]:
+              - img [ref=f5e485]
+        - generic [ref=f5e487]:
+          - button "Copy gradient for seed 1ungazt" [ref=f5e488] [cursor=pointer]
+          - generic: "030"
+          - generic: 1ungazt
+          - generic [ref=f5e492]:
+            - button "Copy to clipboard" [ref=f5e493] [cursor=pointer]:
+              - img [ref=f5e495]
+            - button "Download 2000×2000" [ref=f5e497] [cursor=pointer]:
+              - img [ref=f5e499]
+    - generic [ref=f5e502]:
+      - generic [ref=f5e503]:
+        - paragraph [ref=f5e504]: Handcrafted by
+        - link "Outpace Studios" [ref=f5e505] [cursor=pointer]:
+          - /url: https://outpacestudios.com
+      - paragraph [ref=f5e506]:
+        - text: Free to use, licensed under the
+        - link "MIT license" [ref=f5e507] [cursor=pointer]:
+          - /url: https://opensource.org/license/mit
+        - text: .
+  - alert [ref=f5e508]

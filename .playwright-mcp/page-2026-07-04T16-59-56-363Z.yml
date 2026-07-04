@@ -1,0 +1,197 @@
+- generic [ref=f6e1]:
+  - generic [ref=f6e2]:
+    - banner [ref=f6e3]:
+      - link "Outpace Studios" [ref=f6e4] [cursor=pointer]:
+        - /url: https://outpacestudios.com
+        - img [ref=f6e5]
+      - generic [ref=f6e9]:
+        - link "GitHub" [ref=f6e10] [cursor=pointer]:
+          - /url: https://github.com/outpacelabs/smooth
+          - img [ref=f6e11]
+          - text: GitHub
+        - generic [ref=f6e13]:
+          - button "More Outpace Labs projects" [expanded] [active] [ref=f6e14]:
+            - text: More
+            - img [ref=f6e15]
+          - menu [ref=f6e173]:
+            - menuitem "avatars" [ref=f6e174] [cursor=pointer]
+            - menuitem "smooth current" [ref=f6e175] [cursor=pointer]:
+              - text: smooth
+              - generic [ref=f6e176]: current
+            - menuitem "audio" [ref=f6e177] [cursor=pointer]
+    - generic [ref=f6e17]:
+      - heading "Corner smoothing that keeps your radius" [level=1] [ref=f6e18]
+      - paragraph [ref=f6e19]:
+        - code [ref=f6e20]: border-radius
+        - text: snaps from straight to curved at a single point, and your eye reads the snap. This corner doesn't have one. Tune it, press it, compare it against the circle, and copy the code.
+      - button "$ pnpm add @outpacelabs/smooth" [ref=f6e21]:
+        - generic [ref=f6e22]: $
+        - generic [ref=f6e23]: pnpm add @outpacelabs/smooth
+    - generic [ref=f6e28]:
+      - generic [ref=f6e29]:
+        - generic [ref=f6e30]: width
+        - slider "width" [ref=f6e31] [cursor=pointer]: "320"
+        - status [ref=f6e32]: 320px
+      - generic [ref=f6e33]:
+        - generic [ref=f6e34]: height
+        - slider "height" [ref=f6e35] [cursor=pointer]: "320"
+        - status [ref=f6e36]: 320px
+      - generic [ref=f6e37]:
+        - generic [ref=f6e38]: radius
+        - slider "radius" [ref=f6e39] [cursor=pointer]: "40"
+        - status [ref=f6e40]: 40px
+      - generic [ref=f6e41]:
+        - generic [ref=f6e42]: smoothing
+        - slider "smoothing" [ref=f6e43] [cursor=pointer]: "60"
+        - status [ref=f6e44]: 60%
+      - generic [ref=f6e45] [cursor=pointer]:
+        - checkbox "compare against border-radius" [ref=f6e46]
+        - text: compare against border-radius
+      - generic [ref=f6e47]:
+        - generic [ref=f6e48]: presets
+        - generic [ref=f6e49]:
+          - button "0%" [ref=f6e50]:
+            - generic [ref=f6e52]: 0%
+          - button "30%" [ref=f6e53]:
+            - generic [ref=f6e55]: 30%
+          - button "60% · Apple" [ref=f6e56]:
+            - generic [ref=f6e58]: 60% · Apple
+          - button "100%" [ref=f6e59]:
+            - generic [ref=f6e61]: 100%
+    - generic [ref=f6e63]:
+      - generic [ref=f6e64]:
+        - button "css" [ref=f6e65]
+        - button "react" [ref=f6e66]
+        - button "path" [ref=f6e67]
+        - button "copy" [ref=f6e68]
+      - generic [ref=f6e69]: "clip-path: path(\"M 64 0 L 256 0 C 281.9857 0 289.6032 0 298.1596 4.3597 A 40 40 0 0 1 315.6403 21.8404 C 320 30.3968 320 38.0143 320 64 L 320 256 C 320 281.9857 320 289.6032 315.6403 298.1596 A 40 40 0 0 1 298.1596 315.6403 C 289.6032 320 281.9857 320 256 320 L 64 320 C 38.0143 320 30.3968 320 21.8404 315.6403 A 40 40 0 0 1 4.3597 298.1596 C 0 289.6032 0 281.9857 0 256 L 0 64 C 0 38.0143 0 30.3968 4.3597 21.8404 A 40 40 0 0 1 21.8404 4.3597 C 30.3968 0 38.0143 0 64 0 Z\");"
+    - generic [ref=f6e70]:
+      - complementary "Contents" [ref=f6e71]:
+        - navigation [ref=f6e72]:
+          - link "Playground" [ref=f6e73] [cursor=pointer]:
+            - /url: "#playground"
+          - link "The crease" [ref=f6e74] [cursor=pointer]:
+            - /url: "#circular"
+          - link "The superellipse trap" [ref=f6e75] [cursor=pointer]:
+            - /url: "#superellipse"
+          - link "The geometry" [ref=f6e76] [cursor=pointer]:
+            - /url: "#math"
+          - link "On the web" [ref=f6e77] [cursor=pointer]:
+            - /url: "#web"
+          - link "Corners that respond" [ref=f6e78] [cursor=pointer]:
+            - /url: "#press"
+          - link "Leave it alone" [ref=f6e79] [cursor=pointer]:
+            - /url: "#caveats"
+      - main [ref=f6e80]:
+        - generic [ref=f6e82]:
+          - heading "Every corner has a crease" [level=2] [ref=f6e83]
+          - paragraph [ref=f6e84]:
+            - code [ref=f6e85]: border-radius
+            - text: rounds a corner with a quarter of a circle. The edge runs dead straight, at zero curvature, and at the exact point the arc begins, curvature jumps to
+            - code [ref=f6e86]: 1/r
+            - text: . Nothing in between. Your eye won't name it, but it reads the jump as a faint crease, the place where one continuous line quietly becomes two.
+          - paragraph [ref=f6e87]: Apple has been sanding that crease off for years, on hardware rims, on icons, on the Dynamic Island. Figma shipped the same move as a slider called corner smoothing. The corner stays a corner. The curvature just arrives gradually instead of switching on.
+        - generic [ref=f6e89]:
+          - heading "The superellipse trap" [level=2] [ref=f6e90]
+          - paragraph [ref=f6e91]:
+            - text: The first thing everyone reaches for is a superellipse,
+            - code [ref=f6e92]: "|x/r|ⁿ + |y/r|ⁿ = 1"
+            - text: ", sampled into the corner box. In isolation it looks right: one continuous curve, no crease. It also quietly redraws your design. Inside the same r-by-r box, a superellipse hugs the corner tighter than the circle does, so the apex creeps outward and a 20px radius reads closer to 12. Same number, smaller corner."
+          - paragraph [ref=f6e93]: We shipped that version first. Every corner on the site came back squarer, at the same nominal radius. The red outline below is the plain circular arc; watch what each curve does at the apex.
+          - generic [ref=f6e94]:
+            - figure "border-radius" [ref=f6e95]:
+              - generic [ref=f6e96]:
+                - img
+              - generic [ref=f6e98]: border-radius
+            - figure "naive superellipse" [ref=f6e99]:
+              - generic [ref=f6e100]:
+                - img
+              - generic [ref=f6e102]: naive superellipse
+            - figure "corner smoothing" [ref=f6e103]:
+              - generic [ref=f6e104]:
+                - img
+              - generic [ref=f6e106]: corner smoothing
+        - generic [ref=f6e108]:
+          - heading "Keep the arc, stretch the ease" [level=2] [ref=f6e109]
+          - paragraph [ref=f6e110]:
+            - text: The shape Figma describes in
+            - link "Desperately seeking squircles" [ref=f6e111] [cursor=pointer]:
+              - /url: https://www.figma.com/blog/desperately-seeking-squircles/
+            - text: "keeps the circular arc, at your radius. What changes is its sweep: 90° with no smoothing, shrinking to"
+            - code [ref=f6e112]: 90° · (1 − s)
+            - text: as smoothing
+            - code [ref=f6e113]: s
+            - text: rises, while the run-in from the straight edge stretches to
+            - code [ref=f6e114]: (1 + s) · r
+            - text: . At 60%, the value Figma equates with iOS, the arc keeps 36° and the ease takes 1.6r of edge on either side. The apex sits exactly on the circle. The radius you chose is the radius you see.
+          - paragraph [ref=f6e115]:
+            - text: Our transition is one cubic bézier per side, solved in closed form from two constraints. Its first three control points stay collinear on the edge, so the curve leaves the straight line with zero curvature; at the far end its curvature is exactly
+            - code [ref=f6e116]: 1/r
+            - text: ", the circle's own. Both junctions are curvature-continuous, a step smoother than"
+            - code [ref=f6e117]: border-radius
+            - text: "itself, which only matches tangents. And the geometry has to answer for itself: property tests hold the apex to the radius circle, check tangency and curvature at every junction, and clamp radius-first when a small element runs out of room. No reference implementation, no parity target."
+        - generic [ref=f6e119]:
+          - heading "CSS can't say this shape" [level=2] [ref=f6e120]
+          - paragraph [ref=f6e121]:
+            - text: There is no property for it.
+            - code [ref=f6e122]: border-radius
+            - text: "only draws elliptical arcs, so a smoothed corner has to arrive as a path:"
+            - code [ref=f6e123]: "clip-path: path()"
+            - text: on HTML,
+            - code [ref=f6e124]: d
+            - text: on SVG,
+            - code [ref=f6e125]: Path2D
+            - text: on canvas. Paths speak absolute pixels, which means a responsive element needs its path regenerated every time it resizes.
+          - code [ref=f6e128]:
+            - generic [ref=f6e129]: "import { squirclePath } from \"@outpacelabs/smooth\";"
+            - generic [ref=f6e130]: // SVG path data in border-box pixels. smoothing 0 to 1; 0.6 = Apple.
+            - generic [ref=f6e131]: "const d = squirclePath({ width: 320, height: 200, radius: 20, smoothing: 0.6 });"
+            - generic [ref=f6e132]: "element.style.clipPath = `path(\"${d}\")`;"
+          - paragraph [ref=f6e133]:
+            - text: The hook does the regenerating with a ResizeObserver, reading the border-box size off the observer entry so a scale or translate mid-entrance never skews the geometry. Keep the element's
+            - code [ref=f6e134]: border-radius
+            - text: in CSS; it is the fallback for the moment before JavaScript runs. The hook zeroes it as the clip applies, because the circular arc sits inside the squircle along the transition, and painting both would intersect the shape right back to the plain circle.
+          - code [ref=f6e137]:
+            - generic [ref=f6e138]: "import { useSmoothCorners } from \"@outpacelabs/smooth/react\";"
+            - generic [ref=f6e139]: "function Card() {"
+            - generic [ref=f6e140]: // radius in px, smoothing 0 to 100 (default 60)
+            - generic [ref=f6e141]: const ref = useSmoothCorners<HTMLDivElement>(20);
+            - generic [ref=f6e142]: "return <div ref={ref} className=\"rounded-[20px]\" />;"
+            - generic [ref=f6e143]: "}"
+        - generic [ref=f6e145]:
+          - heading "Corners that respond" [level=2] [ref=f6e146]
+          - paragraph [ref=f6e147]:
+            - text: "Every path this generator emits shares one command structure: a cubic, an arc, a cubic, four times over, at any smoothing above zero. Paths with identical structure interpolate, and"
+            - code [ref=f6e148]: clip-path
+            - text: animates on the compositor. So smoothing doesn't have to be a constant. It can be a state.
+          - button "hold me" [ref=f6e150]
+          - paragraph [ref=f6e151]:
+            - text: Pass
+            - code [ref=f6e152]: press
+            - text: and the corners ease to a second smoothing level while the pointer is down, then spring back on release, like material giving under a finger. The radius never moves, so the shape stays itself. Native CSS will get here eventually;
+            - code [ref=f6e153]: corner-shape
+            - text: is on its way and will make this kind of response declarative in a few years. Interpolating paths do it today.
+        - generic [ref=f6e155]:
+          - heading "Where to leave it alone" [level=2] [ref=f6e156]
+          - paragraph [ref=f6e157]: Smoothing only means something where a straight edge meets a corner. A capsule or a circle has no straight edge left, so smoothing would square a pill's ends; Apple keeps capsules true capsules, and so should you. Below roughly 8px of radius the deviation from the circle is subpixel, not worth a ResizeObserver.
+          - paragraph [ref=f6e158]:
+            - text: And
+            - code [ref=f6e159]: clip-path
+            - text: clips everything the element paints, its own
+            - code [ref=f6e160]: outline
+            - text: and
+            - code [ref=f6e161]: box-shadow
+            - text: included. Draw focus rings on a child, or accept a little clipping at the corners.
+    - contentinfo [ref=f6e164]:
+      - generic [ref=f6e165]:
+        - generic [ref=f6e166]:
+          - paragraph [ref=f6e167]: By Outpace Studios
+          - paragraph [ref=f6e168]:
+            - text: Brands, interfaces, and motion for
+            - text: venture-backed companies
+        - generic [ref=f6e169]:
+          - link "Website" [ref=f6e170] [cursor=pointer]:
+            - /url: https://outpacestudios.com
+          - link "X / Twitter" [ref=f6e171] [cursor=pointer]:
+            - /url: https://x.com/outpacestudios
+  - alert [ref=f6e172]

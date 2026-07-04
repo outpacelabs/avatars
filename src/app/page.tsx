@@ -1,5 +1,6 @@
 "use client";
 
+import { confirm as confirmSound, deny as denySound } from "@outpacelabs/audio";
 import { motion } from "framer-motion";
 import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import { GradientAvatar } from "@/components/GradientAvatar";
@@ -143,6 +144,7 @@ function NpmInstall() {
 				void navigator.clipboard
 					?.writeText("npm i @outpacelabs/avatars")
 					.then(() => {
+						confirmSound();
 						setCopied(true);
 						window.setTimeout(() => setCopied(false), 1400);
 					});
@@ -311,7 +313,12 @@ function GradientCard({
 
 	const copy = () => {
 		void copyGradient(seed).then((ok) => {
-			if (ok) window.dispatchEvent(new CustomEvent("show-toast"));
+			if (ok) {
+				confirmSound();
+				window.dispatchEvent(new CustomEvent("show-toast"));
+			} else {
+				denySound();
+			}
 		});
 	};
 
@@ -417,7 +424,12 @@ export default function Home() {
 
 	const copyHero = useCallback(() => {
 		void copyGradient(heroSeed).then((ok) => {
-			if (ok) window.dispatchEvent(new CustomEvent("show-toast"));
+			if (ok) {
+				confirmSound();
+				window.dispatchEvent(new CustomEvent("show-toast"));
+			} else {
+				denySound();
+			}
 		});
 	}, [heroSeed]);
 

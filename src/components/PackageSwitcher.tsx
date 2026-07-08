@@ -1,6 +1,10 @@
 "use client";
 
-import { copy as copySound, tap as tapSound } from "@outpacelabs/audio";
+import {
+	copy as copySound,
+	deny as denySound,
+	tap as tapSound,
+} from "@outpacelabs/audio";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { useSmoothCorners } from "@/lib/utils/useSmoothCorners";
@@ -206,11 +210,14 @@ export function PackageSwitcher({
 	const cur = items[active];
 
 	const copy = () => {
-		void navigator.clipboard?.writeText(cur.command).then(() => {
-			copySound();
-			setCopied(true);
-			window.setTimeout(() => setCopied(false), 1400);
-		});
+		void navigator.clipboard
+			?.writeText(cur.command)
+			.then(() => {
+				copySound();
+				setCopied(true);
+				window.setTimeout(() => setCopied(false), 1400);
+			})
+			.catch(() => denySound());
 	};
 
 	return (

@@ -57,6 +57,8 @@ export function GradientAvatar({
 		>
 			<canvas
 				ref={canvasRef}
+				role="img"
+				aria-label={`Gradient avatar for seed ${seed}`}
 				width={RENDER_SIZE}
 				height={RENDER_SIZE}
 				style={{

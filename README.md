@@ -10,7 +10,7 @@
 
 <p align="center">
   <a href="https://www.npmjs.com/package/@outpacelabs/avatars"><img src="https://img.shields.io/npm/v/@outpacelabs/avatars?color=000&labelColor=000" alt="npm version" /></a>
-  <img src="https://img.shields.io/badge/gzipped-2.3_kB-000?labelColor=000" alt="gzipped size" />
+  <a href="https://bundlephobia.com/package/@outpacelabs/avatars"><img src="https://img.shields.io/badge/gzipped-2.3_kB-000?labelColor=000" alt="gzipped size" /></a>
   <img src="https://img.shields.io/badge/dependencies-0-000?labelColor=000" alt="zero dependencies" />
   <img src="https://img.shields.io/badge/types-included-000?labelColor=000" alt="types included" />
   <a href="./LICENSE"><img src="https://img.shields.io/badge/license-MIT-000?labelColor=000" alt="license" /></a>
@@ -65,6 +65,7 @@ pnpm install     # install deps
 pnpm dev         # run the site → http://localhost:3000
 pnpm build       # production build
 pnpm lint        # biome + eslint
+pnpm test        # engine property tests (palette stability)
 ```
 
 The package lives in [`packages/avatars`](./packages/avatars); `pnpm packages:build` from the root (or `pnpm build` inside the package) produces the npm bundle.

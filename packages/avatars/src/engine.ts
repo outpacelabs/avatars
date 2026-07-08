@@ -267,9 +267,47 @@ export function renderGradient(
 	const dw = size * scaleUp;
 	const offset = (dw - size) / 2;
 	ctx.clearRect(0, 0, size, size);
-	ctx.filter = `blur(${blur}px)`;
-	ctx.drawImage(scratch as CanvasImageSource, -offset, -offset, dw, dw);
-	ctx.filter = "none";
+	if (supportsCanvasFilter()) {
+		ctx.filter = `blur(${blur}px)`;
+		ctx.drawImage(scratch as CanvasImageSource, -offset, -offset, dw, dw);
+		ctx.filter = "none";
+		return;
+	}
+	// 2D-canvas `filter` is a silent no-op on Safari < 17: approximate the
+	// gaussian by bouncing through a small canvas. Bilinear resampling on the
+	// way down and back up smears by roughly the downscale factor, which is
+	// plenty for a mesh that is already smooth gradients.
+	const factor = Math.max(2, Math.min(16, blur / 2));
+	const sw = Math.max(1, Math.round(size / factor));
+	const small = createCanvas(sw, sw);
+	const smallCtx = small.getContext("2d") as CanvasRenderingContext2D | null;
+	if (!smallCtx) {
+		ctx.drawImage(scratch as CanvasImageSource, -offset, -offset, dw, dw);
+		return;
+	}
+	smallCtx.imageSmoothingEnabled = true;
+	smallCtx.imageSmoothingQuality = "high";
+	smallCtx.drawImage(scratch as CanvasImageSource, 0, 0, sw, sw);
+	ctx.imageSmoothingEnabled = true;
+	ctx.imageSmoothingQuality = "high";
+	ctx.drawImage(small as CanvasImageSource, -offset, -offset, dw, dw);
+}
+
+/* Engines that honor 2D-canvas `filter` echo an assigned value back from the
+ * property; Safari < 17 ignores the assignment. Probed once, then cached. */
+let canvasFilterSupport: boolean | null = null;
+function supportsCanvasFilter(): boolean {
+	if (canvasFilterSupport !== null) return canvasFilterSupport;
+	const probe = createCanvas(1, 1).getContext(
+		"2d",
+	) as CanvasRenderingContext2D | null;
+	if (!probe) {
+		canvasFilterSupport = false;
+		return canvasFilterSupport;
+	}
+	probe.filter = "blur(1px)";
+	canvasFilterSupport = probe.filter === "blur(1px)";
+	return canvasFilterSupport;
 }
 
 function createCanvas(

@@ -30,10 +30,16 @@ function SingleToast({
 	const opacity = 1 - depth * 0.2;
 	const zIndex = total - depth;
 
+	// The dismiss callback lives in a ref so the timer runs exactly once per
+	// toast. Depending on the prop identity would reset every visible toast's
+	// countdown each time a new one is added (the parent passes a fresh
+	// closure per render), letting rapid copies pile toasts up indefinitely.
+	const onDismissRef = useRef(onDismiss);
+	onDismissRef.current = onDismiss;
 	useEffect(() => {
-		const timer = setTimeout(onDismiss, TOAST_DURATION);
+		const timer = setTimeout(() => onDismissRef.current(), TOAST_DURATION);
 		return () => clearTimeout(timer);
-	}, [onDismiss]);
+	}, []);
 
 	return (
 		<motion.div

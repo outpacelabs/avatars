@@ -7,6 +7,7 @@
 		"build": "next build",
 		"start": "next start",
 		"lint": "biome check . && eslint",
+		"test": "pnpm -r --filter \"./packages/**\" test",
 		"lint:fix": "biome check --write . && eslint --fix",
 		"format": "biome format --write .",
 		"typecheck": "tsc --noEmit && pnpm -r --filter \"./packages/**\" typecheck",
@@ -19,7 +20,6 @@
 		"geist": "^1.7.2",
 		"next": "16.1.6",
 		"posthog-js": "^1.336.1",
-		"posthog-node": "^5.24.5",
 		"react": "19.2.4",
 		"react-dom": "19.2.4",
 		"shiki": "^4.2.0"

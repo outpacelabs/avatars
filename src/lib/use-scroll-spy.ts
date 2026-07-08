@@ -36,6 +36,9 @@ export function useScrollSpy({ ids, topOffset = 0 }: ScrollSpyOptions) {
 	const [active, setActive] = useState(0);
 	const lockRef = useRef(false); // a click is driving the active index
 	const rafRef = useRef<number | null>(null);
+	// Removes the pending click-release listeners (see scrollToId); kept in a
+	// ref so unmount and re-clicks can clear them.
+	const releaseRef = useRef<(() => void) | null>(null);
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: idsKey is a stable proxy for the ids array
 	const compute = useCallback((): number => {
@@ -89,6 +92,7 @@ export function useScrollSpy({ ids, topOffset = 0 }: ScrollSpyOptions) {
 			ro?.disconnect();
 			clearTimeout(t);
 			if (rafRef.current != null) cancelAnimationFrame(rafRef.current);
+			releaseRef.current?.(); // drop any pending click-release listeners
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [idsKey, requestUpdate]);
@@ -102,6 +106,7 @@ export function useScrollSpy({ ids, topOffset = 0 }: ScrollSpyOptions) {
 			if (i < 0 || !el) return;
 			setActive(i); // authoritative: clicked item wins
 			lockRef.current = true;
+			releaseRef.current?.(); // a re-click replaces any pending release
 			const reduce = prefersReduced();
 			const maxScroll = Math.max(
 				0,
@@ -110,20 +115,43 @@ export function useScrollSpy({ ids, topOffset = 0 }: ScrollSpyOptions) {
 			const top = el.getBoundingClientRect().top + window.scrollY;
 			const target = Math.max(0, Math.min(top - topOffset, maxScroll));
 			window.scrollTo({ top: target, behavior: reduce ? "auto" : "smooth" });
-			// Hold the active index until the user scrolls themselves, then resume.
-			const release = () => {
-				lockRef.current = false;
+			// Hold the active index until the user scrolls themselves, then
+			// resume. Wheel/touch/key are direct user signals; plain `scroll`
+			// also counts (scrollbar drag emits nothing else) but only after
+			// the programmatic smooth scroll has settled at its target,
+			// otherwise our own animation would release the lock instantly.
+			let settled = false;
+			const settleTimer = window.setTimeout(() => {
+				settled = true;
+			}, 1200); // fallback: browsers cap smooth scrolls well under this
+			const onScrollProbe = () => {
+				if (!settled) {
+					if (Math.abs(window.scrollY - target) < 2) settled = true;
+					return;
+				}
+				release();
+			};
+			const cleanup = () => {
+				window.clearTimeout(settleTimer);
 				window.removeEventListener("wheel", release);
 				window.removeEventListener("touchstart", release);
 				window.removeEventListener("keydown", release);
-				requestUpdate();
+				window.removeEventListener("scroll", onScrollProbe);
+				releaseRef.current = null;
 			};
+			function release() {
+				lockRef.current = false;
+				cleanup();
+				requestUpdate();
+			}
+			releaseRef.current = cleanup;
 			window.addEventListener("wheel", release, { once: true, passive: true });
 			window.addEventListener("touchstart", release, {
 				once: true,
 				passive: true,
 			});
 			window.addEventListener("keydown", release, { once: true });
+			window.addEventListener("scroll", onScrollProbe, { passive: true });
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[idsKey, topOffset, requestUpdate],

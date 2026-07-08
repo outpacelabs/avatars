@@ -151,7 +151,8 @@ function NpmInstall() {
 						copySound();
 						setCopied(true);
 						window.setTimeout(() => setCopied(false), 1400);
-					});
+					})
+					.catch(() => denySound());
 			}}
 			className="group/npm flex h-12 items-center gap-3 rounded-full bg-white/[0.08] pl-5 pr-2 transition hover:bg-white/[0.12] motion-safe:active:scale-[0.98] cursor-pointer"
 		>
@@ -267,17 +268,23 @@ function gradientBlob(
 	return new Promise((resolve) => canvas.toBlob(resolve, type, quality));
 }
 
-async function downloadGradient(seed: string): Promise<void> {
-	const blob = await gradientBlob(seed, "image/jpeg", 0.92);
-	if (!blob) return;
-	const url = URL.createObjectURL(blob);
-	const link = document.createElement("a");
-	link.href = url;
-	link.download = `gradient-${sanitizeFilename(seed)}.jpg`;
-	document.body.appendChild(link);
-	link.click();
-	link.remove();
-	URL.revokeObjectURL(url);
+/** Download the gradient as a JPEG. Resolves false if rendering failed. */
+async function downloadGradient(seed: string): Promise<boolean> {
+	try {
+		const blob = await gradientBlob(seed, "image/jpeg", 0.92);
+		if (!blob) return false;
+		const url = URL.createObjectURL(blob);
+		const link = document.createElement("a");
+		link.href = url;
+		link.download = `gradient-${sanitizeFilename(seed)}.jpg`;
+		document.body.appendChild(link);
+		link.click();
+		link.remove();
+		URL.revokeObjectURL(url);
+		return true;
+	} catch {
+		return false;
+	}
 }
 
 /** Copy the gradient as a PNG to the clipboard. Returns false if unsupported. */
@@ -381,8 +388,9 @@ function GradientCard({
 				)}
 				<IconButton
 					onClick={() => {
-						confirmSound();
-						void downloadGradient(seed);
+						void downloadGradient(seed).then((ok) =>
+							ok ? confirmSound() : denySound(),
+						);
 					}}
 					title="Download 2000×2000"
 				>
@@ -443,8 +451,9 @@ export default function Home() {
 	}, [heroSeed]);
 
 	const exportHero = useCallback(() => {
-		confirmSound();
-		void downloadGradient(heroSeed);
+		void downloadGradient(heroSeed).then((ok) =>
+			ok ? confirmSound() : denySound(),
+		);
 	}, [heroSeed]);
 
 	return (

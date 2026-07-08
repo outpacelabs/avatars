@@ -22,7 +22,7 @@ export const metadata: Metadata = {
 		type: "website",
 		locale: "en_US",
 		siteName: "@outpacelabs/avatars",
-		title: "@outpacelabs/avatars | Docs",
+		title: "Docs | @outpacelabs/avatars",
 		description: DOCS_OG_DESCRIPTION,
 		url: "https://avatars.outpacestudios.com/docs",
 		images: [
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
 	},
 	twitter: {
 		card: "summary_large_image",
-		title: "@outpacelabs/avatars | Docs",
+		title: "Docs | @outpacelabs/avatars",
 		description: DOCS_OG_DESCRIPTION,
 		images: ["/meta.jpg"],
 		site: "@outpacestudios",

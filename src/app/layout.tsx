@@ -13,9 +13,11 @@ const inter = Inter({
 	variable: "--font-display",
 });
 
-// Published version of @outpacelabs/avatars (packages/avatars/package.json),
-// surfaced in the SoftwareApplication JSON-LD as a freshness signal.
-const PACKAGE_VERSION = "0.2.1";
+// Published version of @outpacelabs/avatars, read from the package itself
+// so the JSON-LD freshness signal can't drift from the real version.
+import avatarsPackage from "../../packages/avatars/package.json";
+
+const PACKAGE_VERSION: string = avatarsPackage.version;
 
 // Aligned with TAGLINE (the visible H1). "Free & open source" lives in the
 // description: with "Beautiful" in the title, a suffix would push it past

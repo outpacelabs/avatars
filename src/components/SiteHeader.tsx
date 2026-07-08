@@ -104,7 +104,7 @@ function LabsMenu() {
 					else openSound();
 					setMenuOpen(!menuOpen);
 				}}
-				className="inline-flex items-center gap-1.5 rounded-full bg-white/[0.08] py-2.5 pl-3.5 pr-3 text-sm font-[550] leading-none text-white/[0.96] transition hover:bg-white/[0.12] motion-safe:active:scale-[0.97]"
+				className="inline-flex cursor-pointer items-center gap-1.5 rounded-full bg-white/[0.08] py-2.5 pl-3.5 pr-3 text-sm font-[550] leading-none text-white/[0.96] transition hover:bg-white/[0.12] motion-safe:active:scale-[0.97]"
 			>
 				More
 				<ChevronDownIcon

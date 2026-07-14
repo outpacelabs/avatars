@@ -2,10 +2,11 @@
  * Render patterns for the avatar editor.
  *
  * Two engines, both deterministic from the seed and sharing the same
- * harmony-based palette: the original soft mesh gradient, and an ordered
+ * harmony-based palette: the soft mesh gradient, and a chunky ordered
  * (Bayer 8×8) dither *of that same gradient*. The dither reconstructs the exact
- * mesh field (same seed → same spots) and quantizes it to the palette, so the
- * two patterns read as the same avatar — one smooth, one dithered.
+ * mesh field (same seed → same spots) and quantizes it to the palette on a
+ * coarse grid, so it reads as the gradient rendered in pixels — same shapes,
+ * same colors. Render it with `image-rendering: pixelated` so it scales crisp.
  */
 
 import {
@@ -31,6 +32,9 @@ export const PATTERNS: PatternMeta[] = [
 ];
 
 export type PatternOptions = MeshOptions;
+
+/** Dither cells across the avatar — chunky enough to survive downscaling. */
+const DITHER_CELLS = 34;
 
 /** Whether a pattern wants hard edges (no soft blur by default). */
 export function isCrisp(pattern: Pattern): boolean {
@@ -136,11 +140,10 @@ function drawDither(
 	const hr = size * 0.3;
 	const [br, bg, bb] = rgb[0];
 
-	const cell = Math.max(2, Math.round(size / 80));
-	const n = Math.ceil(size / cell);
+	const cell = size / DITHER_CELLS;
 
-	for (let gy = 0; gy < n; gy++) {
-		for (let gx = 0; gx < n; gx++) {
+	for (let gy = 0; gy < DITHER_CELLS; gy++) {
+		for (let gx = 0; gx < DITHER_CELLS; gx++) {
 			const px = (gx + 0.5) * cell;
 			const py = (gy + 0.5) * cell;
 
@@ -169,7 +172,12 @@ function drawDither(
 			}
 
 			ctx.fillStyle = colors[ditherIndex(r, g, b, rgb, BAYER[gy % 8][gx % 8])];
-			ctx.fillRect(gx * cell, gy * cell, cell + 1, cell + 1);
+			ctx.fillRect(
+				Math.floor(gx * cell),
+				Math.floor(gy * cell),
+				Math.ceil(cell) + 1,
+				Math.ceil(cell) + 1,
+			);
 		}
 	}
 }

@@ -71,6 +71,8 @@ export function GradientAvatar({
 					height: "100%",
 					display: "block",
 					filter: blurPx > 0 ? `blur(${blurPx}px)` : undefined,
+					// Keep the coarse dither crisp when scaled to the display size.
+					imageRendering: pattern === "dither" ? "pixelated" : undefined,
 				}}
 			/>
 		</span>

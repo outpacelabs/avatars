@@ -247,6 +247,9 @@ function makeBayer(n: number): number[][] {
 
 const BAYER = makeBayer(3); // 8×8, thresholds in (0,1)
 
+/** Dither cells across the avatar — chunky enough to survive downscaling. */
+const DITHER_CELLS = 34;
+
 function hexToRgb(hex: string): [number, number, number] {
 	const n = Number.parseInt(hex.slice(1), 16);
 	return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
@@ -310,10 +313,11 @@ function ditherIndex(
 }
 
 /**
- * Draw an ordered (Bayer 8×8) dither of the seed's gradient into `ctx` at
+ * Draw a chunky ordered (Bayer 8×8) dither of the seed's gradient into `ctx` at
  * `size` x `size`. A crisp, retro alternative to {@link drawMeshGradient}: it
  * reconstructs the exact same mesh field (same seed → same spots) and quantizes
- * it to the palette, so mesh and dither read as the same avatar. No blur wanted.
+ * it to the palette on a coarse grid, so mesh and dither read as the same
+ * avatar. Render the canvas with `image-rendering: pixelated`. No blur wanted.
  */
 export function drawDither(
 	ctx: GradientContext,
@@ -351,11 +355,10 @@ export function drawDither(
 	const hr = size * 0.3;
 	const [br, bg, bb] = rgb[0];
 
-	const cell = Math.max(2, Math.round(size / 80));
-	const n = Math.ceil(size / cell);
+	const cell = size / DITHER_CELLS;
 
-	for (let gy = 0; gy < n; gy++) {
-		for (let gx = 0; gx < n; gx++) {
+	for (let gy = 0; gy < DITHER_CELLS; gy++) {
+		for (let gx = 0; gx < DITHER_CELLS; gx++) {
 			const px = (gx + 0.5) * cell;
 			const py = (gy + 0.5) * cell;
 
@@ -383,7 +386,12 @@ export function drawDither(
 			}
 
 			ctx.fillStyle = colors[ditherIndex(r, g, b, rgb, BAYER[gy % 8][gx % 8])];
-			ctx.fillRect(gx * cell, gy * cell, cell + 1, cell + 1);
+			ctx.fillRect(
+				Math.floor(gx * cell),
+				Math.floor(gy * cell),
+				Math.ceil(cell) + 1,
+				Math.ceil(cell) + 1,
+			);
 		}
 	}
 }

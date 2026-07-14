@@ -188,7 +188,6 @@ function Avatar({
 					height: "100%",
 					display: "block",
 					filter: `blur(${blurPx}px)`,
-					imageRendering: pattern === "dither" ? "pixelated" : undefined,
 				}}
 			/>
 		</span>

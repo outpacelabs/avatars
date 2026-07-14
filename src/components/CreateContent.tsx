@@ -262,7 +262,6 @@ function PatternCanvas({
 					height: "100%",
 					display: "block",
 					filter: blurPx > 0 ? `blur(${blurPx}px)` : undefined,
-					imageRendering: pattern === "dither" ? "pixelated" : undefined,
 				}}
 			/>
 		</span>

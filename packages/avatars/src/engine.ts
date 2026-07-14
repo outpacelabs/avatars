@@ -247,77 +247,10 @@ function makeBayer(n: number): number[][] {
 
 const BAYER = makeBayer(3); // 8×8, thresholds in (0,1)
 
-/** Dither cells across the avatar — chunky enough to survive downscaling. */
-const DITHER_CELLS = 34;
-
-function hexToRgb(hex: string): [number, number, number] {
-	const n = Number.parseInt(hex.slice(1), 16);
-	return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
-}
-
 /**
- * Alpha of a mesh spot at normalized distance `d`, matching the stop ramp in
- * {@link drawMeshGradient} (FF → DD → 88 → 00 at 0 / 0.3 / 0.6 / 1).
- */
-function spotAlpha(d: number): number {
-	if (d <= 0) return 1;
-	if (d >= 1) return 0;
-	const DD = 221 / 255;
-	const EE = 136 / 255;
-	if (d < 0.3) return 1 + (DD - 1) * (d / 0.3);
-	if (d < 0.6) return DD + (EE - DD) * ((d - 0.3) / 0.3);
-	return EE * (1 - (d - 0.6) / 0.4);
-}
-
-/**
- * Ordered dither of one color to the palette: find its two nearest palette
- * entries, then pick between them by comparing `threshold` to where the color
- * sits on the segment between them.
- */
-function ditherIndex(
-	r: number,
-	g: number,
-	b: number,
-	rgb: [number, number, number][],
-	threshold: number,
-): number {
-	let i0 = 0;
-	let i1 = 0;
-	let d0 = Infinity;
-	let d1 = Infinity;
-	for (let c = 0; c < rgb.length; c++) {
-		const dr = r - rgb[c][0];
-		const dg = g - rgb[c][1];
-		const db = b - rgb[c][2];
-		const dd = dr * dr + dg * dg + db * db;
-		if (dd < d0) {
-			d1 = d0;
-			i1 = i0;
-			d0 = dd;
-			i0 = c;
-		} else if (dd < d1) {
-			d1 = dd;
-			i1 = c;
-		}
-	}
-	const c0 = rgb[i0];
-	const c1 = rgb[i1];
-	const ex = c1[0] - c0[0];
-	const ey = c1[1] - c0[1];
-	const ez = c1[2] - c0[2];
-	const len2 = ex * ex + ey * ey + ez * ez || 1;
-	let t = ((r - c0[0]) * ex + (g - c0[1]) * ey + (b - c0[2]) * ez) / len2;
-	if (t < 0) t = 0;
-	else if (t > 1) t = 1;
-	return t > threshold ? i1 : i0;
-}
-
-/**
- * Draw a chunky ordered (Bayer 8×8) dither of the seed's gradient into `ctx` at
- * `size` x `size`. A crisp, retro alternative to {@link drawMeshGradient}: it
- * reconstructs the exact same mesh field (same seed → same spots) and quantizes
- * it to the palette on a coarse grid, so mesh and dither read as the same
- * avatar. Render the canvas with `image-rendering: pixelated`. No blur wanted.
+ * Draw an ordered (Bayer 8×8) dither of the seed's palette into `ctx` at
+ * `size` x `size`. A crisp, retro alternative to {@link drawMeshGradient} that
+ * shares the same deterministic colors — no blur wanted.
  */
 export function drawDither(
 	ctx: GradientContext,
@@ -326,72 +259,29 @@ export function drawDither(
 ): void {
 	const s = toSeed(seed);
 	const { colors } = generatePalette(s);
-	const rgb = colors.map(hexToRgb);
-	// Same RNG stream as drawMeshGradient → identical spots and highlight.
-	const random = seededRandom(s * 12345);
+	const random = seededRandom((s ^ 0x9e3779b9) >>> 0);
+	const cell = Math.max(2, Math.round(size / 72));
+	const n = Math.ceil(size / cell);
 
-	const numSpots = 8 + Math.floor(random() * 5);
-	const spots: Array<{
-		x: number;
-		y: number;
-		radius: number;
-		color: [number, number, number];
-	}> = [];
-	for (let i = 0; i < numSpots; i++) {
-		const angle = random() * Math.PI * 2;
-		const distance = random() * size * 0.4;
-		const cx = size / 2 + Math.cos(angle) * distance;
-		const cy = size / 2 + Math.sin(angle) * distance;
-		spots.push({
-			x: cx + (random() - 0.5) * size * 0.3,
-			y: cy + (random() - 0.5) * size * 0.3,
-			radius: size * (0.3 + random() * 0.4),
-			color: rgb[i % rgb.length],
-		});
-	}
-	spots.sort((a, b) => b.radius - a.radius);
-	const hx = size * 0.3 + random() * size * 0.2;
-	const hy = size * 0.3 + random() * size * 0.2;
-	const hr = size * 0.3;
-	const [br, bg, bb] = rgb[0];
+	// Random gradient axis, normalized to 0..1 across the unit square.
+	const angle = random() * Math.PI * 2;
+	const dx = Math.cos(angle);
+	const dy = Math.sin(angle);
+	const min = Math.min(0, dx) + Math.min(0, dy);
+	const span = Math.abs(dx) + Math.abs(dy) || 1;
 
-	const cell = size / DITHER_CELLS;
-
-	for (let gy = 0; gy < DITHER_CELLS; gy++) {
-		for (let gx = 0; gx < DITHER_CELLS; gx++) {
-			const px = (gx + 0.5) * cell;
-			const py = (gy + 0.5) * cell;
-
-			let r = br;
-			let g = bg;
-			let b = bb;
-			for (const sp of spots) {
-				const dx = px - sp.x;
-				const dy = py - sp.y;
-				const d = Math.sqrt(dx * dx + dy * dy) / sp.radius;
-				if (d >= 1) continue;
-				const a = spotAlpha(d);
-				r = r * (1 - a) + sp.color[0] * a;
-				g = g * (1 - a) + sp.color[1] * a;
-				b = b * (1 - a) + sp.color[2] * a;
-			}
-			const dhx = px - hx;
-			const dhy = py - hy;
-			const dh = Math.sqrt(dhx * dhx + dhy * dhy) / hr;
-			if (dh < 1) {
-				const a = 0.15 * (1 - dh);
-				r = r * (1 - a) + 255 * a;
-				g = g * (1 - a) + 255 * a;
-				b = b * (1 - a) + 255 * a;
-			}
-
-			ctx.fillStyle = colors[ditherIndex(r, g, b, rgb, BAYER[gy % 8][gx % 8])];
-			ctx.fillRect(
-				Math.floor(gx * cell),
-				Math.floor(gy * cell),
-				Math.ceil(cell) + 1,
-				Math.ceil(cell) + 1,
-			);
+	for (let gy = 0; gy < n; gy++) {
+		for (let gx = 0; gx < n; gx++) {
+			const px = (gx + 0.5) / n;
+			const py = (gy + 0.5) / n;
+			const v = (px * dx + py * dy - min) / span; // 0..1
+			const scaled = v * (colors.length - 1);
+			const idx = Math.floor(scaled);
+			const frac = scaled - idx;
+			const t = BAYER[gy % 8][gx % 8];
+			const ci = frac > t ? Math.min(idx + 1, colors.length - 1) : idx;
+			ctx.fillStyle = colors[ci];
+			ctx.fillRect(gx * cell, gy * cell, cell + 1, cell + 1);
 		}
 	}
 }

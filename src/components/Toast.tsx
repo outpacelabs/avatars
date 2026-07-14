@@ -86,7 +86,19 @@ function SingleToast({
 	);
 }
 
-export function Toast() {
+/**
+ * `bottomClassName` sets the container's distance from the bottom (default
+ * `bottom-8`). `onActiveChange` fires when the toast stack goes empty ↔
+ * non-empty, so the home page can swap the floating PatternSwitch out while a
+ * toast occupies the same bottom-center slot, then bring it back.
+ */
+export function Toast({
+	bottomClassName = "bottom-8",
+	onActiveChange,
+}: {
+	bottomClassName?: string;
+	onActiveChange?: (active: boolean) => void;
+}) {
 	const [toasts, setToasts] = useState<ToastData[]>([]);
 	const idRef = useRef(0);
 
@@ -106,12 +118,22 @@ export function Toast() {
 		return () => window.removeEventListener("show-toast", handleShowToast);
 	}, []);
 
+	// Notify the parent on empty ↔ non-empty transitions only.
+	const activeRef = useRef(false);
+	useEffect(() => {
+		const active = toasts.length > 0;
+		if (active !== activeRef.current) {
+			activeRef.current = active;
+			onActiveChange?.(active);
+		}
+	}, [toasts.length, onActiveChange]);
+
 	const dismiss = useCallback((id: number) => {
 		setToasts((prev) => prev.filter((t) => t.id !== id));
 	}, []);
 
 	return (
-		<div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50">
+		<div className={`fixed ${bottomClassName} left-1/2 -translate-x-1/2 z-50`}>
 			<div className="relative h-9">
 				<AnimatePresence>
 					{toasts.map((toast, index) => (

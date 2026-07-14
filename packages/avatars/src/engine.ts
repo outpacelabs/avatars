@@ -222,12 +222,79 @@ export function drawMeshGradient(
 	ctx.fillRect(0, 0, size, size);
 }
 
+/** Which engine paints the avatar. */
+export type Pattern = "mesh" | "dither";
+
+/* ── dither: ordered (Bayer 8×8) ramp of the palette along a random axis ── */
+
+function makeBayer(n: number): number[][] {
+	let m: number[][] = [[0]];
+	for (let k = 0; k < n; k++) {
+		const s = m.length;
+		const next: number[][] = Array.from({ length: s * 2 }, () => []);
+		for (let y = 0; y < s * 2; y++) {
+			for (let x = 0; x < s * 2; x++) {
+				const base = m[y % s][x % s] * 4;
+				const add = x < s ? (y < s ? 0 : 3) : y < s ? 2 : 1;
+				next[y][x] = base + add;
+			}
+		}
+		m = next;
+	}
+	const max = m.length * m.length;
+	return m.map((row) => row.map((v) => (v + 0.5) / max));
+}
+
+const BAYER = makeBayer(3); // 8×8, thresholds in (0,1)
+
+/**
+ * Draw an ordered (Bayer 8×8) dither of the seed's palette into `ctx` at
+ * `size` x `size`. A crisp, retro alternative to {@link drawMeshGradient} that
+ * shares the same deterministic colors — no blur wanted.
+ */
+export function drawDither(
+	ctx: GradientContext,
+	seed: number | string,
+	size: number,
+): void {
+	const s = toSeed(seed);
+	const { colors } = generatePalette(s);
+	const random = seededRandom((s ^ 0x9e3779b9) >>> 0);
+	const cell = Math.max(2, Math.round(size / 72));
+	const n = Math.ceil(size / cell);
+
+	// Random gradient axis, normalized to 0..1 across the unit square.
+	const angle = random() * Math.PI * 2;
+	const dx = Math.cos(angle);
+	const dy = Math.sin(angle);
+	const min = Math.min(0, dx) + Math.min(0, dy);
+	const span = Math.abs(dx) + Math.abs(dy) || 1;
+
+	for (let gy = 0; gy < n; gy++) {
+		for (let gx = 0; gx < n; gx++) {
+			const px = (gx + 0.5) / n;
+			const py = (gy + 0.5) / n;
+			const v = (px * dx + py * dy - min) / span; // 0..1
+			const scaled = v * (colors.length - 1);
+			const idx = Math.floor(scaled);
+			const frac = scaled - idx;
+			const t = BAYER[gy % 8][gx % 8];
+			const ci = frac > t ? Math.min(idx + 1, colors.length - 1) : idx;
+			ctx.fillStyle = colors[ci];
+			ctx.fillRect(gx * cell, gy * cell, cell + 1, cell + 1);
+		}
+	}
+}
+
 export interface RenderOptions {
 	/**
 	 * Blur radius in pixels. Defaults to ~6% of the canvas size for the
-	 * signature soft look. Pass `0` to disable.
+	 * signature soft look. Pass `0` to disable. Ignored for the dither pattern,
+	 * which is always crisp.
 	 */
 	blur?: number;
+	/** Which engine to paint. Default: `"mesh"`. */
+	pattern?: Pattern;
 }
 
 function blurFor(size: number, blur?: number): number {
@@ -249,6 +316,13 @@ export function renderGradient(
 
 	const ctx = canvas.getContext("2d") as CanvasRenderingContext2D | null;
 	if (!ctx) return;
+
+	// The dither is always crisp — no blur bounce.
+	if (options.pattern === "dither") {
+		ctx.clearRect(0, 0, size, size);
+		drawDither(ctx, seed, size);
+		return;
+	}
 
 	if (blur <= 0) {
 		ctx.clearRect(0, 0, size, size);

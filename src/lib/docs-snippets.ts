@@ -17,6 +17,11 @@ export function Avatar({ user }) {
 <GradientAvatar seed="studio" size={84} radius={18} /> // rounded square
 <GradientAvatar seed="studio" size={84} radius={0} />  // square`,
 	},
+	patterns: {
+		lang: "tsx",
+		code: `<GradientAvatar seed="studio" size={84} />                  // mesh (default)
+<GradientAvatar seed="studio" size={84} pattern="dither" /> // dither`,
+	},
 	engine: {
 		lang: "tsx",
 		code: `import { gradientToDataURL, generatePalette } from "@outpacelabs/avatars";

@@ -1,12 +1,18 @@
 import type { CSSProperties } from "react";
 import { useEffect, useRef } from "react";
-import { drawMeshGradient } from "./engine";
+import { drawDither, drawMeshGradient, type Pattern } from "./engine";
 
 export interface GradientAvatarProps {
 	/** Any string or number — each unique seed produces a unique gradient. */
 	seed: number | string;
 	/** Rendered size in pixels. Default: 32. */
 	size?: number;
+	/**
+	 * Render style. `"mesh"` is the signature soft gradient; `"dither"` is an
+	 * ordered (Bayer) dither of the same palette, crisp with no blur.
+	 * Default: `"mesh"`.
+	 */
+	pattern?: Pattern;
 	/**
 	 * Corner radius. Number = pixels, string = any CSS length.
 	 * Defaults to a full circle; pass `0` for a square or e.g. `12` for a
@@ -31,6 +37,7 @@ const BLUR_FRACTION = 0.06;
 export function GradientAvatar({
 	seed,
 	size = 32,
+	pattern = "mesh",
 	radius = "9999px",
 	className,
 	style,
@@ -43,10 +50,13 @@ export function GradientAvatar({
 		const ctx = canvas.getContext("2d");
 		if (!ctx) return;
 		ctx.clearRect(0, 0, RENDER_SIZE, RENDER_SIZE);
-		drawMeshGradient(ctx, seed, RENDER_SIZE);
-	}, [seed]);
+		if (pattern === "dither") drawDither(ctx, seed, RENDER_SIZE);
+		else drawMeshGradient(ctx, seed, RENDER_SIZE);
+	}, [seed, pattern]);
 
-	const blurPx = Math.max(1, Math.round(size * BLUR_FRACTION));
+	// The dither is crisp; only the mesh gets the signature soft blur.
+	const blurPx =
+		pattern === "dither" ? 0 : Math.max(1, Math.round(size * BLUR_FRACTION));
 
 	return (
 		<span
@@ -68,7 +78,7 @@ export function GradientAvatar({
 					width: "100%",
 					height: "100%",
 					display: "block",
-					filter: `blur(${blurPx}px)`,
+					filter: blurPx > 0 ? `blur(${blurPx}px)` : undefined,
 				}}
 			/>
 		</span>
@@ -79,9 +89,11 @@ export type {
 	ExportOptions,
 	GradientPalette,
 	Harmony,
+	Pattern,
 	RenderOptions,
 } from "./engine";
 export {
+	drawDither,
 	drawMeshGradient,
 	generatePalette,
 	gradientToBlob,

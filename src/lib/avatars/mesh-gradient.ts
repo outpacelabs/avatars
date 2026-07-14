@@ -119,12 +119,27 @@ export function toSeed(seed: number | string): number {
 	return seedFromString(seed);
 }
 
-export function generatePalette(seed: number | string): GradientPalette {
+export interface MeshOptions {
+	/**
+	 * Force a specific color-harmony rule instead of the seed-derived one.
+	 * Site-only for now — powers the /create editor's harmony control; ships
+	 * to the npm package once the prop set is settled.
+	 */
+	harmony?: Harmony;
+}
+
+export function generatePalette(
+	seed: number | string,
+	options: MeshOptions = {},
+): GradientPalette {
 	const s = toSeed(seed);
 	const random = seededRandom(s);
 	const baseHue = (s * GOLDEN_ANGLE) % 360;
+	// Consume the harmony roll even when overridden so the per-color rolls
+	// below stay identical — overriding with the seed's natural harmony must
+	// produce exactly the default palette.
 	const harmonyIndex = Math.floor(random() * HARMONY_TYPES.length);
-	const harmony = HARMONY_TYPES[harmonyIndex];
+	const harmony = options.harmony ?? HARMONY_TYPES[harmonyIndex];
 	const hues = harmonyHues(baseHue, harmony);
 	const colors = hues.map((hue) => {
 		const saturation = 75 + random() * 25;
@@ -162,9 +177,10 @@ export function drawMeshGradient(
 	ctx: Ctx,
 	seed: number | string,
 	size: number,
+	options: MeshOptions = {},
 ): void {
 	const s = toSeed(seed);
-	const { colors } = generatePalette(s);
+	const { colors } = generatePalette(s, options);
 	const random = seededRandom(s * 12345);
 
 	ctx.fillStyle = colors[0];

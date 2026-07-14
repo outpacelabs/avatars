@@ -52,7 +52,19 @@ That's the whole API surface for most apps. A few more:
 <GradientAvatar seed="jane@example.com" size={96} />            {/* circle (default) */}
 <GradientAvatar seed="jane@example.com" size={96} radius={16} /> {/* rounded square */}
 <GradientAvatar seed="jane@example.com" size={96} radius={0} />  {/* square */}
+<GradientAvatar seed="jane@example.com" size={96} pattern="dither" /> {/* ordered dither */}
 <GradientAvatar seed={42} size={64} className="ring-2 ring-white/10" />
+```
+
+### Patterns
+
+`pattern` switches the render engine. `"mesh"` (the default) is the soft mesh
+gradient; `"dither"` is an ordered (Bayer 8×8) dither of the same palette, a
+crisp retro look with no blur. Both are deterministic from the seed.
+
+```tsx
+<GradientAvatar seed="studio" size={96} />                  {/* mesh (default) */}
+<GradientAvatar seed="studio" size={96} pattern="dither" /> {/* dither */}
 ```
 
 ## Why @outpacelabs/avatars
@@ -71,6 +83,7 @@ That's the whole API surface for most apps. A few more:
 |------|------|---------|-------------|
 | `seed` | `string \| number` | None | Any value; each unique seed is a unique gradient. |
 | `size` | `number` | `32` | Rendered size in pixels. |
+| `pattern` | `"mesh" \| "dither"` | `"mesh"` | Render engine. `mesh` is the soft gradient; `dither` is an ordered dither of the same palette. |
 | `radius` | `number \| string` | `"9999px"` | Corner radius. Number = pixels, string = any CSS length. Defaults to a full circle; pass `0` for a square. |
 | `className` | `string` | None | Extra classes on the wrapper `<span>`. |
 | `style` | `CSSProperties` | None | Extra inline styles merged onto the wrapper. |
@@ -94,6 +107,7 @@ const { colors, harmony } = generatePalette("jane@example.com");
 | Helper | Description |
 |--------|-------------|
 | `drawMeshGradient(ctx, seed, size)` | Paint the raw mesh into a 2D canvas context. |
+| `drawDither(ctx, seed, size)` | Paint the ordered dither into a 2D canvas context. |
 | `renderGradient(canvas, seed, options?)` | Render a seed into a canvas with the signature soft blur. |
 | `gradientToDataURL(seed, options?)` | Render and return a data URL. |
 | `gradientToBlob(seed, options?)` | Render and resolve a `Blob` (e.g. for the clipboard). |

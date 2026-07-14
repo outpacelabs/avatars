@@ -10,9 +10,10 @@ import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import { GradientAvatar } from "@/components/GradientAvatar";
 import { IconButton } from "@/components/IconButton";
 import { CopyMorphIcon } from "@/components/PackageSwitcher";
+import { PatternSwitch } from "@/components/PatternSwitch";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Toast } from "@/components/Toast";
-import { drawMeshGradient } from "@/lib/avatars/mesh-gradient";
+import { drawPattern, type Pattern } from "@/lib/avatars/patterns";
 import { FAQ, TAGLINE } from "@/lib/seo";
 import { usePrefersReducedMotion } from "@/lib/utils/useReducedMotion";
 import { useSmoothCorners } from "@/lib/utils/useSmoothCorners";
@@ -230,18 +231,22 @@ function sanitizeFilename(seed: string): string {
 }
 
 /**
- * Render a seed's gradient at 2000×2000 (matching the original baked assets).
- * Bakes in the same ~6% blur the live avatars use, scaled up slightly so the
- * blur's transparent edges fall outside the frame (avoids a dark ring).
- * Fully client-side — nothing is stored server-side.
+ * Render a seed's avatar at 2000×2000 (matching the original baked assets).
+ * The mesh bakes in the same ~6% blur the live avatars use, scaled up slightly
+ * so the blur's transparent edges fall outside the frame (avoids a dark ring);
+ * the dither is crisp. Fully client-side — nothing is stored server-side.
  */
-function renderGradientCanvas(seed: string): HTMLCanvasElement | null {
+function renderGradientCanvas(
+	seed: string,
+	pattern: Pattern,
+): HTMLCanvasElement | null {
 	const base = document.createElement("canvas");
 	base.width = EXPORT_SIZE;
 	base.height = EXPORT_SIZE;
 	const bctx = base.getContext("2d");
 	if (!bctx) return null;
-	drawMeshGradient(bctx, seed, EXPORT_SIZE);
+	drawPattern(bctx, seed, EXPORT_SIZE, pattern);
+	if (pattern === "dither") return base;
 
 	const out = document.createElement("canvas");
 	out.width = EXPORT_SIZE;
@@ -260,23 +265,27 @@ function renderGradientCanvas(seed: string): HTMLCanvasElement | null {
 
 function gradientBlob(
 	seed: string,
+	pattern: Pattern,
 	type: string,
 	quality?: number,
 ): Promise<Blob | null> {
-	const canvas = renderGradientCanvas(seed);
+	const canvas = renderGradientCanvas(seed, pattern);
 	if (!canvas) return Promise.resolve(null);
 	return new Promise((resolve) => canvas.toBlob(resolve, type, quality));
 }
 
-/** Download the gradient as a JPEG. Resolves false if rendering failed. */
-async function downloadGradient(seed: string): Promise<boolean> {
+/** Download the avatar as a JPEG. Resolves false if rendering failed. */
+async function downloadGradient(
+	seed: string,
+	pattern: Pattern,
+): Promise<boolean> {
 	try {
-		const blob = await gradientBlob(seed, "image/jpeg", 0.92);
+		const blob = await gradientBlob(seed, pattern, "image/jpeg", 0.92);
 		if (!blob) return false;
 		const url = URL.createObjectURL(blob);
 		const link = document.createElement("a");
 		link.href = url;
-		link.download = `gradient-${sanitizeFilename(seed)}.jpg`;
+		link.download = `${pattern === "dither" ? "dither" : "gradient"}-${sanitizeFilename(seed)}.jpg`;
 		document.body.appendChild(link);
 		link.click();
 		link.remove();
@@ -287,11 +296,11 @@ async function downloadGradient(seed: string): Promise<boolean> {
 	}
 }
 
-/** Copy the gradient as a PNG to the clipboard. Returns false if unsupported. */
-async function copyGradient(seed: string): Promise<boolean> {
+/** Copy the avatar as a PNG to the clipboard. Returns false if unsupported. */
+async function copyGradient(seed: string, pattern: Pattern): Promise<boolean> {
 	try {
 		const item = new ClipboardItem({
-			"image/png": gradientBlob(seed, "image/png") as Promise<Blob>,
+			"image/png": gradientBlob(seed, pattern, "image/png") as Promise<Blob>,
 		});
 		await navigator.clipboard.write([item]);
 		return true;
@@ -314,16 +323,18 @@ function GradientCard({
 	seed,
 	index,
 	canCopy,
+	pattern,
 }: {
 	seed: string;
 	index: number;
 	canCopy: boolean;
+	pattern: Pattern;
 }) {
 	const reducedMotion = usePrefersReducedMotion();
 	const smoothRef = useSmoothCorners<HTMLDivElement>(20);
 
 	const copy = () => {
-		void copyGradient(seed).then((ok) => {
+		void copyGradient(seed, pattern).then((ok) => {
 			if (ok) {
 				copySound();
 				window.dispatchEvent(new CustomEvent("show-toast"));
@@ -362,7 +373,7 @@ function GradientCard({
 				<div className="size-[80px] md:size-[96px] transition-transform duration-150 motion-safe:group-hover:scale-105">
 					{/* fill: the responsive wrapper owns the dimensions; a fixed
 					    96px avatar overflowed the 80px mobile box 8px off-center. */}
-					<GradientAvatar seed={seed} size={96} fill />
+					<GradientAvatar seed={seed} size={96} fill pattern={pattern} />
 				</div>
 			</button>
 
@@ -388,7 +399,7 @@ function GradientCard({
 				)}
 				<IconButton
 					onClick={() => {
-						void downloadGradient(seed).then((ok) =>
+						void downloadGradient(seed, pattern).then((ok) =>
 							ok ? confirmSound() : denySound(),
 						);
 					}}
@@ -403,9 +414,13 @@ function GradientCard({
 
 export default function Home() {
 	const [heroSeed, setHeroSeed] = useState(DEFAULT_HERO_SEED);
+	const [pattern, setPattern] = useState<Pattern>("mesh");
 	const [pool, setPool] = useState<string[]>(initialPool);
 	const [showTopBlur, setShowTopBlur] = useState(false);
 	const [canCopy, setCanCopy] = useState(false);
+	// A toast and the pattern switch share the bottom-center slot: while a toast
+	// shows, the switch slides out, then returns once the toast clears.
+	const [toastActive, setToastActive] = useState(false);
 	const sentinelRef = useRef<HTMLDivElement>(null);
 	const reducedMotion = usePrefersReducedMotion();
 	const heroCardRef = useSmoothCorners<HTMLLabelElement>(20);
@@ -440,7 +455,7 @@ export default function Home() {
 	}, []);
 
 	const copyHero = useCallback(() => {
-		void copyGradient(heroSeed).then((ok) => {
+		void copyGradient(heroSeed, pattern).then((ok) => {
 			if (ok) {
 				copySound();
 				window.dispatchEvent(new CustomEvent("show-toast"));
@@ -448,13 +463,13 @@ export default function Home() {
 				denySound();
 			}
 		});
-	}, [heroSeed]);
+	}, [heroSeed, pattern]);
 
 	const exportHero = useCallback(() => {
-		void downloadGradient(heroSeed).then((ok) =>
+		void downloadGradient(heroSeed, pattern).then((ok) =>
 			ok ? confirmSound() : denySound(),
 		);
-	}, [heroSeed]);
+	}, [heroSeed, pattern]);
 
 	return (
 		<div className="relative flex flex-col items-center min-h-screen pb-24 overflow-x-clip">
@@ -524,7 +539,7 @@ export default function Home() {
 										: { duration: 8, repeat: Infinity, ease: "easeInOut" }
 								}
 							>
-								<GradientAvatar seed={heroSeed} size={160} />
+								<GradientAvatar seed={heroSeed} size={160} pattern={pattern} />
 							</motion.div>
 
 							<div className="flex flex-col items-center gap-4 w-full max-w-[260px]">
@@ -556,6 +571,7 @@ export default function Home() {
 								seed={seed}
 								index={index}
 								canCopy={canCopy}
+								pattern={pattern}
 							/>
 						))}
 					</div>
@@ -590,7 +606,13 @@ export default function Home() {
 				</p>
 			</div>
 
-			<Toast />
+			<PatternSwitch
+				value={pattern}
+				onChange={setPattern}
+				hidden={toastActive}
+			/>
+			{/* Same slot as the switch — the two swap in place. */}
+			<Toast bottomClassName="bottom-6" onActiveChange={setToastActive} />
 		</div>
 	);
 }

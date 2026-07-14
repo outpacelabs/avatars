@@ -10,7 +10,7 @@ import {
 } from "react";
 import { PackageSwitcher } from "@/components/PackageSwitcher";
 import { SiteHeader } from "@/components/SiteHeader";
-import { drawMeshGradient } from "@/lib/avatars/mesh-gradient";
+import { drawPattern, type Pattern } from "@/lib/avatars/patterns";
 import { useScrollSpy } from "@/lib/use-scroll-spy";
 import { useSmoothCorners } from "@/lib/utils/useSmoothCorners";
 
@@ -148,10 +148,12 @@ function Avatar({
 	seed,
 	size = 32,
 	radius = "9999px",
+	pattern = "mesh",
 }: {
 	seed: number | string;
 	size?: number;
 	radius?: number | string;
+	pattern?: Pattern;
 }) {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -161,10 +163,11 @@ function Avatar({
 		const ctx = canvas.getContext("2d");
 		if (!ctx) return;
 		ctx.clearRect(0, 0, RENDER_SIZE, RENDER_SIZE);
-		drawMeshGradient(ctx, seed, RENDER_SIZE);
-	}, [seed]);
+		drawPattern(ctx, seed, RENDER_SIZE, pattern);
+	}, [seed, pattern]);
 
-	const blurPx = Math.max(1, Math.round(size * 0.06));
+	const blurPx =
+		pattern === "dither" ? 0 : Math.max(1, Math.round(size * 0.06));
 
 	return (
 		<span
@@ -228,6 +231,7 @@ const TOC: { id: string; label: string }[] = [
 	{ id: "usage", label: "Usage" },
 	{ id: "props", label: "Props" },
 	{ id: "examples", label: "Sizes & shapes" },
+	{ id: "patterns", label: "Patterns" },
 	{ id: "engine", label: "Engine helpers" },
 	{ id: "license", label: "License" },
 ];
@@ -341,6 +345,12 @@ const PROPS: { name: string; type: string; def: string; desc: string }[] = [
 	},
 	{ name: "size", type: "number", def: "32", desc: "Rendered size in pixels." },
 	{
+		name: "pattern",
+		type: '"mesh" | "dither"',
+		def: '"mesh"',
+		desc: "Render engine. mesh is the soft gradient; dither is an ordered dither of the same palette.",
+	},
+	{
 		name: "radius",
 		type: "number | string",
 		def: '"9999px"',
@@ -364,6 +374,10 @@ const HELPERS: { sig: string; desc: string }[] = [
 	{
 		sig: "drawMeshGradient(ctx, seed, size)",
 		desc: "Paint the raw mesh into a 2D canvas context. The lowest-level primitive.",
+	},
+	{
+		sig: "drawDither(ctx, seed, size)",
+		desc: "Paint the ordered dither into a 2D canvas context.",
 	},
 	{
 		sig: "renderGradient(canvas, seed, options?)",
@@ -562,6 +576,44 @@ export function DocsContent({
 										</div>
 									</Preview>
 									<Code html={highlighted.examples} />
+								</Col>
+							</section>
+
+							{/* Patterns */}
+							<section id="patterns" style={SECTION}>
+								<Col>
+									<H2>Patterns</H2>
+									<P>
+										<C>pattern</C> switches the render engine. <C>mesh</C> (the
+										default) is the signature soft gradient; <C>dither</C> is an
+										ordered dither of the same palette, a crisp retro look with
+										no blur. Both are deterministic from the seed.
+									</P>
+									<Preview>
+										<div
+											style={{
+												display: "flex",
+												flexDirection: "column",
+												alignItems: "center",
+												gap: 8,
+											}}
+										>
+											<Avatar seed="studio" size={84} />
+											<PreviewLabel>mesh</PreviewLabel>
+										</div>
+										<div
+											style={{
+												display: "flex",
+												flexDirection: "column",
+												alignItems: "center",
+												gap: 8,
+											}}
+										>
+											<Avatar seed="studio" size={84} pattern="dither" />
+											<PreviewLabel>dither</PreviewLabel>
+										</div>
+									</Preview>
+									<Code html={highlighted.patterns} />
 								</Col>
 							</section>
 

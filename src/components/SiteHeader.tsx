@@ -168,10 +168,22 @@ const navLink = (active: boolean) =>
  * already renders glass's exact horizontal inset, and top-4 (16px) the
  * vertical one.
  */
+/**
+ * Center nav. "Home" hides below sm (the logo already links home) so four
+ * links plus the icon-only GitHub pill fit a 320px viewport without the
+ * absolutely-centered nav colliding with either edge.
+ */
+const NAV = [
+	{ href: "/", label: "Home", mobileHidden: true },
+	{ href: "/docs", label: "Docs" },
+	// Create and Changelog are hidden for now — routes still exist, just
+	// unlinked here (and dropped from the sitemap). Re-add to re-enable.
+] as const;
+
 export function SiteHeader() {
 	const pathname = usePathname();
-	const onDocs = pathname?.startsWith("/docs");
-	const onHome = !onDocs;
+	const isActive = (href: string) =>
+		href === "/" ? pathname === "/" : (pathname?.startsWith(href) ?? false);
 
 	return (
 		<header className="sticky top-4 z-10 relative flex items-center justify-between w-full rounded-[10px] py-0">
@@ -185,26 +197,24 @@ export function SiteHeader() {
 			</Link>
 			{/* Nav links, centered in the bar. */}
 			<nav className="absolute left-1/2 -translate-x-1/2 flex items-center gap-4 md:gap-5">
-				<Link
-					href="/"
-					aria-current={onHome ? "page" : undefined}
-					onClick={() => {
-						if (!onHome) turnSound("back");
-					}}
-					className={navLink(onHome)}
-				>
-					Home
-				</Link>
-				<Link
-					href="/docs"
-					aria-current={onDocs ? "page" : undefined}
-					onClick={() => {
-						if (!onDocs) turnSound("forward");
-					}}
-					className={navLink(onDocs)}
-				>
-					Docs
-				</Link>
+				{NAV.map((item) => {
+					const active = isActive(item.href);
+					const mobileHidden = "mobileHidden" in item && item.mobileHidden;
+					return (
+						<Link
+							key={item.href}
+							href={item.href}
+							aria-current={active ? "page" : undefined}
+							onClick={() => {
+								// Page-turn gesture: back toward home, forward elsewhere.
+								if (!active) turnSound(item.href === "/" ? "back" : "forward");
+							}}
+							className={`${navLink(active)}${mobileHidden ? " hidden sm:block" : ""}`}
+						>
+							{item.label}
+						</Link>
+					);
+				})}
 			</nav>
 			{/* GitHub pill + More switcher, right — glass's frosted-pill style.
 			    Glass ships a disabled "Soon" placeholder (their repo isn't
@@ -223,10 +233,11 @@ export function SiteHeader() {
 							link_text: "GitHub",
 						});
 					}}
-					className="inline-flex items-center gap-1.5 rounded-full bg-white/[0.08] py-2.5 pl-3 pr-3.5 text-sm font-[550] leading-none text-white/[0.96] transition hover:bg-white/[0.12] motion-safe:active:scale-[0.97]"
+					className="inline-flex items-center gap-1.5 rounded-full bg-white/[0.08] py-2.5 pl-3 pr-3 sm:pr-3.5 text-sm font-[550] leading-none text-white/[0.96] transition hover:bg-white/[0.12] motion-safe:active:scale-[0.97]"
 				>
 					<GithubMark />
-					GitHub
+					{/* Icon-only below sm — frees room for the wider center nav. */}
+					<span className="hidden sm:inline">GitHub</span>
 				</a>
 				{SHOW_MORE_MENU && <LabsMenu />}
 			</div>

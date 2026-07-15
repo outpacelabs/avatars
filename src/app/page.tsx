@@ -283,37 +283,72 @@ function sanitizeFilename(seed: string): string {
 }
 
 /**
+ * The mesh export renders small, blurs there, and upscales: the ~6% blur is
+ * scale-invariant, so blurring 512px and stretching to 2000px is visually
+ * identical to blurring 2000px directly — at ~1/15th of the (main-thread)
+ * cost. That cost was the "slow copy", felt most right after a pattern
+ * switch when the thread is already busy crossfading the grid.
+ */
+const MESH_EXPORT_RENDER = 512;
+
+/**
  * Render a seed's avatar at 2000×2000 (matching the original baked assets).
  * The mesh bakes in the same ~6% blur the live avatars use, scaled up slightly
  * so the blur's transparent edges fall outside the frame (avoids a dark ring);
- * the dither is crisp. Fully client-side — nothing is stored server-side.
+ * the dither is crisp and drawn at full size (its cells must stay sharp).
+ * Fully client-side — nothing is stored server-side.
  */
 function renderGradientCanvas(
 	seed: string,
 	pattern: Pattern,
 ): HTMLCanvasElement | null {
+	if (pattern === "dither") {
+		const out = document.createElement("canvas");
+		out.width = EXPORT_SIZE;
+		out.height = EXPORT_SIZE;
+		const ctx = out.getContext("2d");
+		if (!ctx) return null;
+		drawPattern(ctx, seed, EXPORT_SIZE, "dither");
+		return out;
+	}
+
 	const base = document.createElement("canvas");
-	base.width = EXPORT_SIZE;
-	base.height = EXPORT_SIZE;
+	base.width = MESH_EXPORT_RENDER;
+	base.height = MESH_EXPORT_RENDER;
 	const bctx = base.getContext("2d");
 	if (!bctx) return null;
-	drawPattern(bctx, seed, EXPORT_SIZE, pattern);
-	if (pattern === "dither") return base;
+	drawPattern(bctx, seed, MESH_EXPORT_RENDER, "mesh");
+
+	const mid = document.createElement("canvas");
+	mid.width = MESH_EXPORT_RENDER;
+	mid.height = MESH_EXPORT_RENDER;
+	const mctx = mid.getContext("2d");
+	if (!mctx) return null;
+	const blur = Math.round(MESH_EXPORT_RENDER * 0.06);
+	const scale = 1.18;
+	const dw = MESH_EXPORT_RENDER * scale;
+	const offset = (dw - MESH_EXPORT_RENDER) / 2;
+	mctx.filter = `blur(${blur}px)`;
+	mctx.drawImage(base, -offset, -offset, dw, dw);
+	mctx.filter = "none";
 
 	const out = document.createElement("canvas");
 	out.width = EXPORT_SIZE;
 	out.height = EXPORT_SIZE;
 	const octx = out.getContext("2d");
 	if (!octx) return null;
-	const blur = Math.round(EXPORT_SIZE * 0.06);
-	const scale = 1.18;
-	const dw = EXPORT_SIZE * scale;
-	const offset = (dw - EXPORT_SIZE) / 2;
-	octx.filter = `blur(${blur}px)`;
-	octx.drawImage(base, -offset, -offset, dw, dw);
-	octx.filter = "none";
+	octx.imageSmoothingEnabled = true;
+	octx.imageSmoothingQuality = "high";
+	octx.drawImage(mid, 0, 0, EXPORT_SIZE, EXPORT_SIZE);
 	return out;
 }
+
+/**
+ * Encoded exports keyed by pattern/format/seed, so repeat copies and
+ * downloads of the same avatar are instant. Tiny FIFO — blobs are ~1–3MB.
+ */
+const blobCache = new Map<string, Promise<Blob | null>>();
+const BLOB_CACHE_MAX = 8;
 
 function gradientBlob(
 	seed: string,
@@ -321,9 +356,26 @@ function gradientBlob(
 	type: string,
 	quality?: number,
 ): Promise<Blob | null> {
+	const key = `${pattern}|${type}|${quality ?? ""}|${seed}`;
+	const hit = blobCache.get(key);
+	if (hit) return hit;
+
 	const canvas = renderGradientCanvas(seed, pattern);
 	if (!canvas) return Promise.resolve(null);
-	return new Promise((resolve) => canvas.toBlob(resolve, type, quality));
+	const promise = new Promise<Blob | null>((resolve) =>
+		canvas.toBlob(resolve, type, quality),
+	).then((blob) => {
+		// Don't pin a failed encode in the cache.
+		if (!blob) blobCache.delete(key);
+		return blob;
+	});
+
+	blobCache.set(key, promise);
+	if (blobCache.size > BLOB_CACHE_MAX) {
+		const oldest = blobCache.keys().next().value;
+		if (oldest !== undefined) blobCache.delete(oldest);
+	}
+	return promise;
 }
 
 /** Download the avatar as a JPEG. Resolves false if rendering failed. */

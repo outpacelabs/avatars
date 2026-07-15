@@ -79,7 +79,6 @@ export function GradientAvatar({
 		>
 			<canvas
 				ref={meshRef}
-				aria-hidden="true"
 				width={RENDER_SIZE}
 				height={RENDER_SIZE}
 				style={{
@@ -93,7 +92,6 @@ export function GradientAvatar({
 			/>
 			<canvas
 				ref={ditherRef}
-				aria-hidden="true"
 				width={RENDER_SIZE}
 				height={RENDER_SIZE}
 				style={{

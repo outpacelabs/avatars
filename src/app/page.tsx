@@ -14,7 +14,7 @@ import { PatternSwitch } from "@/components/PatternSwitch";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Toast } from "@/components/Toast";
 import { drawPattern, type Pattern } from "@/lib/avatars/patterns";
-import { FAQ, TAGLINE } from "@/lib/seo";
+import { FAQ } from "@/lib/seo";
 import { usePrefersReducedMotion } from "@/lib/utils/useReducedMotion";
 import { useSmoothCorners } from "@/lib/utils/useSmoothCorners";
 
@@ -34,8 +34,9 @@ function SeoContent() {
 				component that renders generative, deterministic mesh-gradient avatars
 				on an HTML canvas. The same seed, whether a user id, email, or username,
 				always produces the same gradient, so you get a stable profile picture
-				with no stored images and no network requests. Zero dependencies, MIT
-				licensed.
+				with no stored images and no network requests. A pattern prop renders
+				each seed as the signature soft mesh gradient or a crisp ordered dither.
+				Zero dependencies, MIT licensed.
 			</p>
 			<p>
 				Install with <code>npm i @outpacelabs/avatars</code>, then render a{" "}
@@ -195,6 +196,57 @@ const heroChild = {
 		transition: { duration: REVEAL_DURATION, ease: EASE_OUT },
 	},
 };
+
+const GLYPHS =
+	"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@/._-";
+
+/**
+ * The headline's pattern word ("gradient" ↔ "dither"), "decoded" into place
+ * when the pattern switch flips: each glyph cycles through random characters
+ * then locks to its target, staggered left-to-right — the same technique as
+ * ScrambleCommand (PackageSwitcher) and ScrambleText (OrbitDemo). The resting
+ * state is the plain word (correct in the server HTML, no scramble on first
+ * mount); reduced motion swaps instantly.
+ */
+function ScrambleWord({ word }: { word: string }) {
+	const reduced = usePrefersReducedMotion();
+	// While animating, `scramble` holds the in-flight glyphs; otherwise null and
+	// we render `word` directly (correct on the server, no first-mount jump).
+	const [scramble, setScramble] = useState<string | null>(null);
+	const mounted = useRef(false);
+
+	useEffect(() => {
+		if (!mounted.current) {
+			mounted.current = true;
+			return;
+		}
+		if (reduced) {
+			// eslint-disable-next-line react-hooks/set-state-in-effect
+			setScramble(null);
+			return;
+		}
+		const chars = [...word];
+		const PER = 6; // ms of stagger per character
+		const DUR = 130; // ms each character spends scrambling
+		const start = performance.now();
+		let raf = 0;
+		const tick = (now: number) => {
+			const elapsed = now - start;
+			let settled = true;
+			const frame = chars.map((ch, i) => {
+				if (elapsed >= i * PER + DUR) return ch;
+				settled = false;
+				return GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
+			});
+			setScramble(settled ? null : frame.join(""));
+			if (!settled) raf = requestAnimationFrame(tick);
+		};
+		raf = requestAnimationFrame(tick);
+		return () => cancelAnimationFrame(raf);
+	}, [word, reduced]);
+
+	return <>{scramble ?? word}</>;
+}
 
 const DEFAULT_HERO_SEED = "";
 
@@ -500,12 +552,18 @@ export default function Home() {
 							show: { transition: { staggerChildren: HERO_STAGGER } },
 						}}
 					>
-						{/* Docs-H1 type at hero scale: weight 550, tight tracking, ink. */}
+						{/* Docs-H1 type at hero scale: weight 550, tight tracking, ink.
+						    Resting text is exactly TAGLINE (server HTML stays intact);
+						    the pattern word decodes in place when the switch flips. */}
 						<motion.h1
 							variants={heroChild}
 							className="text-2xl font-[550] leading-[1.2] tracking-[-0.4px] text-white/[0.92] text-balance"
 						>
-							{TAGLINE}
+							Beautiful generative{" "}
+							<ScrambleWord
+								word={pattern === "dither" ? "dither" : "gradient"}
+							/>{" "}
+							avatars
 						</motion.h1>
 						<motion.div variants={heroChild}>
 							<NpmInstall />

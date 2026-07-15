@@ -5,7 +5,7 @@
 <h1 align="center">@outpacelabs/avatars</h1>
 
 <p align="center">
-  Generative gradient avatars for React. A unique gradient for every seed, with no stored images and no network.
+  Generative gradient avatars for React. Every seed renders a unique mesh gradient — or a crisp ordered dither — with no stored images and no network.
 </p>
 
 <p align="center">
@@ -27,7 +27,8 @@
 Give it any string or number (a user id, an email, a username) and it paints a
 unique, good-looking gradient on a `<canvas>`. The same seed always yields the
 same gradient, so you get stable avatars with **nothing to store and nothing to
-fetch**.
+fetch**. Each seed can also render as a crisp ordered dither of the same
+palette via `pattern="dither"`.
 
 ## Quick start
 

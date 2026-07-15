@@ -5,7 +5,7 @@
 <h1 align="center">@outpacelabs/avatars</h1>
 
 <p align="center">
-  Generative gradient avatars for React. A unique gradient for every seed, with no stored images and no network.
+  Generative gradient avatars for React. Every seed renders a unique mesh gradient — or a crisp ordered dither — with no stored images and no network.
 </p>
 
 <p align="center">
@@ -26,7 +26,8 @@
 Give it any string or number (a user id, an email, a username) and it paints a
 unique, good-looking gradient on a `<canvas>`. The same seed always yields the
 same gradient, so you get stable avatars with **nothing to store and nothing to
-fetch**. The gradient engine is bundled in, so this is the only thing you install.
+fetch**. Prefer pixels? `pattern="dither"` renders the same palette as a crisp
+ordered dither. The engine is bundled in, so this is the only thing you install.
 
 ## Install
 
@@ -72,7 +73,7 @@ crisp retro look with no blur. Both are deterministic from the seed.
 - **Deterministic.** Same seed, same gradient, every time. A user id or email *is* the avatar; you never store or migrate an image.
 - **No images, no network.** Rendered at runtime on a `<canvas>`. No CDN, no requests, no broken `<img>` links, no upload pipeline.
 - **Tiny & zero-dependency.** ~2.3 kB gzipped; `react` is the only peer.
-- **Actually pretty.** Soft mesh gradients, not blocky identicons.
+- **Actually pretty.** Soft mesh gradients — or a crisp retro dither — not blocky identicons.
 - **Any size, any shape.** Circles, rounded squares, hard squares: your call.
 - **Exports anywhere.** Built-in helpers turn a seed into a data URL, a `Blob`, or a full-resolution image for downloads and clipboard.
 - **Typed.** Ships with TypeScript declarations.

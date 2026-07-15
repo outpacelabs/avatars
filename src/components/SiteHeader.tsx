@@ -169,12 +169,11 @@ const navLink = (active: boolean) =>
  * vertical one.
  */
 /**
- * Center nav. "Home" hides below sm (the logo already links home) so four
- * links plus the icon-only GitHub pill fit a 320px viewport without the
- * absolutely-centered nav colliding with either edge.
+ * Center nav. Just two links, so both fit every viewport down to 320px
+ * alongside the icon-only GitHub pill (the logo also links home).
  */
 const NAV = [
-	{ href: "/", label: "Home", mobileHidden: true },
+	{ href: "/", label: "Home" },
 	{ href: "/docs", label: "Docs" },
 	// Create and Changelog are hidden for now — routes still exist, just
 	// unlinked here (and dropped from the sitemap). Re-add to re-enable.
@@ -199,7 +198,6 @@ export function SiteHeader() {
 			<nav className="absolute left-1/2 -translate-x-1/2 flex items-center gap-4 md:gap-5">
 				{NAV.map((item) => {
 					const active = isActive(item.href);
-					const mobileHidden = "mobileHidden" in item && item.mobileHidden;
 					return (
 						<Link
 							key={item.href}
@@ -209,7 +207,7 @@ export function SiteHeader() {
 								// Page-turn gesture: back toward home, forward elsewhere.
 								if (!active) turnSound(item.href === "/" ? "back" : "forward");
 							}}
-							className={`${navLink(active)}${mobileHidden ? " hidden sm:block" : ""}`}
+							className={navLink(active)}
 						>
 							{item.label}
 						</Link>

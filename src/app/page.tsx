@@ -531,7 +531,10 @@ export default function Home() {
 					showTopBlur ? "opacity-100" : "opacity-0"
 				}`}
 				style={{
-					background: "linear-gradient(to bottom, #000 0%, transparent 100%)",
+					// #0a0a0a = the body background (#000 lifted 4% white in
+					// globals.css) — pure #000 here reads as a darker band.
+					background:
+						"linear-gradient(to bottom, #0a0a0a 0%, transparent 100%)",
 				}}
 			/>
 

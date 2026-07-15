@@ -628,10 +628,7 @@ export default function Home() {
 
 						{pool.map((seed, index) => (
 							<GradientCard
-								// `pattern` in the key remounts every card when the switch
-								// flips, replaying the same entrance wave as on load — the
-								// grid arrives again in the new pattern.
-								key={`${pattern}-${index}-${seed}`}
+								key={`${index}-${seed}`}
 								seed={seed}
 								index={index}
 								canCopy={canCopy}

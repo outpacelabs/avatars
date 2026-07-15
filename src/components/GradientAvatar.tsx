@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useLayoutEffect, useRef } from "react";
 import { drawPattern, type Pattern } from "@/lib/avatars/patterns";
 import { usePrefersReducedMotion } from "@/lib/utils/useReducedMotion";
 
@@ -28,15 +28,18 @@ const RENDER_SIZE = 256;
 /** Blur radius as a fraction of display size — matches the baked-image look. */
 const BLUR_FRACTION = 0.06;
 /** Pattern crossfade — a small state change (duration-small-state, ease-out). */
-const FADE = "opacity 240ms cubic-bezier(0.22, 1, 0.36, 1)";
+const FADE_MS = 240;
 
 /**
  * Renders a deterministic mesh-gradient avatar on a `<canvas>`.
  * The same seed always produces the same gradient.
  *
- * Both patterns are painted once onto stacked canvases; toggling `pattern`
- * only crossfades their opacity (GPU-composited, no redraw), so the switch
- * animates smoothly instead of snapping.
+ * Exactly ONE live canvas per avatar. Browsers accelerate a limited number of
+ * canvases, and a wall of avatars holding two apiece (the old crossfade's
+ * standing double buffer) blew that budget — canvas work then intermittently
+ * fell back to software, which is what made copy/export feel slow. The
+ * pattern crossfade instead uses a transient overlay: snapshot the old look,
+ * redraw the single canvas, fade the snapshot out, then free its buffer.
  */
 export function GradientAvatar({
 	seed,
@@ -45,28 +48,63 @@ export function GradientAvatar({
 	fill = false,
 	className = "",
 }: GradientAvatarProps) {
-	const meshRef = useRef<HTMLCanvasElement>(null);
-	const ditherRef = useRef<HTMLCanvasElement>(null);
+	const canvasRef = useRef<HTMLCanvasElement>(null);
+	const overlayRef = useRef<HTMLCanvasElement>(null);
+	const shownRef = useRef<{ seed: number | string; pattern: Pattern } | null>(
+		null,
+	);
+	const cleanupTimer = useRef(0);
 	const reducedMotion = usePrefersReducedMotion();
 
-	useEffect(() => {
-		for (const [ref, p] of [
-			[meshRef, "mesh"],
-			[ditherRef, "dither"],
-		] as const) {
-			const canvas = ref.current;
-			if (!canvas) continue;
-			const ctx = canvas.getContext("2d");
-			if (!ctx) continue;
-			ctx.clearRect(0, 0, RENDER_SIZE, RENDER_SIZE);
-			drawPattern(ctx, seed, RENDER_SIZE, p);
-		}
-	}, [seed]);
-
-	// Only the mesh gets the signature soft blur; the dither stays crisp.
 	const blurPx = Math.max(1, Math.round(size * BLUR_FRACTION));
-	const showDither = pattern === "dither";
-	const transition = reducedMotion ? undefined : FADE;
+	const meshBlur = `blur(${blurPx}px)`;
+
+	// Layout effect: the canvas pixels and its CSS filter must swap in the
+	// same paint, or a mesh frame would flash unblurred (and vice versa).
+	useLayoutEffect(() => {
+		const canvas = canvasRef.current;
+		if (!canvas) return;
+		const ctx = canvas.getContext("2d");
+		if (!ctx) return;
+
+		const prev = shownRef.current;
+		const patternFlip =
+			prev !== null && prev.pattern !== pattern && prev.seed === seed;
+
+		// Crossfade: freeze the old look in the overlay and fade it out over
+		// the freshly drawn canvas, then zero the overlay's buffer.
+		const overlay = overlayRef.current;
+		if (patternFlip && !reducedMotion && overlay) {
+			const octx = overlay.getContext("2d");
+			if (octx) {
+				overlay.width = RENDER_SIZE;
+				overlay.height = RENDER_SIZE;
+				octx.drawImage(canvas, 0, 0);
+				// The snapshot copies raw pixels; the old pattern's blur lives
+				// in CSS, so carry it over explicitly.
+				overlay.style.filter = prev.pattern === "mesh" ? meshBlur : "none";
+				overlay.style.transition = "none";
+				overlay.style.opacity = "1";
+				overlay.style.display = "block";
+				requestAnimationFrame(() => {
+					overlay.style.transition = `opacity ${FADE_MS}ms cubic-bezier(0.22, 1, 0.36, 1)`;
+					overlay.style.opacity = "0";
+				});
+				window.clearTimeout(cleanupTimer.current);
+				cleanupTimer.current = window.setTimeout(() => {
+					overlay.style.display = "none";
+					overlay.width = 0;
+					overlay.height = 0;
+				}, FADE_MS + 60);
+			}
+		}
+
+		ctx.clearRect(0, 0, RENDER_SIZE, RENDER_SIZE);
+		drawPattern(ctx, seed, RENDER_SIZE, pattern);
+		shownRef.current = { seed, pattern };
+	}, [seed, pattern, reducedMotion, meshBlur]);
+
+	useLayoutEffect(() => () => window.clearTimeout(cleanupTimer.current), []);
 
 	return (
 		<span
@@ -78,29 +116,28 @@ export function GradientAvatar({
 			}
 		>
 			<canvas
-				ref={meshRef}
+				ref={canvasRef}
 				width={RENDER_SIZE}
 				height={RENDER_SIZE}
 				style={{
 					width: "100%",
 					height: "100%",
 					display: "block",
-					filter: `blur(${blurPx}px)`,
-					opacity: showDither ? 0 : 1,
-					transition,
+					filter: pattern === "mesh" ? meshBlur : undefined,
 				}}
 			/>
+			{/* Transient crossfade snapshot — 0×0 and display:none at rest. */}
 			<canvas
-				ref={ditherRef}
-				width={RENDER_SIZE}
-				height={RENDER_SIZE}
+				ref={overlayRef}
+				width={0}
+				height={0}
 				style={{
 					position: "absolute",
 					inset: 0,
 					width: "100%",
 					height: "100%",
-					opacity: showDither ? 1 : 0,
-					transition,
+					display: "none",
+					pointerEvents: "none",
 				}}
 			/>
 		</span>

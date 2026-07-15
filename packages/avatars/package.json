@@ -1,13 +1,15 @@
 {
 	"name": "@outpacelabs/avatars",
 	"version": "0.3.0",
-	"description": "React component for generative gradient avatars. Every seed renders a unique, deterministic mesh gradient, with no stored images.",
+	"description": "React component for generative gradient avatars. Every seed renders a deterministic mesh gradient or a crisp ordered dither, with no stored images.",
 	"keywords": [
 		"avatars",
 		"generative",
 		"generative-avatars",
 		"gradient",
 		"mesh-gradient",
+		"ordered-dither",
+		"dither",
 		"avatar-generator",
 		"react",
 		"profile-pictures"

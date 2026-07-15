@@ -5,9 +5,9 @@ import { DocsContent } from "@/components/DocsContent";
 import { INSTALL, SNIPPETS } from "@/lib/docs-snippets";
 
 const DOCS_DESCRIPTION =
-	"Documentation for @outpacelabs/avatars, a React component for generative gradient avatars. Installation, props, examples, and engine helpers.";
+	"Documentation for @outpacelabs/avatars, a React component for generative gradient avatars. Installation, props, patterns, examples, and engine helpers.";
 const DOCS_OG_DESCRIPTION =
-	"A React component for generative gradient avatars. Every seed renders a unique mesh gradient, with no stored images.";
+	"A React component for generative gradient avatars. Every seed renders a unique mesh gradient or crisp dither, with no stored images.";
 
 // Next.js replaces `openGraph`/`twitter` per segment wholesale (no deep merge
 // with layout.tsx), so both must be defined in full here or the docs page
@@ -69,7 +69,7 @@ const docsJsonLd = {
 			"@id": `${SITE}/docs/#article`,
 			headline: "@outpacelabs/avatars: Documentation",
 			description:
-				"Installation, props, usage, and engine helpers for @outpacelabs/avatars, a React component for generative gradient avatars.",
+				"Installation, props, patterns, usage, and engine helpers for @outpacelabs/avatars, a React component for generative gradient avatars.",
 			url: `${SITE}/docs`,
 			about: { "@id": `${SITE}/#software` },
 			author: { "@id": `${SITE}/#organization` },

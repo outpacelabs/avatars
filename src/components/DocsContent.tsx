@@ -410,6 +410,16 @@ export function DocsContent({
 }) {
 	const propsTableRef = useSmoothCorners<HTMLDivElement>(16);
 	const helpersRef = useSmoothCorners<HTMLDivElement>(16);
+	const [showTopBlur, setShowTopBlur] = useState(false);
+
+	// Fade in the top scroll gradient once the page has scrolled (same as home).
+	useEffect(() => {
+		const handleScroll = () => setShowTopBlur(window.scrollY > 50);
+		handleScroll();
+		window.addEventListener("scroll", handleScroll, { passive: true });
+		return () => window.removeEventListener("scroll", handleScroll);
+	}, []);
+
 	return (
 		<div
 			style={{
@@ -419,6 +429,15 @@ export function DocsContent({
 				overflowX: "clip",
 			}}
 		>
+			{/* Top scroll fade */}
+			<div
+				className={`fixed top-0 left-0 right-0 h-[80px] z-[5] pointer-events-none transition-opacity duration-300 ${
+					showTopBlur ? "opacity-100" : "opacity-0"
+				}`}
+				style={{
+					background: "linear-gradient(to bottom, #000 0%, transparent 100%)",
+				}}
+			/>
 			{/* Shiki blocks: let our flat surface own the background; the theme
 			    only colors the tokens. */}
 			<style>{`.docs-code .shiki{margin:0;padding:16px 18px;overflow-x:auto;line-height:1.65;background:transparent !important;font-family:${MONO};font-size:13px}
@@ -450,9 +469,10 @@ export function DocsContent({
 									<h1 className="sr-only">Avatars</h1>
 									<P>
 										A deterministic mesh-gradient avatar for any seed, rendered
-										on a <C>&lt;canvas&gt;</C>. The same seed always yields the
-										same gradient, with no stored images and no network.
-										Self-contained: the gradient engine is bundled in.
+										on a <C>&lt;canvas&gt;</C> — or a crisp ordered dither of
+										the same palette via <C>pattern</C>. The same seed always
+										yields the same avatar, with no stored images and no
+										network. Self-contained: the engine is bundled in.
 									</P>
 								</Col>
 							</section>

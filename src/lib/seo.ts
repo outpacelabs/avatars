@@ -24,6 +24,10 @@ export const FAQ: { q: string; a: string }[] = [
 		a: "Each gradient is derived deterministically from its seed via a hashing function, so the same seed always yields the same gradient. Nothing is stored and no network request is made.",
 	},
 	{
+		q: "Can it render anything besides gradients?",
+		a: "Yes. The pattern prop switches between the default soft mesh gradient and a crisp ordered dither of the same palette. Both render deterministically from the seed.",
+	},
+	{
 		q: "Does it make network requests?",
 		a: "No. Avatars render entirely client-side on an HTML canvas. Nothing is uploaded, hashed to a remote service, or stored, which is good for privacy and offline use.",
 	},

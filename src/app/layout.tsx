@@ -24,9 +24,9 @@ const PACKAGE_VERSION: string = avatarsPackage.version;
 // Google's ~60-char truncation point.
 const TITLE = "Beautiful Generative Gradient Avatars for React";
 const DESCRIPTION =
-	"Free, zero-dependency React component for beautiful generative gradient avatars. Any seed becomes a unique mesh gradient, no stored images or network calls.";
+	"Free, zero-dependency React component for generative gradient avatars. Any seed becomes a unique mesh gradient or crisp dither, no stored images or network calls.";
 const OG_DESCRIPTION =
-	"Free, zero-dependency React component for beautiful generative gradient avatars. Any seed becomes a unique mesh gradient, no stored images. MIT licensed.";
+	"Free, zero-dependency React component for generative gradient avatars. Any seed becomes a unique mesh gradient or crisp dither, no stored images. MIT licensed.";
 const TWITTER_DESCRIPTION =
 	"Free, zero-dependency React component for beautiful generative gradient avatars. MIT licensed.";
 
@@ -39,7 +39,7 @@ const jsonLd = {
 			url: SITE,
 			name: "@outpacelabs/avatars",
 			description:
-				"Free, beautiful generative gradient avatars. A unique gradient for every seed.",
+				"Free, beautiful generative gradient avatars. A unique mesh gradient or crisp dither for every seed.",
 			publisher: { "@id": `${SITE}/#organization` },
 			inLanguage: "en",
 		},
@@ -49,7 +49,7 @@ const jsonLd = {
 			name: "@outpacelabs/avatars",
 			alternateName: "Beautiful Generative Gradient Avatars",
 			description:
-				"A free, open-source React component that renders beautiful generative, deterministic mesh-gradient avatars on a canvas. The same seed always produces the same gradient, with no stored images and no network calls. MIT licensed.",
+				"A free, open-source React component that renders beautiful generative, deterministic avatars on a canvas — a soft mesh gradient or a crisp ordered dither. The same seed always produces the same avatar, with no stored images and no network calls. MIT licensed.",
 			url: SITE,
 			applicationCategory: "DeveloperApplication",
 			operatingSystem: "Web, Cross-platform",
@@ -63,7 +63,7 @@ const jsonLd = {
 			author: { "@id": `${SITE}/#organization` },
 			publisher: { "@id": `${SITE}/#organization` },
 			keywords:
-				"generative avatars, gradient avatars, react avatar component, mesh gradient, deterministic avatars",
+				"generative avatars, gradient avatars, react avatar component, mesh gradient, ordered dither, dither avatars, deterministic avatars",
 			sameAs: [
 				"https://github.com/outpacelabs/avatars",
 				"https://www.npmjs.com/package/@outpacelabs/avatars",
@@ -75,7 +75,7 @@ const jsonLd = {
 			url: SITE,
 			name: `${TAGLINE}, for every seed`,
 			description:
-				"Beautiful generative gradient avatars, free to use under the MIT license. Every seed renders a unique mesh gradient.",
+				"Beautiful generative gradient avatars, free to use under the MIT license. Every seed renders a unique mesh gradient or crisp ordered dither.",
 			isPartOf: { "@id": `${SITE}/#website` },
 			about: { "@id": `${SITE}/#software` },
 			publisher: { "@id": `${SITE}/#organization` },

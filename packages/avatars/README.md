@@ -10,7 +10,7 @@
 
 <p align="center">
   <a href="https://www.npmjs.com/package/@outpacelabs/avatars"><img src="https://img.shields.io/npm/v/@outpacelabs/avatars?color=000&labelColor=000" alt="npm version" /></a>
-  <a href="https://bundlephobia.com/package/@outpacelabs/avatars"><img src="https://img.shields.io/badge/gzipped-2.3_kB-000?labelColor=000" alt="gzipped size" /></a>
+  <a href="https://bundlephobia.com/package/@outpacelabs/avatars"><img src="https://img.shields.io/bundlephobia/minzip/@outpacelabs/avatars?color=000&labelColor=000&label=gzipped" alt="gzipped size" /></a>
   <img src="https://img.shields.io/badge/dependencies-0-000?labelColor=000" alt="zero dependencies" />
   <img src="https://img.shields.io/badge/types-included-000?labelColor=000" alt="types included" />
   <a href="./LICENSE"><img src="https://img.shields.io/badge/license-MIT-000?labelColor=000" alt="license" /></a>
@@ -95,7 +95,7 @@ everything else it maps back to the same sRGB color, so it's safe to leave on.
 
 - **Deterministic.** Same seed, same gradient, every time. A user id or email *is* the avatar; you never store or migrate an image.
 - **No images, no network.** Rendered at runtime on a `<canvas>`. No CDN, no requests, no broken `<img>` links, no upload pipeline.
-- **Tiny & zero-dependency.** ~2.3 kB gzipped; `react` is the only peer.
+- **Tiny & zero-dependency.** Under 3 kB gzipped; `react` is the only peer.
 - **Actually pretty.** Soft mesh gradients, or a crisp retro dither, not blocky identicons.
 - **Any size, any shape.** Circles, rounded squares, hard squares: your call.
 - **Exports anywhere.** Built-in helpers turn a seed into a data URL, a `Blob`, or a full-resolution image for downloads and clipboard.

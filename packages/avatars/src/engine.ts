@@ -2,7 +2,7 @@
  * Gradient engine for @outpacelabs/avatars.
  *
  * Framework-agnostic mesh-gradient avatar generator. Every seed (string or
- * number) deterministically produces a unique gradient — no stored images,
+ * number) deterministically produces a unique gradient, no stored images,
  * no network. Pure palette/RNG core plus optional Canvas2D render helpers.
  */
 
@@ -11,18 +11,44 @@ export type Harmony =
 	| "triadic"
 	| "splitComplementary"
 	| "tetradic"
-	| "complementary";
+	| "complementary"
+	/** Not a harmony rule, the palette came from caller-supplied `colors`. */
+	| "custom";
 
 export interface GradientPalette {
 	/** The numeric seed the palette was derived from. */
 	seed: number;
-	/** Hex color stops used to paint the mesh. */
+	/** Hex color stops used to paint the mesh (`#RRGGBB`). */
 	colors: string[];
-	/** Which color-harmony rule produced the hues. */
+	/** Which color-harmony rule produced the hues (or `"custom"`). */
 	harmony: Harmony;
 }
 
-const HARMONY_TYPES: Harmony[] = [
+export interface PaletteOptions {
+	/**
+	 * Bring your own colors instead of the seed-derived harmony. Accepts hex
+	 * (`#rgb` or `#rrggbb`, `#` optional); invalid entries are dropped, and an
+	 * empty/absent list falls back to seed generation. The seed still drives the
+	 * layout and rotates the palette, so each seed stays unique but on-brand.
+	 */
+	colors?: string[];
+}
+
+/** Options shared by the Canvas2D renderers. */
+export interface DrawOptions extends PaletteOptions {
+	/**
+	 * Render in the Display P3 wide-gamut color space. On P3-capable screens the
+	 * palette reads more vivid; elsewhere the browser maps it back to sRGB.
+	 * Requires the target canvas to be a P3 context, the `renderGradient`,
+	 * `gradientTo*`, and `<GradientAvatar>` paths set this up for you.
+	 */
+	p3?: boolean;
+}
+
+/** The generated harmonies, everything except caller-supplied `"custom"`. */
+type GeneratedHarmony = Exclude<Harmony, "custom">;
+
+const HARMONY_TYPES: GeneratedHarmony[] = [
 	"analogous",
 	"triadic",
 	"splitComplementary",
@@ -85,7 +111,7 @@ function hslToHex(h: number, s: number, l: number): string {
 	return `#${toHex(r)}${toHex(g)}${toHex(b)}`.toUpperCase();
 }
 
-function harmonyHues(baseHue: number, harmony: Harmony): number[] {
+function harmonyHues(baseHue: number, harmony: GeneratedHarmony): number[] {
 	switch (harmony) {
 		case "analogous":
 			return [baseHue, baseHue + 30, baseHue + 60, baseHue - 30];
@@ -124,9 +150,43 @@ export function toSeed(seed: number | string): number {
 	return seedFromString(seed);
 }
 
-/** Derive the deterministic color palette for a seed. */
-export function generatePalette(seed: number | string): GradientPalette {
+/** `#rgb`/`#rrggbb` (with or without `#`) → `#RRGGBB`, or null if invalid. */
+function normalizeHex(color: string): string | null {
+	const m = /^#?([0-9a-f]{3}|[0-9a-f]{6})$/i.exec(color.trim());
+	if (!m) return null;
+	let h = m[1];
+	if (h.length === 3) h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2];
+	return `#${h.toUpperCase()}`;
+}
+
+/** Validate + normalize a caller-supplied palette, or null to fall back. */
+function normalizeColors(colors?: string[]): string[] | null {
+	if (!colors?.length) return null;
+	const out: string[] = [];
+	for (const c of colors) {
+		const h = normalizeHex(c);
+		if (h) out.push(h);
+	}
+	return out.length ? out : null;
+}
+
+/**
+ * Derive the deterministic color palette for a seed. Pass `colors` to override
+ * the harmony with your own palette (still placed deterministically per seed).
+ */
+export function generatePalette(
+	seed: number | string,
+	options: PaletteOptions = {},
+): GradientPalette {
 	const s = toSeed(seed);
+	const custom = normalizeColors(options.colors);
+	if (custom) {
+		// Rotate the palette by the seed so different seeds emphasize different
+		// colors (colors[0] becomes the dominant base fill) while staying on-brand.
+		const offset = s % custom.length;
+		const colors = custom.map((_, i) => custom[(i + offset) % custom.length]);
+		return { seed: s, colors, harmony: "custom" };
+	}
 	const random = seededRandom(s);
 	const baseHue = (s * GOLDEN_ANGLE) % 360;
 	const harmonyIndex = Math.floor(random() * HARMONY_TYPES.length);
@@ -139,6 +199,34 @@ export function generatePalette(seed: number | string): GradientPalette {
 	});
 	return { seed: s, colors, harmony };
 }
+
+/** `#RRGGBB` → [r, g, b] in 0–1. */
+function hexToRgb01(hex: string): [number, number, number] {
+	const n = Number.parseInt(hex.slice(1), 16);
+	return [((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255];
+}
+
+/**
+ * A palette color at `alpha` (0–1) as a canvas fill string. In P3 mode the hex
+ * components are emitted as `color(display-p3 …)`, on a P3 canvas this widens
+ * into the P3 gamut (more vivid); off P3 it maps back to the same sRGB color.
+ * Otherwise it's the familiar 8-digit hex, so the default output is unchanged.
+ */
+function fill(hex: string, alpha: number, p3: boolean): string {
+	if (p3) {
+		const [r, g, b] = hexToRgb01(hex);
+		const a = alpha >= 1 ? "" : ` / ${alpha}`;
+		return `color(display-p3 ${r.toFixed(4)} ${g.toFixed(4)} ${b.toFixed(4)}${a})`;
+	}
+	const a = Math.round(alpha * 255)
+		.toString(16)
+		.padStart(2, "0")
+		.toUpperCase();
+	return `${hex}${a}`;
+}
+
+/** Radial-spot falloff alphas, match the original 0xFF/DD/88/00 stops. */
+const SPOT_ALPHAS = [1, 221 / 255, 136 / 255, 0];
 
 /**
  * Minimal Canvas2D context surface the renderer needs. Both
@@ -160,7 +248,7 @@ export type GradientContext = {
 
 /**
  * Draw the mesh gradient for `seed` into `ctx` at `size` x `size`.
- * The caller is responsible for any blur — apply `filter: blur(…)` on the
+ * The caller is responsible for any blur, apply `filter: blur(…)` on the
  * displayed canvas (≈6% of the rendered dimension) for the signature look,
  * or use {@link renderGradient} / {@link gradientToDataURL} which bake it in.
  */
@@ -168,12 +256,14 @@ export function drawMeshGradient(
 	ctx: GradientContext,
 	seed: number | string,
 	size: number,
+	options: DrawOptions = {},
 ): void {
 	const s = toSeed(seed);
-	const { colors } = generatePalette(s);
+	const { colors } = generatePalette(s, options);
+	const p3 = options.p3 ?? false;
 	const random = seededRandom(s * 12345);
 
-	ctx.fillStyle = colors[0];
+	ctx.fillStyle = fill(colors[0], 1, p3);
 	ctx.fillRect(0, 0, size, size);
 
 	const numSpots = 8 + Math.floor(random() * 5);
@@ -205,10 +295,10 @@ export function drawMeshGradient(
 			spot.y,
 			spot.radius,
 		);
-		g.addColorStop(0, `${spot.color}FF`);
-		g.addColorStop(0.3, `${spot.color}DD`);
-		g.addColorStop(0.6, `${spot.color}88`);
-		g.addColorStop(1, `${spot.color}00`);
+		g.addColorStop(0, fill(spot.color, SPOT_ALPHAS[0], p3));
+		g.addColorStop(0.3, fill(spot.color, SPOT_ALPHAS[1], p3));
+		g.addColorStop(0.6, fill(spot.color, SPOT_ALPHAS[2], p3));
+		g.addColorStop(1, fill(spot.color, SPOT_ALPHAS[3], p3));
 		ctx.fillStyle = g;
 		ctx.fillRect(0, 0, size, size);
 	}
@@ -250,15 +340,17 @@ const BAYER = makeBayer(3); // 8×8, thresholds in (0,1)
 /**
  * Draw an ordered (Bayer 8×8) dither of the seed's palette into `ctx` at
  * `size` x `size`. A crisp, retro alternative to {@link drawMeshGradient} that
- * shares the same deterministic colors — no blur wanted.
+ * shares the same deterministic colors, no blur wanted.
  */
 export function drawDither(
 	ctx: GradientContext,
 	seed: number | string,
 	size: number,
+	options: DrawOptions = {},
 ): void {
 	const s = toSeed(seed);
-	const { colors } = generatePalette(s);
+	const { colors } = generatePalette(s, options);
+	const p3 = options.p3 ?? false;
 	const random = seededRandom((s ^ 0x9e3779b9) >>> 0);
 	const cell = Math.max(2, Math.round(size / 72));
 	const n = Math.ceil(size / cell);
@@ -280,13 +372,13 @@ export function drawDither(
 			const frac = scaled - idx;
 			const t = BAYER[gy % 8][gx % 8];
 			const ci = frac > t ? Math.min(idx + 1, colors.length - 1) : idx;
-			ctx.fillStyle = colors[ci];
+			ctx.fillStyle = fill(colors[ci], 1, p3);
 			ctx.fillRect(gx * cell, gy * cell, cell + 1, cell + 1);
 		}
 	}
 }
 
-export interface RenderOptions {
+export interface RenderOptions extends DrawOptions {
 	/**
 	 * Blur radius in pixels. Defaults to ~6% of the canvas size for the
 	 * signature soft look. Pass `0` to disable. Ignored for the dither pattern,
@@ -295,6 +387,16 @@ export interface RenderOptions {
 	blur?: number;
 	/** Which engine to paint. Default: `"mesh"`. */
 	pattern?: Pattern;
+}
+
+/** Get a 2D context in the requested color space (P3 when `p3`). */
+function get2d(
+	canvas: HTMLCanvasElement | OffscreenCanvas,
+	p3?: boolean,
+): CanvasRenderingContext2D | null {
+	return canvas.getContext("2d", {
+		colorSpace: p3 ? "display-p3" : "srgb",
+	}) as CanvasRenderingContext2D | null;
 }
 
 function blurFor(size: number, blur?: number): number {
@@ -314,28 +416,29 @@ export function renderGradient(
 	const size = canvas.width;
 	const blur = blurFor(size, options.blur);
 
-	const ctx = canvas.getContext("2d") as CanvasRenderingContext2D | null;
+	const ctx = get2d(canvas, options.p3);
 	if (!ctx) return;
 
-	// The dither is always crisp — no blur bounce.
+	// The dither is always crisp, no blur bounce.
 	if (options.pattern === "dither") {
 		ctx.clearRect(0, 0, size, size);
-		drawDither(ctx, seed, size);
+		drawDither(ctx, seed, size, options);
 		return;
 	}
 
 	if (blur <= 0) {
 		ctx.clearRect(0, 0, size, size);
-		drawMeshGradient(ctx, seed, size);
+		drawMeshGradient(ctx, seed, size, options);
 		return;
 	}
 
-	// Draw the raw mesh on a scratch canvas, then composite it back with blur
-	// scaled up slightly so the soft edges fall outside the frame (no ring).
+	// Draw the raw mesh on a scratch canvas (same color space so the P3 gamut
+	// survives the composite), then blur it back scaled up slightly so the soft
+	// edges fall outside the frame (no ring).
 	const scratch = createCanvas(size, size);
-	const sctx = scratch.getContext("2d") as CanvasRenderingContext2D | null;
+	const sctx = get2d(scratch, options.p3);
 	if (!sctx) return;
-	drawMeshGradient(sctx, seed, size);
+	drawMeshGradient(sctx, seed, size, options);
 
 	const scaleUp = 1 + (blur / size) * 4;
 	const dw = size * scaleUp;
@@ -354,7 +457,7 @@ export function renderGradient(
 	const factor = Math.max(2, Math.min(16, blur / 2));
 	const sw = Math.max(1, Math.round(size / factor));
 	const small = createCanvas(sw, sw);
-	const smallCtx = small.getContext("2d") as CanvasRenderingContext2D | null;
+	const smallCtx = get2d(small, options.p3);
 	if (!smallCtx) {
 		ctx.drawImage(scratch as CanvasImageSource, -offset, -offset, dw, dw);
 		return;

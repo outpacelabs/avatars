@@ -20,13 +20,13 @@ import { usePrefersReducedMotion } from "@/lib/utils/useReducedMotion";
 import { useSmoothCorners } from "@/lib/utils/useSmoothCorners";
 
 /*
- * /create — a visual prop editor in the spirit of ui.shadcn.com/create.
+ * /create, a visual prop editor in the spirit of ui.shadcn.com/create.
  * A large live preview beside the controls, then copy-ready JSX. Everything
  * runs client-side against the site's engines.
  *
  * Only `seed`, `size`, and `radius` exist in the shipped package today.
  * `pattern` (the dither), `blur`, and `harmony` preview here before they ship
- * to npm — the generated code marks them, and the footnote links to the
+ * to npm, the generated code marks them, and the footnote links to the
  * changelog.
  */
 
@@ -36,7 +36,7 @@ const MUTED = "rgba(255,255,255,0.42)";
 const MONO =
 	"var(--font-geist-mono), ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, monospace";
 
-/* Shared entrance tokens — same curve/duration as the home grid and docs. */
+/* Shared entrance tokens, same curve/duration as the home grid and docs. */
 const EASE_OUT = [0.22, 1, 0.36, 1] as const;
 const REVEAL_DURATION = 0.28;
 
@@ -85,7 +85,7 @@ function renderExportCanvas(
 	if (blurFraction <= 0) return base;
 
 	// Composite back with blur, scaled up slightly so the soft edges fall
-	// outside the frame (avoids a dark ring) — the engine's formula.
+	// outside the frame (avoids a dark ring), the engine's formula.
 	const out = document.createElement("canvas");
 	out.width = EXPORT_SIZE;
 	out.height = EXPORT_SIZE;
@@ -393,7 +393,7 @@ function Segmented<T extends string>({
 	);
 }
 
-/* ── generated code (hand-tokenized — colors match the docs' github-dark) ── */
+/* ── generated code (hand-tokenized, colors match the docs' github-dark) ── */
 
 const TOK = {
 	keyword: "#FF7B72",
@@ -511,7 +511,7 @@ export function CreateContent() {
 	const [size, setSize] = useState(96);
 	const [shape, setShape] = useState<Shape>("circle");
 	const [radius, setRadius] = useState(24);
-	// Blur and harmony controls are hidden for now — pinned to their defaults so
+	// Blur and harmony controls are hidden for now, pinned to their defaults so
 	// the plumbing (and re-enabling them) stays a one-line change.
 	const blurOverride: number | null = null;
 	const harmony: HarmonyChoice = "auto";
@@ -591,7 +591,7 @@ export function CreateContent() {
 .create-range:focus-visible{outline:2px solid rgba(255,255,255,0.4);outline-offset:4px}`}</style>
 
 			<div className="flex flex-col items-center w-full pt-3 gap-6">
-				{/* Full-bleed within the section's px-6 — no reading-column cap, so
+				{/* Full-bleed within the section's px-6, no reading-column cap, so
 				    the editor uses the whole container width. */}
 				<section className="w-full px-6 flex flex-col gap-3">
 					<SiteHeader />
@@ -734,7 +734,7 @@ export function CreateContent() {
 									</div>
 								</div>
 
-								{/* Pattern (experimental — dither previews the npm prop) */}
+								{/* Pattern (experimental, dither previews the npm prop) */}
 								<div className="flex flex-col gap-3 p-5 border-t border-white/[0.06]">
 									<ControlLabel experimental>Pattern</ControlLabel>
 									<Segmented
@@ -819,7 +819,7 @@ export function CreateContent() {
 										margin: "10px 4px 0",
 									}}
 								>
-									the dither pattern is a preview — only seed, size, and radius
+									the dither pattern is a preview, only seed, size, and radius
 									are in the npm package today. Follow along on the{" "}
 									<a
 										href="/changelog"

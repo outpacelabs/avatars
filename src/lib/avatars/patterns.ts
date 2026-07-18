@@ -3,7 +3,7 @@
  *
  * Two engines, both deterministic from the seed and sharing the same
  * harmony-based palette: the original soft mesh gradient, and an ordered
- * (Bayer 8×8) dither of that palette. Site-only for now — the /create editor
+ * (Bayer 8×8) dither of that palette. Site-only for now, the /create editor
  * previews the dither before it ships to the npm package.
  */
 
@@ -19,7 +19,7 @@ export type Pattern = "mesh" | "dither";
 export interface PatternMeta {
 	id: Pattern;
 	label: string;
-	/** Reads best with hard edges — the editor defaults its blur to 0. */
+	/** Reads best with hard edges, the editor defaults its blur to 0. */
 	crisp: boolean;
 }
 

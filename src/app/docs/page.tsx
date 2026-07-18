@@ -96,7 +96,7 @@ export default async function DocsPage() {
 	const highlighted = Object.fromEntries(entries) as Record<string, string>;
 
 	// The switcher decodes the command itself (scramble), so it only needs the
-	// raw strings — no server highlighting.
+	// raw strings, no server highlighting.
 	const install = INSTALL.map((m) => ({ id: m.id, command: m.command }));
 
 	// GeistMono.variable exposes --font-geist-mono to the docs subtree.

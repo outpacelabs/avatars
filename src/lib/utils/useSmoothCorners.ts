@@ -8,7 +8,7 @@ import { squirclePath } from "./squircle";
  * element via `clip-path: path(...)`, regenerated on resize (border-box
  * size, so entrance transforms don't skew the path).
  *
- * Geometry is our own squirclePath — Figma's actual corner-smoothing math:
+ * Geometry is our own squirclePath, Figma's actual corner-smoothing math:
  * the circular arc at the corner apex keeps the SAME radius, and the
  * smoothing extends the ease-in/out along the straight edges. (A naive
  * superellipse in the r×r corner box hugs the corner tighter than the
@@ -16,7 +16,7 @@ import { squirclePath } from "./squircle";
  *
  * The element should keep its CSS border-radius: it is the no-JS /
  * unsupported-browser fallback. Once the clip applies, the inline
- * border-radius is zeroed — the arc and the squircle overlap at the apex,
+ * border-radius is zeroed, the arc and the squircle overlap at the apex,
  * and letting both paint would clip the smoothed edge transition away.
  * Layout is untouched; only painting is clipped.
  */

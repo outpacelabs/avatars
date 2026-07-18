@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /* Sans is Inter (variable, continuous weights), loaded via next/font in
-   layout.tsx and exposed as --font-display — matches the glass article. */
+   layout.tsx and exposed as --font-display, matches the glass article. */
 
 :root {
 	--background: #000000;
@@ -29,7 +29,7 @@ body {
 	font-family: var(--font-display);
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
-	/* Explicit weights are shipped per face — never synthesize bold/italic. */
+	/* Explicit weights are shipped per face, never synthesize bold/italic. */
 	font-synthesis: none;
 }
 

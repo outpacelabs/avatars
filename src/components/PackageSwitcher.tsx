@@ -17,7 +17,7 @@ const MUTED = "rgba(255,255,255,0.42)";
 // Indicator slides share one spring across the docs (TOC dot uses the same),
 // per timing-consistent: similar elements use identical timing.
 const SLIDE_SPRING = { type: "spring", stiffness: 520, damping: 34 } as const;
-// Confirming a copy is a quiet state change, not a celebration — a calm
+// Confirming a copy is a quiet state change, not a celebration, a calm
 // ease with no overshoot (easing-for-state-change), kept under 300ms.
 const MORPH_EASE = { duration: 0.16, ease: "easeOut" } as const;
 
@@ -26,7 +26,7 @@ const MORPH_EASE = { duration: 0.16, ease: "easeOut" } as const;
  * with a subtle scale so the check settles in over the clipboard, the check
  * drawing itself in via pathLength. Applies the wiki morphing rules: shared
  * viewBox, round caps, aria-hidden, reduced-motion fallback, exit mirrors
- * initial — restrained, no rotation or bounce.
+ * initial, restrained, no rotation or bounce.
  */
 export function CopyMorphIcon({ copied }: { copied: boolean }) {
 	const reduced = useReducedMotion() ?? false;
@@ -143,7 +143,7 @@ function ScrambleCommand({ command }: { command: string }) {
 			return;
 		}
 		const next = toCells(command);
-		// PER×chars + DUR ≈ 285ms for the longest command — the whole decode
+		// PER×chars + DUR ≈ 285ms for the longest command, the whole decode
 		// settles inside the 300ms ceiling (timing-under-300ms).
 		const PER = 6; // ms of stagger per character
 		const DUR = 130; // ms each character spends scrambling
@@ -196,7 +196,7 @@ function ScrambleCommand({ command }: { command: string }) {
  * shadcn-style package-manager switcher: a tab per manager and a copy button,
  * over the install command. The active-tab fill is one shared element that
  * glides between tabs (layoutId), the command decodes into place on switch
- * (scramble), and the copy icon morphs to a check — all via framer-motion.
+ * (scramble), and the copy icon morphs to a check, all via framer-motion.
  */
 export function PackageSwitcher({
 	items,
@@ -263,7 +263,7 @@ export function PackageSwitcher({
 								position: "relative",
 								fontFamily: MONO,
 								// Clone the inline-code chip exactly: same text size (it renders
-								// 11.76px there) and same box — lineHeight matched to the font's
+								// 11.76px there) and same box, lineHeight matched to the font's
 								// content area (~1.28) so the chip is 21px with 3/5 padding.
 								fontSize: 11.76,
 								lineHeight: 1.28,
@@ -305,7 +305,7 @@ export function PackageSwitcher({
 						display: "grid",
 						placeItems: "center",
 						// Match the tab height (15px icon + 2px = 19px) so flex-centering
-						// doesn't push the tabs down — keeps the pill's top inset == left.
+						// doesn't push the tabs down, keeps the pill's top inset == left.
 						padding: "2px 7px",
 						borderRadius: 7,
 						border: 0,

@@ -4,7 +4,7 @@ import { Inter } from "next/font/google";
 import { FAQ, SITE, TAGLINE } from "@/lib/seo";
 import "./globals.css";
 
-// Sans face — Inter (variable), the same as the glass article. next/font
+// Sans face, Inter (variable), the same as the glass article. next/font
 // self-hosts it; the variable font gives continuous weights so the docs' 450
 // and 550 render exactly (the old static InterDisplay couldn't).
 const inter = Inter({
@@ -49,7 +49,7 @@ const jsonLd = {
 			name: "@outpacelabs/avatars",
 			alternateName: "Beautiful Generative Gradient Avatars",
 			description:
-				"A free, open-source React component that renders beautiful generative, deterministic avatars on a canvas — a soft mesh gradient or a crisp ordered dither. The same seed always produces the same avatar, with no stored images and no network calls. MIT licensed.",
+				"A free, open-source React component that renders beautiful generative, deterministic avatars on a canvas, a soft mesh gradient or a crisp ordered dither. The same seed always produces the same avatar, with no stored images and no network calls. MIT licensed.",
 			url: SITE,
 			applicationCategory: "DeveloperApplication",
 			operatingSystem: "Web, Cross-platform",

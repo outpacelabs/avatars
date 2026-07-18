@@ -36,6 +36,27 @@ export const CHANGELOG: ChangelogEntry[] = [
 		],
 	},
 	{
+		version: "0.4.0",
+		date: "2026-07-18",
+		title: "Bring your own colors, and P3",
+		summary:
+			"Use your own palette instead of the seed-derived harmony, and opt into the wide-gamut Display P3 color space.",
+		changes: [
+			{
+				kind: "new",
+				text: "colors prop (and generatePalette option): supply your own hex palette; the seed still drives the layout, so every seed stays unique but on-brand.",
+			},
+			{
+				kind: "new",
+				text: "p3 prop: render in the Display P3 wide-gamut color space, more vivid on capable screens, unchanged everywhere else.",
+			},
+			{
+				kind: "improved",
+				text: "Every engine helper now takes colors and p3 options, wired through renderGradient, gradientToDataURL, and gradientToBlob.",
+			},
+		],
+	},
+	{
 		version: "0.3.0",
 		date: "2026-07-14",
 		title: "The dither pattern",
@@ -44,7 +65,7 @@ export const CHANGELOG: ChangelogEntry[] = [
 		changes: [
 			{
 				kind: "new",
-				text: 'New pattern prop on GradientAvatar — "mesh" (the default soft gradient) or "dither" (a crisp ordered dither of the same colors).',
+				text: 'New pattern prop on GradientAvatar: "mesh" (the default soft gradient) or "dither" (a crisp ordered dither of the same colors).',
 			},
 			{
 				kind: "new",
@@ -73,7 +94,7 @@ export const CHANGELOG: ChangelogEntry[] = [
 			},
 			{
 				kind: "improved",
-				text: "A palette-stability test suite locks the deterministic output — the same seed keeps rendering the same gradient across releases.",
+				text: "A palette-stability test suite locks the deterministic output, so the same seed keeps rendering the same gradient across releases.",
 			},
 		],
 	},
@@ -116,7 +137,7 @@ export const CHANGELOG: ChangelogEntry[] = [
 	},
 ];
 
-/** "2026-07-08" → "July 8, 2026" (fixed locale — server/client identical). */
+/** "2026-07-08" → "July 8, 2026" (fixed locale, server/client identical). */
 export function formatChangelogDate(iso: string): string {
 	const [y, m, d] = iso.split("-").map(Number);
 	const MONTHS = [

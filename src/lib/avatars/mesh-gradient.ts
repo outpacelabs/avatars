@@ -122,7 +122,7 @@ export function toSeed(seed: number | string): number {
 export interface MeshOptions {
 	/**
 	 * Force a specific color-harmony rule instead of the seed-derived one.
-	 * Site-only for now — powers the /create editor's harmony control; ships
+	 * Site-only for now, powers the /create editor's harmony control; ships
 	 * to the npm package once the prop set is settled.
 	 */
 	harmony?: Harmony;
@@ -136,7 +136,7 @@ export function generatePalette(
 	const random = seededRandom(s);
 	const baseHue = (s * GOLDEN_ANGLE) % 360;
 	// Consume the harmony roll even when overridden so the per-color rolls
-	// below stay identical — overriding with the seed's natural harmony must
+	// below stay identical, overriding with the seed's natural harmony must
 	// produce exactly the default palette.
 	const harmonyIndex = Math.floor(random() * HARMONY_TYPES.length);
 	const harmony = options.harmony ?? HARMONY_TYPES[harmonyIndex];

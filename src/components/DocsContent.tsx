@@ -9,6 +9,7 @@ import {
 	useState,
 } from "react";
 import { PackageSwitcher } from "@/components/PackageSwitcher";
+import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { drawPattern, type Pattern } from "@/lib/avatars/patterns";
 import { useScrollSpy } from "@/lib/use-scroll-spy";
@@ -18,7 +19,7 @@ import { useSmoothCorners } from "@/lib/utils/useSmoothCorners";
  * Docs styled after the Outpace "Liquid Glass" article (outpacelabs/glass):
  * a thin ~640px reading column, understated small typography, generous section
  * spacing, a right-gutter table of contents with a dot that snaps to the active
- * section, and borderless rounded code surfaces — kept in dark mode.
+ * section, and borderless rounded code surfaces, kept in dark mode.
  */
 
 // Dark-mode equivalents of the article's ink/body/muted text tokens.
@@ -32,7 +33,7 @@ const MONO =
  * Each section's column fades + slides up as it scrolls into view (the docs'
  * equivalent of the home grid's entrance). Same ease-out curve AND duration as
  * the home cards (timing-consistent); reduced motion renders it statically.
- * Transform + opacity only — no reflow, so the sticky header and TOC
+ * Transform + opacity only, no reflow, so the sticky header and TOC
  * scroll-spy are unaffected. */
 function Col({ children }: { children: ReactNode }) {
 	const reduced = useReducedMotion() ?? false;
@@ -232,6 +233,7 @@ const TOC: { id: string; label: string }[] = [
 	{ id: "props", label: "Props" },
 	{ id: "examples", label: "Sizes & shapes" },
 	{ id: "patterns", label: "Patterns" },
+	{ id: "colors", label: "Colors & P3" },
 	{ id: "engine", label: "Engine helpers" },
 	{ id: "license", label: "License" },
 ];
@@ -357,6 +359,18 @@ const PROPS: { name: string; type: string; def: string; desc: string }[] = [
 		desc: "Corner radius. Number = pixels, string = any CSS length. Pass 0 for a square.",
 	},
 	{
+		name: "colors",
+		type: "string[]",
+		def: "None",
+		desc: "Your own hex palette instead of the seed-derived harmony. The seed still drives the layout, so each seed stays unique but on-brand.",
+	},
+	{
+		name: "p3",
+		type: "boolean",
+		def: "false",
+		desc: "Render in the Display P3 wide-gamut color space, more vivid on capable screens, unchanged on the rest.",
+	},
+	{
 		name: "className",
 		type: "string",
 		def: "None",
@@ -372,11 +386,11 @@ const PROPS: { name: string; type: string; def: string; desc: string }[] = [
 
 const HELPERS: { sig: string; desc: string }[] = [
 	{
-		sig: "drawMeshGradient(ctx, seed, size)",
+		sig: "drawMeshGradient(ctx, seed, size, options?)",
 		desc: "Paint the raw mesh into a 2D canvas context. The lowest-level primitive.",
 	},
 	{
-		sig: "drawDither(ctx, seed, size)",
+		sig: "drawDither(ctx, seed, size, options?)",
 		desc: "Paint the ordered dither into a 2D canvas context.",
 	},
 	{
@@ -392,8 +406,8 @@ const HELPERS: { sig: string; desc: string }[] = [
 		desc: "Render and resolve a Blob, e.g. to write to the clipboard.",
 	},
 	{
-		sig: "generatePalette(seed) → GradientPalette",
-		desc: "The colors and harmony rule behind a seed, without painting anything.",
+		sig: "generatePalette(seed, options?) → GradientPalette",
+		desc: "The colors and harmony rule behind a seed. Pass colors for your own palette.",
 	},
 	{
 		sig: "seedFromString(input) → number / toSeed(seed) → number",
@@ -436,7 +450,7 @@ export function DocsContent({
 				}`}
 				style={{
 					// #0a0a0a = the body background (#000 lifted 4% white in
-					// globals.css) — pure #000 here reads as a darker band.
+					// globals.css), pure #000 here reads as a darker band.
 					background:
 						"linear-gradient(to bottom, #0a0a0a 0%, transparent 100%)",
 				}}
@@ -472,10 +486,10 @@ export function DocsContent({
 									<h1 className="sr-only">Avatars</h1>
 									<P>
 										A deterministic mesh-gradient avatar for any seed, rendered
-										on a <C>&lt;canvas&gt;</C> — or a crisp ordered dither of
-										the same palette via <C>pattern</C>. The same seed always
-										yields the same avatar, with no stored images and no
-										network. Self-contained: the engine is bundled in.
+										on a <C>&lt;canvas&gt;</C>, or a crisp ordered dither of the
+										same palette via <C>pattern</C>. The same seed always yields
+										the same avatar, with no stored images and no network.
+										Self-contained: the engine is bundled in.
 									</P>
 								</Col>
 							</section>
@@ -640,6 +654,29 @@ export function DocsContent({
 								</Col>
 							</section>
 
+							{/* Colors & P3 */}
+							<section id="colors" style={SECTION}>
+								<Col>
+									<H2>Colors &amp; P3</H2>
+									<P>
+										By default the palette is derived from the seed via
+										color-harmony rules. Pass <C>colors</C> to use your own
+										palette instead, brand colors, a product theme, anything.
+										The seed still drives the layout (and rotates which color
+										leads), so every seed stays unique while staying on-brand.
+										Hex in, <C>#</C> optional.
+									</P>
+									<Code html={highlighted.colors} />
+									<P>
+										Set <C>p3</C> to render in the wide-gamut{" "}
+										<C>Display&nbsp;P3</C> color space. On capable screens the
+										palette reads noticeably more vivid; everywhere else it maps
+										back to the same sRGB color, so it&apos;s safe to leave on.
+									</P>
+									<Code html={highlighted.p3} />
+								</Col>
+							</section>
+
 							{/* Engine helpers */}
 							<section id="engine" style={SECTION}>
 								<Col>
@@ -717,71 +754,7 @@ export function DocsContent({
 				</section>
 			</div>
 
-			{/* Thin divider above the footer, same as glass (dark-mode: black → white). */}
-			<div
-				aria-hidden
-				style={{
-					width: 40,
-					height: 1,
-					background: "rgba(255,255,255,0.12)",
-					margin: "64px auto 0",
-				}}
-			/>
-
-			{/* Footer — the glass article's sign-off, dark-mode adapted. */}
-			<footer style={{ padding: "64px 24px 96px", textAlign: "center" }}>
-				<div
-					style={{
-						display: "inline-flex",
-						flexDirection: "column",
-						alignItems: "center",
-						gap: 24,
-					}}
-				>
-					<div
-						style={{
-							display: "flex",
-							flexDirection: "column",
-							alignItems: "center",
-							gap: 8,
-						}}
-					>
-						{/* name — <H2> weight/tracking/colour at body size (14) */}
-						<p
-							style={{
-								margin: 0,
-								fontSize: 14,
-								lineHeight: 1.3,
-								fontWeight: 450,
-								letterSpacing: "-0.1px",
-								color: INK,
-							}}
-						>
-							By Outpace Studios
-						</p>
-						{/* tagline — <P> size/colour, tighter leading; the manual break
-						    keeps "for" on the first line */}
-						<p
-							style={{
-								margin: 0,
-								fontSize: 14,
-								lineHeight: 1.45,
-								letterSpacing: "0.1px",
-								color: BODY,
-							}}
-						>
-							Brands, interfaces, and motion for
-							<br />
-							venture-backed companies
-						</p>
-					</div>
-					{/* links use our <A> style, at the 14px body size */}
-					<div style={{ display: "flex", gap: 16, fontSize: 14 }}>
-						<A href="https://outpacestudios.com">Website</A>
-						<A href="https://x.com/outpacestudios">X / Twitter</A>
-					</div>
-				</div>
-			</footer>
+			<SiteFooter />
 		</div>
 	);
 }

@@ -53,10 +53,52 @@ const GithubMark = () => (
 	</svg>
 );
 
+const GH_REPO = "outpacelabs/avatars";
+
+/** Compact star count, e.g. 1234 → "1.2k", 12300 → "12k". */
+function formatStars(n: number): string {
+	if (n < 1000) return String(n);
+	const k = n / 1000;
+	return `${k < 10 ? k.toFixed(1).replace(/\.0$/, "") : Math.round(k)}k`;
+}
+
+/**
+ * Live GitHub star count. Fetched client-side from the public API (no token,
+ * IP-rate-limited), cached in sessionStorage so it shows instantly on
+ * navigation and doesn't refetch per page. Returns null until known / on error,
+ * so the pill simply renders without a count rather than a broken state.
+ */
+function useGitHubStars(): number | null {
+	const [stars, setStars] = useState<number | null>(null);
+
+	useEffect(() => {
+		const cached = sessionStorage.getItem("gh-stars");
+		if (cached !== null) setStars(Number(cached));
+
+		let cancelled = false;
+		fetch(`https://api.github.com/repos/${GH_REPO}`, {
+			headers: { Accept: "application/vnd.github+json" },
+		})
+			.then((r) => (r.ok ? r.json() : null))
+			.then((data) => {
+				const count = data?.stargazers_count;
+				if (cancelled || typeof count !== "number") return;
+				setStars(count);
+				sessionStorage.setItem("gh-stars", String(count));
+			})
+			.catch(() => {});
+		return () => {
+			cancelled = true;
+		};
+	}, []);
+
+	return stars;
+}
+
 /* ── the "More" switcher: the sibling labs sites, favicon and all. Each row
       loads the live /icon.png straight from the sibling, so there is nothing
       to copy around when a favicon changes. Dark frosted panel to match the
-      header's white-on-glass pills. Hidden for now — flip to re-enable. ── */
+      header's white-on-glass pills. Hidden for now, flip to re-enable. ── */
 const SHOW_MORE_MENU = false;
 const LABS = [
 	{ name: "avatars", href: "https://avatars.outpacestudios.com" },
@@ -162,31 +204,33 @@ const navLink = (active: boolean) =>
 /**
  * Sticky page header shared by the index and docs pages.
  * `position: sticky` only works when no ancestor establishes a scroll
- * container — keep page roots free of `overflow-x: hidden` (use `clip`).
+ * container, keep page roots free of `overflow-x: hidden` (use `clip`).
  *
  * No horizontal padding of its own: the wrapping section's px-6 (24px)
  * already renders glass's exact horizontal inset, and top-4 (16px) the
  * vertical one.
  */
 /**
- * Center nav. Just two links, so both fit every viewport down to 320px
+ * Center nav. Three short links still fit every viewport down to 320px
  * alongside the icon-only GitHub pill (the logo also links home).
  */
 const NAV = [
 	{ href: "/", label: "Home" },
 	{ href: "/docs", label: "Docs" },
-	// Create and Changelog are hidden for now — routes still exist, just
-	// unlinked here (and dropped from the sitemap). Re-add to re-enable.
+	{ href: "/changelog", label: "Changelog" },
+	// Create is hidden for now, the route still exists, just unlinked here
+	// (and dropped from the sitemap). Re-add to re-enable.
 ] as const;
 
 export function SiteHeader() {
 	const pathname = usePathname();
 	const isActive = (href: string) =>
 		href === "/" ? pathname === "/" : (pathname?.startsWith(href) ?? false);
+	const stars = useGitHubStars();
 
 	return (
 		<header className="sticky top-4 z-10 relative flex items-center justify-between w-full rounded-[10px] py-0">
-			{/* Brand mark, left — doubles as the home link. */}
+			{/* Brand mark, left, doubles as the home link. */}
 			<Link
 				href="/"
 				aria-label="Avatars, home"
@@ -214,7 +258,7 @@ export function SiteHeader() {
 					);
 				})}
 			</nav>
-			{/* GitHub pill + More switcher, right — glass's frosted-pill style.
+			{/* GitHub pill + More switcher, right, glass's frosted-pill style.
 			    Glass ships a disabled "Soon" placeholder (their repo isn't
 			    public); ours links to the live public repo. */}
 			<div className="flex items-center gap-2">
@@ -234,8 +278,15 @@ export function SiteHeader() {
 					className="inline-flex items-center gap-1.5 rounded-full bg-white/[0.08] py-2.5 pl-3 pr-3 sm:pr-3.5 text-sm font-[550] leading-none text-white/[0.96] transition hover:bg-white/[0.12] motion-safe:active:scale-[0.97]"
 				>
 					<GithubMark />
-					{/* Icon-only below sm — frees room for the wider center nav. */}
+					{/* Icon-only below sm, frees room for the wider center nav. */}
 					<span className="hidden sm:inline">GitHub</span>
+					{/* Live star count, hidden below sm with the label, and until
+					    the count is known so it never flashes an empty state. */}
+					{stars !== null && (
+						<span className="hidden tabular-nums text-white/[0.64] sm:inline">
+							{formatStars(stars)}
+						</span>
+					)}
 				</a>
 				{SHOW_MORE_MENU && <LabsMenu />}
 			</div>

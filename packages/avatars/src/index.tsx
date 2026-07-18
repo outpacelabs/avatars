@@ -1,9 +1,9 @@
 import type { CSSProperties } from "react";
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { drawDither, drawMeshGradient, type Pattern } from "./engine";
 
 export interface GradientAvatarProps {
-	/** Any string or number — each unique seed produces a unique gradient. */
+	/** Any string or number, each unique seed produces a unique gradient. */
 	seed: number | string;
 	/** Rendered size in pixels. Default: 32. */
 	size?: number;
@@ -19,6 +19,16 @@ export interface GradientAvatarProps {
 	 * rounded square. Default: "9999px".
 	 */
 	radius?: number | string;
+	/**
+	 * Bring your own colors (hex) instead of the seed-derived harmony. The seed
+	 * still drives the layout, so each seed stays unique but on-brand.
+	 */
+	colors?: string[];
+	/**
+	 * Render in the Display P3 wide-gamut color space, more vivid on capable
+	 * screens, and the same on the rest. Default: `false`.
+	 */
+	p3?: boolean;
 	/** Additional CSS classes on the wrapper. */
 	className?: string;
 	/** Extra inline styles merged onto the wrapper. */
@@ -39,20 +49,34 @@ export function GradientAvatar({
 	size = 32,
 	pattern = "mesh",
 	radius = "9999px",
+	colors,
+	p3 = false,
 	className,
 	style,
 }: GradientAvatarProps) {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 
+	// Normalize `colors` to a stable string so an inline `colors={[...]}` array
+	// (a new reference every render) doesn't force a redraw each time; the memo
+	// below rebuilds the palette only when the actual values change.
+	const colorsKey = colors?.join(",");
+	const palette = useMemo(
+		() => (colorsKey ? colorsKey.split(",") : undefined),
+		[colorsKey],
+	);
+
 	useEffect(() => {
 		const canvas = canvasRef.current;
 		if (!canvas) return;
-		const ctx = canvas.getContext("2d");
+		const ctx = canvas.getContext("2d", {
+			colorSpace: p3 ? "display-p3" : "srgb",
+		}) as CanvasRenderingContext2D | null;
 		if (!ctx) return;
 		ctx.clearRect(0, 0, RENDER_SIZE, RENDER_SIZE);
-		if (pattern === "dither") drawDither(ctx, seed, RENDER_SIZE);
-		else drawMeshGradient(ctx, seed, RENDER_SIZE);
-	}, [seed, pattern]);
+		const opts = { colors: palette, p3 };
+		if (pattern === "dither") drawDither(ctx, seed, RENDER_SIZE, opts);
+		else drawMeshGradient(ctx, seed, RENDER_SIZE, opts);
+	}, [seed, pattern, p3, palette]);
 
 	// The dither is crisp; only the mesh gets the signature soft blur.
 	const blurPx =
@@ -86,9 +110,11 @@ export function GradientAvatar({
 }
 
 export type {
+	DrawOptions,
 	ExportOptions,
 	GradientPalette,
 	Harmony,
+	PaletteOptions,
 	Pattern,
 	RenderOptions,
 } from "./engine";

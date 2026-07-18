@@ -22,6 +22,16 @@ export function Avatar({ user }) {
 		code: `<GradientAvatar seed="studio" size={84} />                  // mesh (default)
 <GradientAvatar seed="studio" size={84} pattern="dither" /> // dither`,
 	},
+	colors: {
+		lang: "tsx",
+		code: `// Your brand palette instead of the seed-derived harmony.
+<GradientAvatar seed={user.id} colors={["#4f46e5", "#06b6d4", "#ec4899"]} />`,
+	},
+	p3: {
+		lang: "tsx",
+		code: `// Wide-gamut Display P3, more vivid on capable screens.
+<GradientAvatar seed="studio" size={84} p3 />`,
+	},
 	engine: {
 		lang: "tsx",
 		code: `import { gradientToDataURL, generatePalette } from "@outpacelabs/avatars";

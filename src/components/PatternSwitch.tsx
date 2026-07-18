@@ -9,7 +9,7 @@ import type { Pattern } from "@/lib/avatars/patterns";
  * Floating glass switch (bottom-center of the home page) that flips every
  * avatar between the soft mesh gradient and the crisp dither. Same frosted-pill
  * language as the header. Each option carries a round illustration of the look
- * it switches to — a smooth ramp vs a checkerboard — mirroring the circular
+ * it switches to, a smooth ramp vs a checkerboard, mirroring the circular
  * avatars, so the choice reads at a glance.
  *
  * The active highlight is a shared-layout `motion` pill: selecting an option
@@ -18,7 +18,7 @@ import type { Pattern } from "@/lib/avatars/patterns";
  * motion.
  */
 
-/** Round swatch with a soft ramp — the mesh gradient. */
+/** Round swatch with a soft ramp, the mesh gradient. */
 function GradientIcon() {
 	return (
 		<svg

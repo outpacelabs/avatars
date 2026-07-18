@@ -2,6 +2,7 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 import type { ReactNode } from "react";
+import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import {
 	CHANGELOG,
@@ -21,7 +22,7 @@ const MUTED = "rgba(255,255,255,0.42)";
 const MONO =
 	"var(--font-geist-mono), ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, monospace";
 
-/* Same in-view reveal as the docs' Col — timing-consistent across pages. */
+/* Same in-view reveal as the docs' Col, timing-consistent across pages. */
 function Col({ children }: { children: ReactNode }) {
 	const reduced = useReducedMotion() ?? false;
 	return (
@@ -45,21 +46,22 @@ const KIND_LABEL: Record<ChangeKind, string> = {
 	fixed: "Fixed",
 };
 
-/* Monochrome tag pill — the site palette is black & white, so kinds are
-   distinguished by label, not color. */
+/* Monochrome kind label, plain uppercase mono text, no pill; the site palette
+   is black & white, so kinds are distinguished by the word, not color. A fixed
+   width makes it a left column so every row's change text starts at the same x. */
+const KIND_COL_WIDTH = 68;
 function KindTag({ kind }: { kind: ChangeKind }) {
 	return (
 		<span
 			style={{
+				flexShrink: 0,
+				width: KIND_COL_WIDTH,
 				fontFamily: MONO,
 				fontSize: 10,
 				lineHeight: "16px",
 				letterSpacing: "0.06em",
 				textTransform: "uppercase",
 				color: MUTED,
-				background: "rgba(255,255,255,0.06)",
-				borderRadius: 99,
-				padding: "1px 8px",
 				whiteSpace: "nowrap",
 				alignSelf: "flex-start",
 				marginTop: 3,
@@ -97,37 +99,13 @@ export function ChangelogContent() {
 					>
 						<main>
 							<Col>
-								{/* Headline hidden by design, kept for SEO/accessibility —
+								{/* Headline hidden by design, kept for SEO/accessibility, 
 								    same treatment as the docs' H1. */}
 								<h1 className="sr-only">Changelog</h1>
-								<p
-									style={{
-										fontSize: 14,
-										lineHeight: 1.72,
-										letterSpacing: "0.1px",
-										color: BODY,
-										margin: 0,
-										textWrap: "pretty",
-									}}
-								>
-									Everything that ships in{" "}
-									<code
-										style={{
-											fontFamily: MONO,
-											fontSize: "0.84em",
-											background: "rgba(255,255,255,0.05)",
-											borderRadius: 6,
-											padding: "3px 5px",
-											color: INK,
-										}}
-									>
-										@outpacelabs/avatars
-									</code>
-									, newest first.
-								</p>
 							</Col>
 
-							{CHANGELOG.map((entry) => (
+							{/* Hide in-progress (undated) entries for now, released only. */}
+							{CHANGELOG.filter((entry) => entry.date).map((entry, i) => (
 								<section
 									key={entry.version}
 									id={`v${entry.version}`}
@@ -135,13 +113,15 @@ export function ChangelogContent() {
 								>
 									<Col>
 										{/* Entry header: version pill + date on one line, then
-										    the title at the docs' H2 scale. */}
+										    the title at the docs' H2 scale. The first entry sits
+										    flush under the header padding (like the docs' first
+										    section); later entries get the 72px separation. */}
 										<div
 											style={{
 												display: "flex",
 												alignItems: "baseline",
 												gap: 12,
-												margin: "72px 0 0",
+												margin: i === 0 ? 0 : "72px 0 0",
 											}}
 										>
 											<span
@@ -150,9 +130,6 @@ export function ChangelogContent() {
 													fontSize: 12,
 													lineHeight: "20px",
 													color: INK,
-													background: "rgba(255,255,255,0.06)",
-													borderRadius: 99,
-													padding: "2px 10px",
 												}}
 											>
 												{entry.version === "next"
@@ -196,7 +173,7 @@ export function ChangelogContent() {
 											{entry.summary}
 										</p>
 
-										{/* Changes on a flat rounded surface, one row each —
+										{/* Changes on a flat rounded surface, one row each, 
 										    the docs' props-table treatment. */}
 										<div
 											style={{
@@ -222,6 +199,7 @@ export function ChangelogContent() {
 													<KindTag kind={change.kind} />
 													<span
 														style={{
+															flex: 1,
 															fontSize: 13,
 															color: BODY,
 															lineHeight: 1.6,
@@ -235,38 +213,12 @@ export function ChangelogContent() {
 									</Col>
 								</section>
 							))}
-
-							<Col>
-								<p
-									style={{
-										fontSize: 14,
-										lineHeight: 1.72,
-										letterSpacing: "0.1px",
-										color: MUTED,
-										margin: "72px 0 0",
-									}}
-								>
-									Full commit history lives on{" "}
-									<a
-										href="https://github.com/outpacelabs/avatars"
-										target="_blank"
-										rel="noopener noreferrer"
-										style={{
-											color: INK,
-											textDecoration: "underline",
-											textDecorationColor: "rgba(255,255,255,0.9)",
-											textUnderlineOffset: "2px",
-										}}
-									>
-										GitHub
-									</a>
-									.
-								</p>
-							</Col>
 						</main>
 					</div>
 				</section>
 			</div>
+
+			<SiteFooter />
 		</div>
 	);
 }

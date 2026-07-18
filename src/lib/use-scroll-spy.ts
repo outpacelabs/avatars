@@ -1,7 +1,7 @@
 "use client";
 
 /*
- * useScrollSpy — universal table-of-contents active-section tracking + click
+ * useScrollSpy, universal table-of-contents active-section tracking + click
  * scroll, reusable across pages. Ported from outpacelabs/glass.
  *
  * Detection: scroll-position based, with an in-view line that ramps DOWN the

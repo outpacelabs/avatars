@@ -11,7 +11,7 @@ export const TAGLINE = "Beautiful generative gradient avatars";
 
 /**
  * Canonical FAQ. The SAME text feeds the `FAQPage` JSON-LD (layout.tsx) and the
- * indexable copy rendered on the home page (page.tsx) — they must match, or
+ * indexable copy rendered on the home page (page.tsx), they must match, or
  * Google may discount the FAQ markup.
  */
 export const FAQ: { q: string; a: string }[] = [

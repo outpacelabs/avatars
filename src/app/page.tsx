@@ -133,7 +133,7 @@ const ClipboardIcon = () => (
 );
 
 /**
- * Copyable `npm i @outpacelabs/avatars` command — the hero's primary CTA.
+ * Copyable `npm i @outpacelabs/avatars` command, the hero's primary CTA.
  * Feedback is the morph alone, no toast: this is a single, prominent button
  * whose icon is exactly what you're looking at when you click, unlike the
  * anonymous small copy buttons scattered across the grid below (those use a
@@ -178,7 +178,7 @@ const EXPORT_SIZE = 2000;
  * One set of entrance tokens (timing-consistent): every reveal shares the
  * same duration and ease-out curve; sequence comes from delays only.
  * Timeline: hero H1 at 0, install pill at +60ms, then the grid wave from
- * +120ms (staging-one-focal-point — the headline reads first, the wall
+ * +120ms (staging-one-focal-point, the headline reads first, the wall
  * follows). Individual animations stay under 300ms; card stagger is 25ms
  * per item, capped (physics-no-excessive-stagger). */
 const EASE_OUT = [0.22, 1, 0.36, 1] as const;
@@ -203,7 +203,7 @@ const GLYPHS =
 /**
  * The headline's pattern word ("gradient" ↔ "dither"), "decoded" into place
  * when the pattern switch flips: each glyph cycles through random characters
- * then locks to its target, staggered left-to-right — the same technique as
+ * then locks to its target, staggered left-to-right, the same technique as
  * ScrambleCommand (PackageSwitcher) and ScrambleText (OrbitDemo). The resting
  * state is the plain word (correct in the server HTML, no scramble on first
  * mount); reduced motion swaps instantly.
@@ -259,7 +259,7 @@ function randomPool(): string[] {
 }
 
 /**
- * Deterministic first batch so the grid renders server-side at full height —
+ * Deterministic first batch so the grid renders server-side at full height,
  * no post-hydration layout shift or flash. Subsequent batches are random.
  * An LCG keeps the seeds varied-looking while staying identical on server
  * and client (avoids hydration mismatch that Math.random() would cause).
@@ -285,7 +285,7 @@ function sanitizeFilename(seed: string): string {
 /**
  * The mesh export renders small, blurs there, and upscales: the ~6% blur is
  * scale-invariant, so blurring 512px and stretching to 2000px is visually
- * identical to blurring 2000px directly — at ~1/15th of the (main-thread)
+ * identical to blurring 2000px directly, at ~1/15th of the (main-thread)
  * cost. That cost was the "slow copy", felt most right after a pattern
  * switch when the thread is already busy crossfading the grid.
  */
@@ -296,7 +296,7 @@ const MESH_EXPORT_RENDER = 512;
  * The mesh bakes in the same ~6% blur the live avatars use, scaled up slightly
  * so the blur's transparent edges fall outside the frame (avoids a dark ring);
  * the dither is crisp and drawn at full size (its cells must stay sharp).
- * Fully client-side — nothing is stored server-side.
+ * Fully client-side, nothing is stored server-side.
  */
 function renderGradientCanvas(
 	seed: string,
@@ -345,7 +345,7 @@ function renderGradientCanvas(
 
 /**
  * Encoded exports keyed by pattern/format/seed, so repeat copies and
- * downloads of the same avatar are instant. Tiny FIFO — blobs are ~1–3MB.
+ * downloads of the same avatar are instant. Tiny FIFO, blobs are ~1–3MB.
  */
 const blobCache = new Map<string, Promise<Blob | null>>();
 const BLOB_CACHE_MAX = 8;
@@ -584,23 +584,23 @@ export default function Home() {
 				}`}
 				style={{
 					// #0a0a0a = the body background (#000 lifted 4% white in
-					// globals.css) — pure #000 here reads as a darker band.
+					// globals.css), pure #000 here reads as a darker band.
 					background:
 						"linear-gradient(to bottom, #0a0a0a 0%, transparent 100%)",
 				}}
 			/>
 
 			<div className="flex flex-col items-center w-full pt-3 gap-6">
-				{/* WALL — the hero lives as a 2×2 feature in the top-left */}
+				{/* WALL, the hero lives as a 2×2 feature in the top-left */}
 				<section className="w-full px-6 flex flex-col gap-3">
 					<SiteHeader />
 
-					{/* HERO — slides up + fades on mount, the same reveal the docs' first
+					{/* HERO, slides up + fades on mount, the same reveal the docs' first
 					    section uses (same curve/duration), so arriving at either page
 					    animates its top content identically. Safe to transform: the
 					    sticky header is a preceding sibling, not an ancestor. */}
 					<motion.div
-						className="flex flex-col items-center text-center gap-6 pt-14 pb-12 sm:pt-20 sm:pb-16"
+						className="flex flex-col items-center text-center gap-7 pt-14 pb-12 sm:pt-20 sm:pb-16"
 						initial={reducedMotion ? false : "hidden"}
 						animate="show"
 						variants={{
@@ -612,9 +612,10 @@ export default function Home() {
 						    the pattern word decodes in place when the switch flips. */}
 						<motion.h1
 							variants={heroChild}
-							className="text-2xl font-[550] leading-[1.2] tracking-[-0.4px] text-white/[0.92] text-balance"
+							className="text-3xl font-[550] leading-[1.2] tracking-[-0.4px] text-white/[0.92] text-balance"
 						>
-							Beautiful generative{" "}
+							Beautiful generative
+							<br />
 							<ScrambleWord
 								word={pattern === "dither" ? "dither" : "gradient"}
 							/>{" "}
@@ -627,7 +628,7 @@ export default function Home() {
 					<SeoContent />
 
 					<div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 w-full">
-						{/* HERO (2 cols × 2 rows) — the whole card focuses the seed input.
+						{/* HERO (2 cols × 2 rows), the whole card focuses the seed input.
 						    It leads the grid wave (same entrance as the cards, first slot)
 						    instead of popping in statically around the animating cards. */}
 						<motion.label
@@ -724,7 +725,7 @@ export default function Home() {
 				onChange={setPattern}
 				hidden={toastActive}
 			/>
-			{/* Same slot as the switch — the two swap in place. */}
+			{/* Same slot as the switch, the two swap in place. */}
 			<Toast bottomClassName="bottom-6" onActiveChange={setToastActive} />
 		</div>
 	);

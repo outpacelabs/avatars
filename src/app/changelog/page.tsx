@@ -7,7 +7,7 @@ import { SITE } from "@/lib/seo";
 const CHANGELOG_DESCRIPTION =
 	"Release notes for @outpacelabs/avatars: every version of the generative gradient avatar component, what changed, and what is coming next.";
 const CHANGELOG_OG_DESCRIPTION =
-	"Release notes for @outpacelabs/avatars — every version, what changed, and what is coming next.";
+	"Release notes for @outpacelabs/avatars, every version, what changed, and what is coming next.";
 
 // Next.js replaces `openGraph`/`twitter` per segment wholesale (no deep merge
 // with layout.tsx), so both must be defined in full here or the page silently

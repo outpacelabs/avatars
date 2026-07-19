@@ -1,16 +1,17 @@
 import { GeistMono } from "geist/font/mono";
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import localFont from "next/font/local";
 import { FAQ, SITE, TAGLINE } from "@/lib/seo";
 import "./globals.css";
 
 // Sans face — Inter (variable), the same as the glass article. next/font
 // self-hosts it; the variable font gives continuous weights so the docs' 450
 // and 550 render exactly (the old static InterDisplay couldn't).
-const inter = Inter({
-	subsets: ["latin"],
+const inter = localFont({
+	src: "./fonts/InterVariable.woff2",
 	display: "swap",
 	variable: "--font-display",
+	weight: "100 900",
 });
 
 // Published version of @outpacelabs/avatars, read from the package itself

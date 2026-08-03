@@ -315,7 +315,13 @@ export function drawMeshGradient(
 /** Which engine paints the avatar. */
 export type Pattern = "mesh" | "dither";
 
-/* ── dither: ordered (Bayer 8×8) ramp of the palette along a random axis ── */
+/* ── dither: ordered (Bayer 8×8) ramp of the palette along a fixed axis ── */
+
+/**
+ * Every dither ramps along the same axis so the pattern reads as one
+ * consistent family. A 45° diagonal (top-left → bottom-right).
+ */
+const DITHER_ANGLE = Math.PI / 4;
 
 function makeBayer(n: number): number[][] {
 	let m: number[][] = [[0]];
@@ -351,14 +357,13 @@ export function drawDither(
 	const s = toSeed(seed);
 	const { colors } = generatePalette(s, options);
 	const p3 = options.p3 ?? false;
-	const random = seededRandom((s ^ 0x9e3779b9) >>> 0);
 	const cell = Math.max(2, Math.round(size / 72));
 	const n = Math.ceil(size / cell);
 
-	// Random gradient axis, normalized to 0..1 across the unit square.
-	const angle = random() * Math.PI * 2;
-	const dx = Math.cos(angle);
-	const dy = Math.sin(angle);
+	// Shared gradient axis, normalized to 0..1 across the unit square, so every
+	// dither ramps the same direction.
+	const dx = Math.cos(DITHER_ANGLE);
+	const dy = Math.sin(DITHER_ANGLE);
 	const min = Math.min(0, dx) + Math.min(0, dy);
 	const span = Math.abs(dx) + Math.abs(dy) || 1;
 

@@ -624,7 +624,9 @@ export function DocsContent({
 										<C>pattern</C> switches the render engine. <C>mesh</C> (the
 										default) is the signature soft gradient; <C>dither</C> is an
 										ordered dither of the same palette, a crisp retro look with
-										no blur. Both are deterministic from the seed.
+										no blur that ramps along a fixed diagonal, so a set of
+										dithers reads as one family. Both are deterministic from the
+										seed.
 									</P>
 									<Preview>
 										<div

@@ -35,18 +35,6 @@ export function isCrisp(pattern: Pattern): boolean {
 	return pattern === "dither";
 }
 
-/** Same mulberry32 the engine uses, re-seeded so the dither looks its own. */
-function rng(seed: number): () => number {
-	let s = seed >>> 0;
-	return () => {
-		s += 0x6d2b79f5;
-		let t = s;
-		t = Math.imul(t ^ (t >>> 15), t | 1);
-		t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-		return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-	};
-}
-
 /**
  * Paint `pattern` for `seed` into `ctx` at `size` × `size`. `mesh` delegates to
  * the shipped engine; `dither` is editor-only for now.
@@ -65,7 +53,13 @@ export function drawPattern(
 	drawMeshGradient(ctx, seed, size, options);
 }
 
-/* ── dither: ordered (Bayer 8×8) ramp of the palette along a random axis ── */
+/* ── dither: ordered (Bayer 8×8) ramp of the palette along a fixed axis ── */
+
+/**
+ * Every dither ramps along the same axis so the pattern reads as one
+ * consistent family. A 45° diagonal (top-left → bottom-right).
+ */
+const DITHER_ANGLE = Math.PI / 4;
 
 function makeBayer(n: number): number[][] {
 	let m: number[][] = [[0]];
@@ -94,14 +88,13 @@ function drawDither(
 	options: PatternOptions,
 ): void {
 	const { colors } = generatePalette(toSeed(seed), options);
-	const r = rng(toSeed(seed) * 2654435761);
 	const cell = Math.max(2, Math.round(size / 72));
 	const n = Math.ceil(size / cell);
 
-	// Random gradient axis, normalized to 0..1 across the unit square.
-	const angle = r() * Math.PI * 2;
-	const dx = Math.cos(angle);
-	const dy = Math.sin(angle);
+	// Shared gradient axis, normalized to 0..1 across the unit square, so every
+	// dither ramps the same direction.
+	const dx = Math.cos(DITHER_ANGLE);
+	const dy = Math.sin(DITHER_ANGLE);
 	const min = Math.min(0, dx) + Math.min(0, dy);
 	const span = Math.abs(dx) + Math.abs(dy) || 1;
 

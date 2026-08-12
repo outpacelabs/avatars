@@ -61,7 +61,8 @@ That's the whole API surface for most apps. A few more:
 
 `pattern` switches the render engine. `"mesh"` (the default) is the soft mesh
 gradient; `"dither"` is an ordered (Bayer 8×8) dither of the same palette, a
-crisp retro look with no blur. Both are deterministic from the seed.
+crisp retro look with no blur. The dither ramps along a fixed diagonal, so a set
+of dithers reads as one family. Both are deterministic from the seed.
 
 ```tsx
 <GradientAvatar seed="studio" size={96} />                  {/* mesh (default) */}

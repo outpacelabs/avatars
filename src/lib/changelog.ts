@@ -33,6 +33,10 @@ export const CHANGELOG: ChangelogEntry[] = [
 				kind: "new",
 				text: "Create page: live preview for seed, size, shape, and pattern with copy-ready JSX.",
 			},
+			{
+				kind: "improved",
+				text: "Every dither now ramps along the same fixed diagonal, so a set of dithers reads as one family; previously each seed picked a random axis.",
+			},
 		],
 	},
 	{

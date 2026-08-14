@@ -73,10 +73,12 @@ export function GradientAvatar({
 		}) as CanvasRenderingContext2D | null;
 		if (!ctx) return;
 		ctx.clearRect(0, 0, RENDER_SIZE, RENDER_SIZE);
-		const opts = { colors: palette, p3 };
+		// Always drawn at RENDER_SIZE for a smooth blur, but the complexity
+		// follows `size`: a 24px avatar gets a simpler mark than a 160px one.
+		const opts = { colors: palette, p3, displaySize: size };
 		if (pattern === "dither") drawDither(ctx, seed, RENDER_SIZE, opts);
 		else drawMeshGradient(ctx, seed, RENDER_SIZE, opts);
-	}, [seed, pattern, p3, palette]);
+	}, [seed, pattern, p3, palette, size]);
 
 	// The dither is crisp; only the mesh gets the signature soft blur.
 	const blurPx =

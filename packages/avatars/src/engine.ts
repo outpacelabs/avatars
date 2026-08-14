@@ -256,11 +256,11 @@ const DETAIL_FULL_SIZE = 160;
 /** Colors a simplified avatar keeps, the start of the seed's palette. */
 const MIN_COLORS = 2;
 /** Mesh spots a simplified avatar keeps, the largest ones. */
-const MIN_SPOTS = 3;
+const MIN_SPOTS = 4;
 /** How far the kept spots move toward the center at the smallest size. */
-const CENTER_PULL = 0.3;
+const CENTER_PULL = 0.15;
 /** How much the kept spots grow at the smallest size. */
-const RADIUS_BOOST = 0.45;
+const RADIUS_BOOST = 0.2;
 /** A dither cell never gets smaller than this on screen (CSS px). */
 const MIN_CELL_PX = 3;
 /** Dither cells across the frame, at the two ends of the ramp. */

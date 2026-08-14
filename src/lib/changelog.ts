@@ -35,6 +35,14 @@ export const CHANGELOG: ChangelogEntry[] = [
 			},
 			{
 				kind: "improved",
+				text: "Avatars now draw for the size they are shown at: a small one gets fewer colors and fewer, larger shapes instead of blending into a muddy blob, a big one keeps the full detail. Both patterns, driven by the size prop.",
+			},
+			{
+				kind: "new",
+				text: "displaySize option on every engine helper: the on-screen size in CSS pixels, for when you draw at a higher resolution than you display.",
+			},
+			{
+				kind: "improved",
 				text: "Every dither now ramps along the same fixed diagonal, so a set of dithers reads as one family; previously each seed picked a random axis.",
 			},
 		],

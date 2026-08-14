@@ -345,7 +345,12 @@ const PROPS: { name: string; type: string; def: string; desc: string }[] = [
 		def: "None",
 		desc: "Any value; each unique seed is a unique gradient.",
 	},
-	{ name: "size", type: "number", def: "32", desc: "Rendered size in pixels." },
+	{
+		name: "size",
+		type: "number",
+		def: "32",
+		desc: "Rendered size in pixels. Also sets the level of detail: a small avatar is drawn with fewer colors and fewer, larger shapes, a big one gets the full complexity.",
+	},
 	{
 		name: "pattern",
 		type: '"mesh" | "dither"',
@@ -688,6 +693,13 @@ export function DocsContent({
 										gradients outside React: to a data URL for an{" "}
 										<C>&lt;img&gt;</C>, a Blob for the clipboard, or a
 										full-resolution download.
+									</P>
+									<P>
+										Every helper takes an options object. Pass{" "}
+										<C>displaySize</C> when you draw larger than you display,
+										for example at 256 px for a 32 px avatar: it is the
+										on-screen size in CSS pixels, and it sets the level of
+										detail. It defaults to the size you draw at.
 									</P>
 									<div
 										ref={helpersRef}

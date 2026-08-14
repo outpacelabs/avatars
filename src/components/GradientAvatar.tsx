@@ -12,6 +12,13 @@ interface GradientAvatarProps {
 	/** Render engine: soft `"mesh"` (default) or crisp `"dither"`. */
 	pattern?: Pattern;
 	/**
+	 * Size the complexity is derived from, in CSS pixels. Defaults to `size`,
+	 * which is what a real app wants: small avatars draw simpler. The demo
+	 * surfaces pass `DEMO_DENSITY` instead, so a page that shows one seed at
+	 * several sizes holds one density.
+	 */
+	displaySize?: number;
+	/**
 	 * Fill the parent instead of sizing to `size`. Use when a responsive
 	 * wrapper owns the dimensions: a fixed inline width/height would
 	 * overflow the wrapper at breakpoints where the two disagree (the
@@ -45,9 +52,11 @@ export function GradientAvatar({
 	seed,
 	size = 32,
 	pattern = "mesh",
+	displaySize,
 	fill = false,
 	className = "",
 }: GradientAvatarProps) {
+	const detailSize = displaySize ?? size;
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 	const overlayRef = useRef<HTMLCanvasElement>(null);
 	const shownRef = useRef<{ seed: number | string; pattern: Pattern } | null>(
@@ -100,9 +109,12 @@ export function GradientAvatar({
 		}
 
 		ctx.clearRect(0, 0, RENDER_SIZE, RENDER_SIZE);
-		drawPattern(ctx, seed, RENDER_SIZE, pattern);
+		// Always drawn at RENDER_SIZE for a smooth blur, but the complexity
+		// follows the display size: a 24px avatar gets a simpler mark than a
+		// 160px one.
+		drawPattern(ctx, seed, RENDER_SIZE, pattern, { displaySize: detailSize });
 		shownRef.current = { seed, pattern };
-	}, [seed, pattern, reducedMotion, meshBlur]);
+	}, [seed, pattern, reducedMotion, meshBlur, detailSize]);
 
 	useLayoutEffect(() => () => window.clearTimeout(cleanupTimer.current), []);
 

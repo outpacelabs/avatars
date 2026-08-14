@@ -69,6 +69,26 @@ of dithers reads as one family. Both are deterministic from the seed.
 <GradientAvatar seed="studio" size={96} pattern="dither" /> {/* dither */}
 ```
 
+### Complexity follows the size
+
+An avatar is drawn for the size it is shown at. A 24 px avatar in a comment
+thread gets a couple of colors and a few big shapes, so it reads as one clean
+mark instead of a muddy blob; a 160 px profile picture gets the full palette
+and all the detail. Same seed, same avatar, just fewer parts when small. The
+`size` prop drives this, so there is nothing to configure.
+
+```tsx
+<GradientAvatar seed="studio" size={24} />  {/* simple: 2 colors, big shapes */}
+<GradientAvatar seed="studio" size={160} /> {/* full detail */}
+```
+
+Driving the engine yourself, and drawing at a higher resolution than you
+display? Pass `displaySize` so the engine knows the on-screen size.
+
+```ts
+drawMeshGradient(ctx, seed, 256, { displaySize: 32 });
+```
+
 ### Your colors
 
 By default the palette is derived from the seed via color-harmony rules. Pass
@@ -107,7 +127,7 @@ everything else it maps back to the same sRGB color, so it's safe to leave on.
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `seed` | `string \| number` | None | Any value; each unique seed is a unique gradient. |
-| `size` | `number` | `32` | Rendered size in pixels. |
+| `size` | `number` | `32` | Rendered size in pixels. Also sets the level of detail: small avatars are drawn simpler. |
 | `pattern` | `"mesh" \| "dither"` | `"mesh"` | Render engine. `mesh` is the soft gradient; `dither` is an ordered dither of the same palette. |
 | `radius` | `number \| string` | `"9999px"` | Corner radius. Number = pixels, string = any CSS length. Defaults to a full circle; pass `0` for a square. |
 | `colors` | `string[]` | None | Your own hex palette instead of the seed-derived harmony. The seed still drives the layout. |
@@ -139,7 +159,10 @@ const brand = gradientToDataURL(user.id, {
 ```
 
 Every render/palette helper takes an options object with `colors?: string[]`
-and `p3?: boolean` (plus `blur`, `pattern`, `size`, … where relevant).
+and `p3?: boolean` (plus `displaySize`, `blur`, `pattern`, `size`, … where
+relevant). `displaySize` is the on-screen size in CSS pixels and sets the level
+of detail; it defaults to the size you draw at, so set it only when you render
+larger than you display.
 
 | Helper | Description |
 |--------|-------------|

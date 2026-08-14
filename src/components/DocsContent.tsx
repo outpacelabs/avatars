@@ -11,7 +11,11 @@ import {
 import { PackageSwitcher } from "@/components/PackageSwitcher";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
-import { drawPattern, type Pattern } from "@/lib/avatars/patterns";
+import {
+	DEMO_DENSITY,
+	drawPattern,
+	type Pattern,
+} from "@/lib/avatars/patterns";
 import { useScrollSpy } from "@/lib/use-scroll-spy";
 import { useSmoothCorners } from "@/lib/utils/useSmoothCorners";
 
@@ -164,7 +168,9 @@ function Avatar({
 		const ctx = canvas.getContext("2d");
 		if (!ctx) return;
 		ctx.clearRect(0, 0, RENDER_SIZE, RENDER_SIZE);
-		drawPattern(ctx, seed, RENDER_SIZE, pattern);
+		// One density across the page: the previews sit next to each other at
+		// different sizes, so the ramp would read as an inconsistency here.
+		drawPattern(ctx, seed, RENDER_SIZE, pattern, { displaySize: DEMO_DENSITY });
 	}, [seed, pattern]);
 
 	const blurPx =
@@ -345,7 +351,12 @@ const PROPS: { name: string; type: string; def: string; desc: string }[] = [
 		def: "None",
 		desc: "Any value; each unique seed is a unique gradient.",
 	},
-	{ name: "size", type: "number", def: "32", desc: "Rendered size in pixels." },
+	{
+		name: "size",
+		type: "number",
+		def: "32",
+		desc: "Rendered size in pixels. Also sets the level of detail: a small avatar is drawn with fewer colors and fewer, larger shapes, a big one gets the full complexity.",
+	},
 	{
 		name: "pattern",
 		type: '"mesh" | "dither"',
@@ -688,6 +699,13 @@ export function DocsContent({
 										gradients outside React: to a data URL for an{" "}
 										<C>&lt;img&gt;</C>, a Blob for the clipboard, or a
 										full-resolution download.
+									</P>
+									<P>
+										Every helper takes an options object. Pass{" "}
+										<C>displaySize</C> when you draw larger than you display,
+										for example at 256 px for a 32 px avatar: it is the
+										on-screen size in CSS pixels, and it sets the level of
+										detail. It defaults to the size you draw at.
 									</P>
 									<div
 										ref={helpersRef}

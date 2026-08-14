@@ -10,8 +10,18 @@
  *    hash as seedFromString.
  *  - shape: colors are valid hex, harmonies come from the known set.
  *  - spread: distinct seeds actually produce distinct palettes.
+ *
+ * The renderers need a canvas, but not a real one: a recording stub is enough
+ * to assert the level-of-detail ramp (fewer parts when small, full detail
+ * when large, and the same parts every time).
  */
-import { generatePalette, seedFromString, toSeed } from "../dist/index.js";
+import {
+	drawDither,
+	drawMeshGradient,
+	generatePalette,
+	seedFromString,
+	toSeed,
+} from "../dist/index.js";
 
 let failures = 0;
 const check = (name, ok, detail = "") => {
@@ -124,6 +134,101 @@ check(
 		"spread · seeds actually differentiate (>190 distinct of 200)",
 		distinct.size > 190,
 		`${distinct.size}`,
+	);
+}
+
+// Level of detail: complexity follows the display size.
+{
+	const RENDER = 256;
+	// Records what the renderer draws: the fill colors it uses, one entry per
+	// filled rect, and one per radial gradient (a mesh spot).
+	function record(pattern, seed, displaySize) {
+		const rects = [];
+		const colors = new Set();
+		let spots = 0;
+		const ctx = {
+			set fillStyle(v) {
+				if (typeof v === "string") colors.add(v.slice(0, 7));
+			},
+			get fillStyle() {
+				return "#000000";
+			},
+			globalCompositeOperation: "source-over",
+			fillRect(x, y, w, h) {
+				rects.push([x, y, w, h]);
+			},
+			createRadialGradient() {
+				spots++;
+				return { addColorStop() {} };
+			},
+		};
+		const options = displaySize === undefined ? {} : { displaySize };
+		if (pattern === "dither") drawDither(ctx, seed, RENDER, options);
+		else drawMeshGradient(ctx, seed, RENDER, options);
+		return { rects, colors: colors.size, spots };
+	}
+
+	const LADDER = [16, 24, 32, 48, 64, 96, 128, 160, 256];
+	let meshRamps = true;
+	let ditherRamps = true;
+	let fullAtLarge = true;
+	let deterministic = true;
+	let tiles = true;
+
+	for (let i = 0; i < 40; i++) {
+		const seed = `lod-${i * 7919}`;
+		let prevSpots = 0;
+		let prevCells = 0;
+		for (const displaySize of LADDER) {
+			const mesh = record("mesh", seed, displaySize);
+			const dither = record("dither", seed, displaySize);
+			// Never less complex as the avatar gets bigger.
+			if (mesh.spots < prevSpots) meshRamps = false;
+			if (dither.rects.length < prevCells) ditherRamps = false;
+			prevSpots = mesh.spots;
+			prevCells = dither.rects.length;
+			// The dither cells tile the frame exactly: no gap, no overlap.
+			const across = Math.sqrt(dither.rects.length);
+			if (!Number.isInteger(across)) tiles = false;
+			else {
+				const covered = dither.rects.reduce((sum, r) => sum + r[2] * r[3], 0);
+				if (covered !== RENDER * RENDER) tiles = false;
+			}
+			// Same seed and size, same drawing, every time.
+			const again = record("dither", seed, displaySize);
+			if (JSON.stringify(again.rects) !== JSON.stringify(dither.rects)) {
+				deterministic = false;
+			}
+		}
+		// At or above the full-detail size, nothing is dropped: the drawing is
+		// the same as the size-unaware one that shipped before the ramp.
+		const large = record("mesh", seed, 512);
+		const unaware = record("mesh", seed, undefined);
+		if (large.spots !== unaware.spots || large.colors !== unaware.colors) {
+			fullAtLarge = false;
+		}
+	}
+
+	check("lod · mesh complexity never drops as the size grows", meshRamps);
+	check("lod · dither cell count never drops as the size grows", ditherRamps);
+	check("lod · full detail at large sizes (unchanged default)", fullAtLarge);
+	check("lod · dither cells tile the frame exactly", tiles);
+	check("lod · same seed and size, same drawing", deterministic);
+
+	// A tiny avatar really is simpler than a big one.
+	const small = record("mesh", "jane@example.com", 24);
+	const big = record("mesh", "jane@example.com", 256);
+	check(
+		"lod · 24px mesh has fewer spots than 256px",
+		small.spots < big.spots,
+		`${small.spots} vs ${big.spots}`,
+	);
+	const smallD = record("dither", "jane@example.com", 24);
+	const bigD = record("dither", "jane@example.com", 256);
+	check(
+		"lod · 24px dither has fewer, bigger cells than 256px",
+		smallD.rects.length < bigD.rects.length && smallD.colors <= bigD.colors,
+		`${smallD.rects.length}/${smallD.colors} vs ${bigD.rects.length}/${bigD.colors}`,
 	);
 }
 

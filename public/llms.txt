@@ -29,7 +29,7 @@ import { GradientAvatar } from "@outpacelabs/avatars";
 ## Props
 
 - seed (string | number): any value; each unique seed is a unique gradient.
-- size (number, default 32): rendered size in pixels.
+- size (number, default 32): rendered size in pixels; also sets the level of detail, small avatars are drawn simpler.
 - radius (number | string, default "9999px"): corner radius; pass 0 for a square.
 - className (string): extra classes on the wrapper span.
 - style (CSSProperties): extra inline styles merged onto the wrapper.
@@ -46,6 +46,7 @@ import { GradientAvatar } from "@outpacelabs/avatars";
 ## Key facts
 
 - Deterministic: the same seed always produces the same avatar, on every device and reload.
+- Size-aware: complexity follows the display size, so a 24px avatar reads as one clean mark and a 160px one keeps the full detail.
 - Zero dependencies; renders client-side on HTML canvas; no network calls, no third-party requests.
 - Privacy-friendly: nothing is uploaded, hashed to a remote service, or stored.
 - MIT-licensed, free for commercial use; TypeScript types included.

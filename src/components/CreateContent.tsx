@@ -75,13 +75,19 @@ function renderExportCanvas(
 	pattern: Pattern,
 	harmony: HarmonyChoice,
 	blurFraction: number,
+	displaySize: number,
 ): HTMLCanvasElement | null {
 	const base = document.createElement("canvas");
 	base.width = EXPORT_SIZE;
 	base.height = EXPORT_SIZE;
 	const bctx = base.getContext("2d");
 	if (!bctx) return null;
-	drawPattern(bctx, seed, EXPORT_SIZE, pattern, harmonyOpts(harmony));
+	// The export carries the size control's level of detail, not the 2000px
+	// one: the editor promises the image you tuned, blown up.
+	drawPattern(bctx, seed, EXPORT_SIZE, pattern, {
+		...harmonyOpts(harmony),
+		displaySize,
+	});
 	if (blurFraction <= 0) return base;
 
 	// Composite back with blur, scaled up slightly so the soft edges fall
@@ -106,10 +112,17 @@ function exportBlob(
 	pattern: Pattern,
 	harmony: HarmonyChoice,
 	blurFraction: number,
+	displaySize: number,
 	type: string,
 	quality?: number,
 ): Promise<Blob | null> {
-	const canvas = renderExportCanvas(seed, pattern, harmony, blurFraction);
+	const canvas = renderExportCanvas(
+		seed,
+		pattern,
+		harmony,
+		blurFraction,
+		displaySize,
+	);
 	if (!canvas) return Promise.resolve(null);
 	return new Promise((resolve) => canvas.toBlob(resolve, type, quality));
 }
@@ -119,6 +132,7 @@ async function downloadAvatar(
 	pattern: Pattern,
 	harmony: HarmonyChoice,
 	blurFraction: number,
+	displaySize: number,
 ): Promise<boolean> {
 	try {
 		const blob = await exportBlob(
@@ -126,6 +140,7 @@ async function downloadAvatar(
 			pattern,
 			harmony,
 			blurFraction,
+			displaySize,
 			"image/jpeg",
 			0.92,
 		);
@@ -149,6 +164,7 @@ async function copyAvatar(
 	pattern: Pattern,
 	harmony: HarmonyChoice,
 	blurFraction: number,
+	displaySize: number,
 ): Promise<boolean> {
 	try {
 		const item = new ClipboardItem({
@@ -157,6 +173,7 @@ async function copyAvatar(
 				pattern,
 				harmony,
 				blurFraction,
+				displaySize,
 				"image/png",
 			) as Promise<Blob>,
 		});
@@ -240,8 +257,13 @@ function PatternCanvas({
 		const ctx = canvas.getContext("2d");
 		if (!ctx) return;
 		ctx.clearRect(0, 0, RENDER_SIZE, RENDER_SIZE);
-		drawPattern(ctx, seed, RENDER_SIZE, pattern, harmonyOpts(harmony));
-	}, [seed, pattern, harmony]);
+		// Drawn at RENDER_SIZE, but the complexity follows the size control:
+		// the preview simplifies as you drag it down, like a real 24px avatar.
+		drawPattern(ctx, seed, RENDER_SIZE, pattern, {
+			...harmonyOpts(harmony),
+			displaySize: size,
+		});
+	}, [seed, pattern, harmony, size]);
 
 	return (
 		<span
@@ -670,6 +692,7 @@ export function CreateContent() {
 														pattern,
 														harmony,
 														blurFraction,
+														size,
 													).then((ok) => {
 														if (ok) {
 															copySound();
@@ -691,6 +714,7 @@ export function CreateContent() {
 													pattern,
 													harmony,
 													blurFraction,
+													size,
 												).then((ok) => (ok ? confirmSound() : denySound()));
 											}}
 											title="Download 2000×2000"

@@ -8,11 +8,23 @@
  */
 
 import {
+	detailFor,
 	drawMeshGradient,
 	generatePalette,
 	type MeshOptions,
+	paletteForDetail,
 	toSeed,
 } from "./mesh-gradient";
+
+/**
+ * Display size that draws the full complexity.
+ *
+ * The demo surfaces (home hero, home grid, docs previews) pass this instead of
+ * their own size. They show one seed at several sizes on one screen, and a
+ * mixed density there reads as a bug, not as a feature. /create is where the
+ * ramp is on show: its size control drives the preview.
+ */
+export { DETAIL_FULL_SIZE as DEMO_DENSITY } from "./mesh-gradient";
 
 export type Pattern = "mesh" | "dither";
 
@@ -81,6 +93,18 @@ function makeBayer(n: number): number[][] {
 
 const BAYER = makeBayer(3); // 8×8, thresholds in (0,1)
 
+/** A dither cell never gets smaller than this on screen (CSS px). */
+const MIN_CELL_PX = 3;
+/** Dither cells across the frame, at the two ends of the detail ramp. */
+const MIN_DITHER_CELLS = 8;
+const MAX_DITHER_CELLS = 64;
+
+/** Dither cells across the frame for a display size (cells stay visible). */
+function ditherCells(displaySize: number): number {
+	const byPixels = Math.floor(displaySize / MIN_CELL_PX);
+	return Math.max(MIN_DITHER_CELLS, Math.min(MAX_DITHER_CELLS, byPixels));
+}
+
 function drawDither(
 	ctx: CanvasRenderingContext2D,
 	seed: number | string,
@@ -88,8 +112,11 @@ function drawDither(
 	options: PatternOptions,
 ): void {
 	const { colors } = generatePalette(toSeed(seed), options);
-	const cell = Math.max(2, Math.round(size / 72));
-	const n = Math.ceil(size / cell);
+	const display = options.displaySize ?? size;
+	// Level of detail: fewer, chunkier cells and fewer bands when small, so the
+	// cells stay above ~3 screen pixels instead of dissolving into noise.
+	const palette = paletteForDetail(colors, detailFor(display));
+	const n = ditherCells(display);
 
 	// Shared gradient axis, normalized to 0..1 across the unit square, so every
 	// dither ramps the same direction.
@@ -99,17 +126,23 @@ function drawDither(
 	const span = Math.abs(dx) + Math.abs(dy) || 1;
 
 	for (let gy = 0; gy < n; gy++) {
+		// Cell edges are rounded off the exact grid, so the cells tile the
+		// frame with no seam and no overlap at any cell count.
+		const y0 = Math.round((gy * size) / n);
+		const y1 = Math.round(((gy + 1) * size) / n);
 		for (let gx = 0; gx < n; gx++) {
+			const x0 = Math.round((gx * size) / n);
+			const x1 = Math.round(((gx + 1) * size) / n);
 			const px = (gx + 0.5) / n;
 			const py = (gy + 0.5) / n;
 			const v = (px * dx + py * dy - min) / span; // 0..1
-			const scaled = v * (colors.length - 1);
+			const scaled = v * (palette.length - 1);
 			const idx = Math.floor(scaled);
 			const frac = scaled - idx;
 			const t = BAYER[gy % 8][gx % 8];
-			const ci = frac > t ? Math.min(idx + 1, colors.length - 1) : idx;
-			ctx.fillStyle = colors[ci];
-			ctx.fillRect(gx * cell, gy * cell, cell + 1, cell + 1);
+			const ci = frac > t ? Math.min(idx + 1, palette.length - 1) : idx;
+			ctx.fillStyle = palette[ci];
+			ctx.fillRect(x0, y0, x1 - x0, y1 - y0);
 		}
 	}
 }

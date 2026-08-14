@@ -240,8 +240,13 @@ function PatternCanvas({
 		const ctx = canvas.getContext("2d");
 		if (!ctx) return;
 		ctx.clearRect(0, 0, RENDER_SIZE, RENDER_SIZE);
-		drawPattern(ctx, seed, RENDER_SIZE, pattern, harmonyOpts(harmony));
-	}, [seed, pattern, harmony]);
+		// Drawn at RENDER_SIZE, but the complexity follows the size control:
+		// the preview simplifies as you drag it down, like a real 24px avatar.
+		drawPattern(ctx, seed, RENDER_SIZE, pattern, {
+			...harmonyOpts(harmony),
+			displaySize: size,
+		});
+	}, [seed, pattern, harmony, size]);
 
 	return (
 		<span

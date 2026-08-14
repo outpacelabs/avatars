@@ -164,8 +164,8 @@ function Avatar({
 		const ctx = canvas.getContext("2d");
 		if (!ctx) return;
 		ctx.clearRect(0, 0, RENDER_SIZE, RENDER_SIZE);
-		drawPattern(ctx, seed, RENDER_SIZE, pattern);
-	}, [seed, pattern]);
+		drawPattern(ctx, seed, RENDER_SIZE, pattern, { displaySize: size });
+	}, [seed, pattern, size]);
 
 	const blurPx =
 		pattern === "dither" ? 0 : Math.max(1, Math.round(size * 0.06));

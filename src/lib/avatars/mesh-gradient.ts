@@ -126,6 +126,63 @@ export interface MeshOptions {
 	 * to the npm package once the prop set is settled.
 	 */
 	harmony?: Harmony;
+	/**
+	 * The size the avatar is shown at on screen, in CSS pixels. Drives the
+	 * level of detail (see {@link detailFor}). Defaults to the `size` the
+	 * renderer draws at, so set it whenever the render resolution is higher
+	 * than the display size, e.g. drawing at 256 px for a 32 px avatar.
+	 */
+	displaySize?: number;
+}
+
+/* ── level of detail: complexity follows the display size ── */
+
+/**
+ * Both engines packed the same amount of detail into every avatar, which is
+ * right at 160 px and wrong at 24 px: four hues and a dozen soft spots average
+ * out into one muddy blob, and dither cells below a screen pixel shimmer. So
+ * the complexity ramps with the size the avatar is shown at. Same seed, same
+ * palette order, same layout, just fewer and bigger parts when small.
+ *
+ * Mirrors the shipped engine (`packages/avatars/src/engine.ts`), keep both in
+ * step: the site and the package must draw the same avatar.
+ */
+
+/** At or below this display size (CSS px), draw the simplest version. */
+const DETAIL_MIN_SIZE = 16;
+/** At or above this display size (CSS px), draw the full complexity. */
+const DETAIL_FULL_SIZE = 160;
+/** Colors a simplified avatar keeps, the start of the seed's palette. */
+const MIN_COLORS = 2;
+/** Mesh spots a simplified avatar keeps, the largest ones. */
+const MIN_SPOTS = 4;
+/** How far the kept spots move toward the center at the smallest size. */
+const CENTER_PULL = 0.15;
+/** How much the kept spots grow at the smallest size. */
+const RADIUS_BOOST = 0.2;
+
+/**
+ * How much complexity a display size can carry, 0 (tiny) to 1 (large).
+ * The ramp is logarithmic because what the eye reads is the doubling of the
+ * size, not the pixel count.
+ */
+export function detailFor(displaySize: number): number {
+	if (!(displaySize > 0)) return 1;
+	const t =
+		Math.log2(displaySize / DETAIL_MIN_SIZE) /
+		Math.log2(DETAIL_FULL_SIZE / DETAIL_MIN_SIZE);
+	return Math.max(0, Math.min(1, t));
+}
+
+/**
+ * The palette trimmed to the number of colors `detail` can carry. The kept
+ * colors are the first ones, so a small avatar is the same avatar with its
+ * later accent hues dropped, not a different one.
+ */
+export function paletteForDetail(colors: string[], detail: number): string[] {
+	if (colors.length <= MIN_COLORS) return colors;
+	const n = Math.round(MIN_COLORS + detail * (colors.length - MIN_COLORS));
+	return colors.slice(0, Math.max(MIN_COLORS, Math.min(colors.length, n)));
 }
 
 export function generatePalette(
@@ -181,9 +238,11 @@ export function drawMeshGradient(
 ): void {
 	const s = toSeed(seed);
 	const { colors } = generatePalette(s, options);
+	const detail = detailFor(options.displaySize ?? size);
+	const palette = paletteForDetail(colors, detail);
 	const random = seededRandom(s * 12345);
 
-	ctx.fillStyle = colors[0];
+	ctx.fillStyle = palette[0];
 	ctx.fillRect(0, 0, size, size);
 
 	const numSpots = 8 + Math.floor(random() * 5);
@@ -199,14 +258,32 @@ export function drawMeshGradient(
 			x: centerX + (random() - 0.5) * size * 0.3,
 			y: centerY + (random() - 0.5) * size * 0.3,
 			radius: size * (0.3 + random() * 0.4),
-			color: colors[i % colors.length],
+			color: palette[i % palette.length],
 		});
 	}
 
 	spots.sort((a, b) => b.radius - a.radius);
 
+	// Level of detail. The spots are already sorted largest first, so a small
+	// avatar keeps the shapes that carry the composition and drops the fine
+	// ones. The survivors then grow and pull toward the center, which fills
+	// the frame the dropped spots used to cover.
+	const keep = Math.max(
+		MIN_SPOTS,
+		Math.round(MIN_SPOTS + detail * (numSpots - MIN_SPOTS)),
+	);
+	const spread = 1 - (1 - detail) * CENTER_PULL;
+	const grow = 1 + (1 - detail) * RADIUS_BOOST;
+	const mid = size / 2;
+
 	ctx.globalCompositeOperation = "source-over";
-	for (const spot of spots) {
+	for (const raw of spots.slice(0, keep)) {
+		const spot = {
+			x: mid + (raw.x - mid) * spread,
+			y: mid + (raw.y - mid) * spread,
+			radius: raw.radius * grow,
+			color: raw.color,
+		};
 		const g = ctx.createRadialGradient(
 			spot.x,
 			spot.y,

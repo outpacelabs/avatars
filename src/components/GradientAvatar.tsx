@@ -100,9 +100,11 @@ export function GradientAvatar({
 		}
 
 		ctx.clearRect(0, 0, RENDER_SIZE, RENDER_SIZE);
-		drawPattern(ctx, seed, RENDER_SIZE, pattern);
+		// Always drawn at RENDER_SIZE for a smooth blur, but the complexity
+		// follows `size`: a 24px avatar gets a simpler mark than a 160px one.
+		drawPattern(ctx, seed, RENDER_SIZE, pattern, { displaySize: size });
 		shownRef.current = { seed, pattern };
-	}, [seed, pattern, reducedMotion, meshBlur]);
+	}, [seed, pattern, reducedMotion, meshBlur, size]);
 
 	useLayoutEffect(() => () => window.clearTimeout(cleanupTimer.current), []);
 

@@ -16,6 +16,16 @@ import {
 	toSeed,
 } from "./mesh-gradient";
 
+/**
+ * Display size that draws the full complexity.
+ *
+ * The demo surfaces (home hero, home grid, docs previews) pass this instead of
+ * their own size. They show one seed at several sizes on one screen, and a
+ * mixed density there reads as a bug, not as a feature. /create is where the
+ * ramp is on show: its size control drives the preview.
+ */
+export { DETAIL_FULL_SIZE as DEMO_DENSITY } from "./mesh-gradient";
+
 export type Pattern = "mesh" | "dither";
 
 export interface PatternMeta {

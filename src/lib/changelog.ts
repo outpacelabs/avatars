@@ -23,16 +23,12 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
 	{
-		version: "next",
-		date: null,
-		title: "A visual editor for props",
+		version: "0.5.0",
+		date: "2026-08-14",
+		title: "Avatars that fit their size",
 		summary:
-			"A Create page to tune every prop visually and copy the code, with a live preview and 2000×2000 export.",
+			"Complexity now follows the size an avatar is shown at, so a 24px avatar reads as one clean mark instead of a muddy blob. Plus a Create page to tune every prop visually.",
 		changes: [
-			{
-				kind: "new",
-				text: "Create page: live preview for seed, size, shape, and pattern with copy-ready JSX.",
-			},
 			{
 				kind: "improved",
 				text: "Avatars now draw for the size they are shown at: a small one gets fewer colors and fewer, larger shapes instead of blending into a muddy blob, a big one keeps the full detail. Both patterns, driven by the size prop.",
@@ -40,6 +36,14 @@ export const CHANGELOG: ChangelogEntry[] = [
 			{
 				kind: "new",
 				text: "displaySize option on every engine helper: the on-screen size in CSS pixels, for when you draw at a higher resolution than you display.",
+			},
+			{
+				kind: "fixed",
+				text: "Dither cells now tile the frame exactly instead of overlapping by a pixel, so no cell edge doubles up.",
+			},
+			{
+				kind: "new",
+				text: "Create page: live preview for seed, size, shape, and pattern with copy-ready JSX.",
 			},
 			{
 				kind: "improved",

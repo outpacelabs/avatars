@@ -150,8 +150,12 @@ export interface MeshOptions {
 
 /** At or below this display size (CSS px), draw the simplest version. */
 const DETAIL_MIN_SIZE = 16;
-/** At or above this display size (CSS px), draw the full complexity. */
-const DETAIL_FULL_SIZE = 160;
+/**
+ * At or above this display size (CSS px), draw the full complexity. Exported
+ * because the demo surfaces pin it: a page of avatars at mixed sizes has to
+ * read at one density, so only /create shows the ramp.
+ */
+export const DETAIL_FULL_SIZE = 160;
 /** Colors a simplified avatar keeps, the start of the seed's palette. */
 const MIN_COLORS = 2;
 /** Mesh spots a simplified avatar keeps, the largest ones. */

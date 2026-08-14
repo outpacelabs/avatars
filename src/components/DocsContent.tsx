@@ -11,7 +11,11 @@ import {
 import { PackageSwitcher } from "@/components/PackageSwitcher";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
-import { drawPattern, type Pattern } from "@/lib/avatars/patterns";
+import {
+	DEMO_DENSITY,
+	drawPattern,
+	type Pattern,
+} from "@/lib/avatars/patterns";
 import { useScrollSpy } from "@/lib/use-scroll-spy";
 import { useSmoothCorners } from "@/lib/utils/useSmoothCorners";
 
@@ -164,8 +168,10 @@ function Avatar({
 		const ctx = canvas.getContext("2d");
 		if (!ctx) return;
 		ctx.clearRect(0, 0, RENDER_SIZE, RENDER_SIZE);
-		drawPattern(ctx, seed, RENDER_SIZE, pattern, { displaySize: size });
-	}, [seed, pattern, size]);
+		// One density across the page: the previews sit next to each other at
+		// different sizes, so the ramp would read as an inconsistency here.
+		drawPattern(ctx, seed, RENDER_SIZE, pattern, { displaySize: DEMO_DENSITY });
+	}, [seed, pattern]);
 
 	const blurPx =
 		pattern === "dither" ? 0 : Math.max(1, Math.round(size * 0.06));

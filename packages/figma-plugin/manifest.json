@@ -1,0 +1,13 @@
+{
+	"name": "Avatars",
+	"id": "1000000000000000000",
+	"api": "1.0.0",
+	"editorType": ["figma"],
+	"main": "dist/code.js",
+	"ui": "dist/ui.html",
+	"documentAccess": "dynamic-page",
+	"networkAccess": {
+		"allowedDomains": ["none"],
+		"reasoning": "Every avatar is generated from its seed on the spot. The plugin never fetches or uploads anything."
+	}
+}

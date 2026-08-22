@@ -218,10 +218,31 @@
 			}
 
 			.check input {
-				width: 13px;
-				height: 13px;
+				appearance: none;
+				flex: none;
+				width: 14px;
+				height: 14px;
 				margin: 0;
-				accent-color: #fff;
+				border: 1px solid var(--line);
+				border-radius: 4px;
+				background: transparent;
+				transition: background 120ms, border-color 120ms;
+			}
+
+			.check:hover input {
+				border-color: rgba(255, 255, 255, 0.28);
+			}
+
+			.check input:checked {
+				border-color: var(--ink);
+				background: var(--ink)
+					url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 6.2 5 8.5 9.5 3.6' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
+					center / 12px 12px no-repeat;
+			}
+
+			.check input:focus-visible {
+				outline: 1px solid var(--ink);
+				outline-offset: 2px;
 			}
 
 			.ghost {

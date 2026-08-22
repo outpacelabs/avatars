@@ -106,7 +106,10 @@ export function parseColor(input: string): Rgba {
 	}
 	const rgb = /^rgba?\(([^)]+)\)$/i.exec(value);
 	if (rgb) {
-		const parts = rgb[1].split(/[\s,/]+/).filter(Boolean).map(Number);
+		const parts = rgb[1]
+			.split(/[\s,/]+/)
+			.filter(Boolean)
+			.map(Number);
 		if (parts.length < 3 || parts.some(Number.isNaN)) {
 			throw new Error(`Bad rgb color: ${input}`);
 		}
@@ -161,12 +164,7 @@ export class Recorder implements GradientContext {
 		y1: number,
 		r1: number,
 	): CanvasGradient {
-		return new GradientRecording(
-			x1,
-			y1,
-			r0,
-			r1,
-		) as unknown as CanvasGradient;
+		return new GradientRecording(x1, y1, r0, r1) as unknown as CanvasGradient;
 	}
 
 	fillRect(x: number, y: number, w: number, h: number): void {

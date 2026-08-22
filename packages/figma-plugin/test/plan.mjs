@@ -41,7 +41,9 @@ check(
 const half = parseColor("#0080FF80");
 check(
 	"parseColor: 8-digit hex keeps alpha",
-	near(half.r, 0) && near(half.g, 128 / 255) && near(half.b, 1) &&
+	near(half.r, 0) &&
+		near(half.g, 128 / 255) &&
+		near(half.b, 1) &&
 		near(half.a, 128 / 255),
 );
 const short = parseColor("#0f8");
@@ -50,10 +52,7 @@ check(
 	near(short.r, 0) && near(short.g, 1) && near(short.b, 136 / 255),
 );
 const rgba = parseColor("rgba(255,255,255,0.15)");
-check(
-	"parseColor: rgba()",
-	near(rgba.r, 1) && near(rgba.a, 0.15),
-);
+check("parseColor: rgba()", near(rgba.r, 1) && near(rgba.a, 0.15));
 let threw = false;
 try {
 	parseColor("color(display-p3 1 0 0)");
@@ -92,7 +91,12 @@ for (const seed of SEEDS) {
 		radials++;
 		const last = op.stops[op.stops.length - 1];
 		if (last.color.a !== 0 || last.offset !== 1) allTransparent = false;
-		if (op.clip.x > 0 || op.clip.y > 0 || op.clip.w < size || op.clip.h < size) {
+		if (
+			op.clip.x > 0 ||
+			op.clip.y > 0 ||
+			op.clip.w < size ||
+			op.clip.h < size
+		) {
 			allFullFrame = false;
 		}
 		for (let i = 1; i < op.stops.length; i++) {
@@ -164,7 +168,6 @@ check("packSolids: an empty list stays empty", packSolids([]).length === 0);
 
 /* ── the packing is worth doing ── */
 
-
 const ditherLayers = buildPlan({ seed: "acme", pattern: "dither", size: 256 })
 	.ops.length;
 check(
@@ -183,7 +186,10 @@ check(
 /* ── blur bleed ── */
 
 check("defaultBlur: a dither is crisp", defaultBlur("dither", 200) === 0);
-check("defaultBlur: a mesh is 6% of the frame", defaultBlur("mesh", 200) === 12);
+check(
+	"defaultBlur: a mesh is 6% of the frame",
+	defaultBlur("mesh", 200) === 12,
+);
 {
 	const plan = buildPlan({ seed: "outpace", pattern: "mesh", size: 200 });
 	const base = plan.ops[0];

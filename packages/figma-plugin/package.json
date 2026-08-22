@@ -1,0 +1,20 @@
+{
+	"name": "@outpacelabs/avatars-figma",
+	"version": "0.1.0",
+	"private": true,
+	"description": "Figma plugin for @outpacelabs/avatars. Generative gradient avatars as native, editable Figma layers.",
+	"license": "MIT",
+	"author": "Outpace Studios (https://outpacestudios.com)",
+	"type": "module",
+	"scripts": {
+		"build": "node scripts/build.mjs",
+		"dev": "node scripts/build.mjs --watch",
+		"test": "node test/plan.mjs",
+		"typecheck": "tsc --noEmit"
+	},
+	"devDependencies": {
+		"@figma/plugin-typings": "^1.134.0",
+		"esbuild": "^0.25.0",
+		"typescript": "^5.9.3"
+	}
+}

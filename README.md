@@ -56,6 +56,7 @@ Full API, props, and engine helpers are in the
 | Path | What |
 |------|------|
 | [`packages/avatars`](./packages/avatars) | **`@outpacelabs/avatars`**, the published React component + bundled gradient engine. |
+| [`packages/figma-plugin`](./packages/figma-plugin) | The Figma plugin. Same engine, same seeds, but it lands as native, editable Figma layers. |
 | [`src`](./src) | The Next.js site at [avatars.outpacestudios.com](https://avatars.outpacestudios.com), the live generator and docs. |
 
 ## Local development
@@ -70,7 +71,7 @@ pnpm lint        # biome + eslint
 pnpm test        # engine property tests (palette stability)
 ```
 
-The package lives in [`packages/avatars`](./packages/avatars); `pnpm packages:build` from the root (or `pnpm build` inside the package) produces the npm bundle.
+The package lives in [`packages/avatars`](./packages/avatars); `pnpm packages:build` from the root (or `pnpm build` inside the package) produces the npm bundle. It also builds the Figma plugin, which you load with **Plugins → Development → Import plugin from manifest** in the Figma desktop app; see the [plugin README](./packages/figma-plugin/README.md).
 
 ## License
 

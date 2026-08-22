@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<title>Avatars</title>
+		<style>
+			/*
+			 * The panel wears the same clothes as avatars.outpacestudios.com:
+			 * black, thin white hairlines, one accent of full-strength white on
+			 * the primary action.
+			 */
+			:root {
+				--ink: rgba(255, 255, 255, 0.92);
+				--body: rgba(255, 255, 255, 0.62);
+				--muted: rgba(255, 255, 255, 0.42);
+				--line: rgba(255, 255, 255, 0.12);
+				--raise: rgba(255, 255, 255, 0.06);
+				--raise-strong: rgba(255, 255, 255, 0.12);
+			}
+
+			* {
+				box-sizing: border-box;
+			}
+
+			html,
+			body {
+				height: 100%;
+			}
+
+			body {
+				margin: 0;
+				background: #000;
+				color: var(--ink);
+				font-family: Inter, "Inter var", ui-sans-serif, system-ui,
+					-apple-system, "Segoe UI", sans-serif;
+				font-size: 12px;
+				line-height: 1.4;
+				-webkit-font-smoothing: antialiased;
+			}
+
+			main {
+				display: flex;
+				flex-direction: column;
+				height: 100%;
+			}
+
+			/* ── preview ── */
+
+			.preview {
+				flex: none;
+				border-bottom: 1px solid var(--line);
+				padding: 20px 16px 16px;
+				background:
+					radial-gradient(
+						120% 100% at 50% 0%,
+						rgba(255, 255, 255, 0.06),
+						transparent 70%
+					),
+					#000;
+			}
+
+			.stage {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				height: 136px;
+			}
+
+			.strip {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				gap: 8px;
+				min-height: 28px;
+				margin-top: 12px;
+			}
+
+			.shape {
+				overflow: hidden;
+				flex: none;
+				background: #111;
+			}
+
+			.shape canvas {
+				display: block;
+				width: 100%;
+				height: 100%;
+			}
+
+			/* ── controls ── */
+
+			.controls {
+				flex: 1 1 auto;
+				overflow-y: auto;
+				padding: 16px;
+				display: flex;
+				flex-direction: column;
+				gap: 14px;
+			}
+
+			.field {
+				display: flex;
+				flex-direction: column;
+				gap: 7px;
+			}
+
+			.label {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: 8px;
+				color: var(--body);
+				font-size: 11px;
+				letter-spacing: 0.01em;
+			}
+
+			.value {
+				color: var(--muted);
+				font-variant-numeric: tabular-nums;
+			}
+
+			.hint {
+				color: var(--muted);
+				font-size: 10.5px;
+			}
+
+			textarea,
+			input[type="text"] {
+				width: 100%;
+				padding: 8px 10px;
+				border: 1px solid var(--line);
+				border-radius: 8px;
+				background: transparent;
+				color: var(--ink);
+				font: inherit;
+				font-size: 11.5px;
+				resize: none;
+			}
+
+			textarea:focus,
+			input[type="text"]:focus {
+				outline: none;
+				border-color: rgba(255, 255, 255, 0.34);
+			}
+
+			textarea::placeholder,
+			input::placeholder {
+				color: rgba(255, 255, 255, 0.28);
+			}
+
+			/* ── segmented control ── */
+
+			.seg {
+				display: grid;
+				grid-auto-flow: column;
+				grid-auto-columns: 1fr;
+				gap: 2px;
+				padding: 2px;
+				border: 1px solid var(--line);
+				border-radius: 9px;
+			}
+
+			.seg button {
+				padding: 5px 4px;
+				border: 0;
+				border-radius: 7px;
+				background: transparent;
+				color: var(--muted);
+				font: inherit;
+				font-size: 11px;
+				cursor: pointer;
+				transition: background 120ms ease, color 120ms ease;
+			}
+
+			.seg button:hover {
+				color: var(--ink);
+			}
+
+			.seg button[aria-pressed="true"] {
+				background: var(--raise-strong);
+				color: var(--ink);
+			}
+
+			/* ── slider ── */
+
+			input[type="range"] {
+				width: 100%;
+				height: 16px;
+				margin: 0;
+				appearance: none;
+				background: transparent;
+				cursor: ew-resize;
+			}
+
+			input[type="range"]::-webkit-slider-runnable-track {
+				height: 2px;
+				border-radius: 2px;
+				background: var(--raise-strong);
+			}
+
+			input[type="range"]::-webkit-slider-thumb {
+				appearance: none;
+				width: 12px;
+				height: 12px;
+				margin-top: -5px;
+				border-radius: 50%;
+				background: var(--ink);
+			}
+
+			/* ── checkbox ── */
+
+			.check {
+				display: inline-flex;
+				align-items: center;
+				gap: 7px;
+				color: var(--body);
+				cursor: pointer;
+			}
+
+			.check input {
+				appearance: none;
+				flex: none;
+				width: 14px;
+				height: 14px;
+				margin: 0;
+				border: 1px solid var(--line);
+				border-radius: 4px;
+				background: transparent;
+				transition: background 120ms, border-color 120ms;
+			}
+
+			.check:hover input {
+				border-color: rgba(255, 255, 255, 0.28);
+			}
+
+			.check input:checked {
+				border-color: var(--ink);
+				background: var(--ink)
+					url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 6.2 5 8.5 9.5 3.6' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
+					center / 12px 12px no-repeat;
+			}
+
+			.check input:focus-visible {
+				outline: 1px solid var(--ink);
+				outline-offset: 2px;
+			}
+
+			.ghost {
+				border: 0;
+				padding: 0;
+				background: none;
+				color: var(--muted);
+				font: inherit;
+				font-size: 11px;
+				text-decoration: underline;
+				text-underline-offset: 3px;
+				cursor: pointer;
+			}
+
+			.ghost:hover {
+				color: var(--ink);
+			}
+
+			/* ── footer ── */
+
+			footer {
+				flex: none;
+				display: flex;
+				gap: 8px;
+				padding: 12px 16px;
+				border-top: 1px solid var(--line);
+			}
+
+			.action {
+				flex: 1;
+				padding: 9px 10px;
+				border-radius: 9px;
+				border: 1px solid transparent;
+				font: inherit;
+				font-size: 11.5px;
+				cursor: pointer;
+				transition: opacity 120ms ease, background 120ms ease;
+			}
+
+			.primary {
+				background: #fff;
+				color: #000;
+			}
+
+			.secondary {
+				background: transparent;
+				border-color: var(--line);
+				color: var(--ink);
+			}
+
+			.secondary:hover:not(:disabled) {
+				background: var(--raise);
+			}
+
+			.action:disabled {
+				opacity: 0.38;
+				cursor: default;
+			}
+
+			@media (prefers-reduced-motion: reduce) {
+				* {
+					transition: none !important;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<main>
+			<section class="preview">
+				<div class="stage"><div class="shape" id="hero"></div></div>
+				<div class="strip" id="strip"></div>
+			</section>
+
+			<div class="controls">
+				<div class="field">
+					<span class="label">
+						Seeds, one per line
+						<button type="button" class="ghost" id="shuffle">Shuffle</button>
+					</span>
+					<textarea id="seeds" rows="3" spellcheck="false"></textarea>
+				</div>
+
+				<div class="field">
+					<span class="label">Pattern</span>
+					<div class="seg" id="pattern"></div>
+				</div>
+
+				<div class="field">
+					<span class="label">Shape</span>
+					<div class="seg" id="shape"></div>
+				</div>
+
+				<div class="field">
+					<span class="label">Size<span class="value" id="size-value"></span></span>
+					<input type="range" id="size" min="16" max="512" step="1" />
+				</div>
+
+				<div class="field" id="radius-field">
+					<span class="label">
+						Corner radius<span class="value" id="radius-value"></span>
+					</span>
+					<input type="range" id="radius" min="0" max="128" step="1" />
+				</div>
+
+				<div class="field">
+					<span class="label">Output</span>
+					<div class="seg" id="output"></div>
+					<span class="hint" id="output-hint"></span>
+				</div>
+
+				<div class="field">
+					<span class="label">
+						<label class="check">
+							<input type="checkbox" id="use-palette" />
+							Brand colors
+						</label>
+					</span>
+					<input
+						type="text"
+						id="palette"
+						placeholder="#0F62FE, #FF3D00, #12E29A"
+					/>
+				</div>
+
+				<label class="check">
+					<input type="checkbox" id="seed-from-name" />
+					Fill uses each layer's name as its seed
+				</label>
+			</div>
+
+			<footer>
+				<button type="button" class="action primary" id="insert">Insert</button>
+				<button type="button" class="action secondary" id="fill" disabled>
+					Fill selection
+				</button>
+			</footer>
+		</main>
+		<!-- bundle -->
+	</body>
+</html>
